@@ -1,4 +1,4 @@
-help a friend make their way to a location
+help a friend make their way to the spot
 
 https://wya-map.vercel.app/Bmore+Licks/39.285881/-76.581595
 

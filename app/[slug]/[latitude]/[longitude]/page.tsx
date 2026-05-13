@@ -3,13 +3,15 @@ import Button, { ButtonStyles } from "./_components/Button";
 import Link from "next/link";
 import CopyToClipboardButton from "./_components/CopyToClipboardButton";
 
-type ResolvedParams = { [key: string]: string | string[] | undefined };
+type ParamValue = string | string[] | undefined;
+
+type ResolvedParams = { [key: string]: ParamValue };
 
 type PlacePageProps = {
   params: Promise<ResolvedParams>;
 };
 
-const decodeString = (value: string | string[] | undefined) =>
+const decodeString = (value: ParamValue) =>
   decodeURIComponent(value as unknown as string)
     .replace(/\+/g, " ")
     .trim();
@@ -20,10 +22,12 @@ const getName = (resolvedParams: ResolvedParams) => {
   return decodeString(slug);
 };
 
+const setPrecision = (value: ParamValue) => Number(value).toFixed(6);
+
 const getCoordinates = (resolvedParams: ResolvedParams) => {
   const { latitude, longitude } = resolvedParams;
 
-  return `${latitude}, ${longitude}`;
+  return `${setPrecision(latitude)}, ${setPrecision(longitude)}`;
 };
 
 const getTitle = (resolvedParams: ResolvedParams) => {
