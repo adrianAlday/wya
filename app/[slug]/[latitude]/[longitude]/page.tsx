@@ -113,4 +113,4 @@ const PlacePage = async ({ params }: PlacePageProps) => {
 export default PlacePage;
 
 // to do:
-// preivew image when texted
+// opengraph preview image
