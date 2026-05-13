@@ -1,5 +1,5 @@
 import Map from "./_components/Map";
-import Button from "./_components/Button";
+import Button, { ButtonStyles } from "./_components/Button";
 import Link from "next/link";
 import CopyToClipboardButton from "./_components/CopyToClipboardButton";
 
@@ -50,7 +50,7 @@ const PlacePage = async ({ params }: PlacePageProps) => {
   const title = getTitle(resolvedParams);
 
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="flex justify-center">
       <div className="w-80">
         <div className="text-sm font-semibold my-4">
           <Link
@@ -75,28 +75,36 @@ const PlacePage = async ({ params }: PlacePageProps) => {
         />
 
         <Button
-          text={"apple"}
+          text={"Apple"}
           url={`https://maps.apple.com/place?coordinate=${latitude},${longitude}`}
         />
 
         <Button
-          text={"google"}
+          text={"Google"}
           url={`https://maps.google.com?q=${latitude},${longitude}`}
         />
 
         <Button
-          text={"waze"}
+          text={"Waze"}
           url={`https://ul.waze.com/ul?ll=${latitude},${longitude}`}
         />
 
         <Button
-          text={"noaa"}
+          text={"NOAA"}
           url={`https://forecast.weather.gov/MapClick.php?w0=t&w1=td&w2=wc&w3=sfcwind&w3u=1&w4=sky&w5=pop&w6=rh&w7=rain&w8=thunder&w9=snow&w10=fzg&w11=sleet&w12=fog&w13u=0&w15=lal&w16u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=${latitude}&textField2=${longitude}&site=all&unit=0&dd=&bw=`}
         />
 
-        <Link target="_blank" href={"https://github.com/adrianAlday"}>
-          <div className={"text-xs text-[#9198a14D]"}>built by adrian</div>
-        </Link>
+        <Button
+          buttonStyle={ButtonStyles.Dark}
+          text={"Tiles from OpenFreeMap"}
+          url={"https://openfreemap.org/quick_start/"}
+        />
+
+        <Button
+          buttonStyle={ButtonStyles.Dark}
+          text={"Built by Adrian"}
+          url={"https://github.com/adrianAlday"}
+        />
       </div>
     </div>
   );
