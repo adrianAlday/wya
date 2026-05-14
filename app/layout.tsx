@@ -12,7 +12,11 @@ type LayoutProps = {
 const Layout = ({ children }: Readonly<LayoutProps>) => {
   return (
     <html lang="en" className={"subpixel-antialiased"}>
-      <body>{children}</body>
+      <body>
+        <div className="flex justify-center">
+          <div className="w-80">{children}</div>
+        </div>
+      </body>
     </html>
   );
 };

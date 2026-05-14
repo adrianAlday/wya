@@ -1,10 +1,14 @@
 help a friend make their way to the spot
 
-https://wya-map.vercel.app/Bmore+Licks/39.285881/-76.581595
+https://wya-map.vercel.app/39.316718,-76.641678/Bench+in+Druid+Hill
 
-https://wya-map.vercel.app/Druid+Hill+Bench/39.316718/-76.641678
+https://wya-map.vercel.app/39.287955,-76.573809/Our+Favorite+Tree
 
-https://wya-map.vercel.app/Our+Favorite+Tree/39.287955/-76.573809
+https://wya-map.vercel.app/2437+eastern/Bmore+Licks
+
+https://wya-map.vercel.app/bmore+licks+canton
+
+https://wya-map.vercel.app
 
 ```bash
 npm run dev
