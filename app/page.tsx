@@ -19,3 +19,5 @@ export default HomePage;
 // recenter button
 // add classnames library
 // copy link button
+// handle multiple locations, use query string
+// rename repo to wya-maps?
