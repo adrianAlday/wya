@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import type { Metadata } from "next";
 
@@ -14,7 +15,11 @@ const Layout = ({ children }: Readonly<LayoutProps>) => {
     <html lang="en" className={"subpixel-antialiased"}>
       <body>
         <div className="flex justify-center">
-          <div className="w-80">{children}</div>
+          <div className="w-80">
+            {children}
+
+            <Analytics />
+          </div>
         </div>
       </body>
     </html>
