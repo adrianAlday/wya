@@ -10,7 +10,9 @@ type HomePageFormProps = {
   resolvedSearchParams: Params;
 };
 const HomePageForm = ({ resolvedSearchParams }: HomePageFormProps) => {
-  const [query, setQuery] = useState(resolvedSearchParams.query as string);
+  const [query, setQuery] = useState(
+    (resolvedSearchParams.query as string) || "",
+  );
   const [name, setName] = useState((resolvedSearchParams.name as string) || "");
 
   const canSubmit = query;
