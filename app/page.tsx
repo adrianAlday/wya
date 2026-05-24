@@ -4,6 +4,7 @@ import HomePageForm from "./_components/HomePageForm";
 type HomePageProps = {
   searchParams: Promise<Params>;
 };
+
 const HomePage = async ({ searchParams }: HomePageProps) => {
   const resolvedSearchParams = await searchParams;
 

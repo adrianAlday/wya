@@ -21,8 +21,23 @@ const Map = ({ latitude, longitude }: MapProps) => {
       container: containerId,
       center: [longitude, latitude],
       zoom: 16,
-      style: "https://tiles.openfreemap.org/styles/bright",
+      // style: "https://tiles.openfreemap.org/styles/bright",
       attributionControl: false,
+    });
+
+    mapInstance.setStyle("https://tiles.openfreemap.org/styles/bright", {
+      transformStyle: (_previousStyle, nextStyle) => {
+        nextStyle.sources.openmaptiles = {
+          type: "vector",
+          tiles: [
+            "https://tiles.openfreemap.org/planet/20260513_001001_pt/{z}/{x}/{y}.pbf",
+          ],
+          minzoom: 0,
+          maxzoom: 14,
+        };
+
+        return nextStyle;
+      },
     });
 
     const markerSize = 36;
