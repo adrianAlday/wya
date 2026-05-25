@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Input from "./Input";
 import { Params } from "../_utils/types";
-import { encodeParam } from "../_utils/helpers";
+import { encodeParam } from "../_utils/url";
 import Button, { ButtonStyles } from "./Button";
 
 type HomePageFormProps = {

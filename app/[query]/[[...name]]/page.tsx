@@ -5,7 +5,7 @@ import Map from "@/app/_components/Map";
 import Link from "next/link";
 import { redirect, RedirectType } from "next/navigation";
 import { Params } from "@/app/_utils/types";
-import { decodeParams } from "@/app/_utils/helpers";
+import { decodeParams } from "@/app/_utils/url";
 
 const validateCoordinates = (query: string) => {
   const [latitude, longitude] = query.split(",").map((value) => Number(value));
