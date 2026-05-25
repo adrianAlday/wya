@@ -40,6 +40,7 @@ const Map = ({ latitude, longitude }: MapProps) => {
       //     return nextStyle;
       //   },
       // }
+      // recent issue: https://github.com/hyperknot/openfreemap/issues/112
     );
 
     const markerSize = 36;
