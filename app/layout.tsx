@@ -16,7 +16,7 @@ const Layout = ({ children }: Readonly<LayoutProps>) => {
     <html lang="en" className={"subpixel-antialiased"}>
       <body>
         <div className="flex justify-center">
-          <div className="w-80">
+          <div className="w-lvw max-w-[600px] p-4">
             <Link href={"/"}>
               <div className="text-sm font-semibold my-4">📍 wya</div>
             </Link>

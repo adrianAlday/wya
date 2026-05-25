@@ -53,7 +53,15 @@ const Map = ({ latitude, longitude }: MapProps) => {
       .addTo(mapInstance);
   }, [latitude, longitude]);
 
-  return <div id={containerId} className="rounded-md h-80 py-3" />;
+  return (
+    <div
+      id={containerId}
+      className="rounded-md my-3 h-lvw"
+      style={{
+        maxHeight: 600 - 4 * 8,
+      }}
+    />
+  );
 };
 
 export default Map;
