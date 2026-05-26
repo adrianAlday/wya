@@ -191,7 +191,7 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
       <style>
         {`
           .maplibregl-ctrl-geocoder {
-            width: ${window.innerWidth - 60}px;
+            width: 330px;
           }
           .maplibregl-ctrl-geocoder--input::-webkit-search-cancel-button {
             -webkit-appearance: none;
@@ -205,7 +205,7 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
 
         {markerCoordinates && (
           <Link
-            href={`/test/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}`}
+            href={`/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}`}
           >
             <button className="absolute bottom-4 inset-x-4 border border-[#3d444d] rounded-md bg-[#238636] py-1 flex items-center justify-center text-xs font-medium ">
               <div>{"Let's go 🚀"}</div>

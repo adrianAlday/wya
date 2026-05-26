@@ -35,7 +35,7 @@ const PlaceHeader = ({
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setName(event.target.value);
 
-            const newUrl = `http://${host}/test/${latitude}/${longitude}/${encodeParam(event.target.value)}`;
+            const newUrl = `http://${host}/${latitude}/${longitude}/${encodeParam(event.target.value)}`;
 
             window.history.replaceState(
               { ...window.history.state, as: newUrl, url: newUrl },
