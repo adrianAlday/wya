@@ -191,7 +191,7 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
       <style>
         {`
           .maplibregl-ctrl-geocoder {
-            width: 280px;
+            width: ${window.innerWidth - 60}px;
           }
           .maplibregl-ctrl-geocoder--input::-webkit-search-cancel-button {
             -webkit-appearance: none;

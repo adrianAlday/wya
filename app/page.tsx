@@ -1,25 +1,29 @@
-import { Params } from "./_utils/types";
-import HomePageForm from "./_components/HomePageForm";
+import axios from "axios";
+import { headers } from "next/headers";
+import TestMap from "./_components/TestMap";
 
-type HomePageProps = {
-  searchParams: Promise<Params>;
+const DataWrapper = async () => {
+  const resolvedHeaders = await headers();
+  const host = resolvedHeaders.get("host");
+
+  const response = await axios
+    .get(`http://${host}/api/geo`)
+    .then((response) => response.data)
+    .catch(async (error) => {
+      console.log(error);
+    });
+
+  const { latitude, longitude } = response;
+
+  return <TestMap latitude={latitude} longitude={longitude} zoom={5} />;
 };
 
-const HomePage = async ({ searchParams }: HomePageProps) => {
-  const resolvedSearchParams = await searchParams;
-
-  return <HomePageForm resolvedSearchParams={resolvedSearchParams} />;
+const TestPage = async () => {
+  return (
+    <main>
+      <DataWrapper />
+    </main>
+  );
 };
 
-export default HomePage;
-
-// to do:
-// bad query message
-// put street address into map links
-// opengraph preview image
-// recenter button
-// add classnames library
-// copy link button
-// handle multiple locations, use query string
-// rename repo to wya-maps?
-// https://maplibre.org/maplibre-gl-js/docs/examples/measure-distances/
+export default TestPage;
