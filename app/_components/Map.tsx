@@ -58,7 +58,8 @@ const Map = ({ latitude, longitude }: MapProps) => {
       id={containerId}
       className="rounded-md my-3 h-lvw"
       style={{
-        maxHeight: 600 - 4 * 8,
+        height: "calc(100dvw - 2*4*4px)",
+        maxHeight: 600 - 2 * 4 * 4,
       }}
     />
   );
