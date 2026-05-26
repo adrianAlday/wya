@@ -24,7 +24,7 @@ const Input = ({
       value={value}
       onChange={onChange}
       onKeyDown={onKeyDown}
-      className="border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 px-3 text-sm "
+      className="border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 px-3 text-md"
     />
   </div>
 );

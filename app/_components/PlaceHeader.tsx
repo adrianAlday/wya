@@ -46,7 +46,7 @@ const PlaceHeader = ({
           onKeyDown={handleKeyDown}
         />
 
-        <div className="mt-2 text-[#9198a1]">
+        <div className="mt-2 px-3 text-[#9198a1]">
           <CopyToClipboardButton text={subtitle}>
             {subtitle}
           </CopyToClipboardButton>
