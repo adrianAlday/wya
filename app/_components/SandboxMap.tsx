@@ -12,13 +12,13 @@ import MaplibreGeocoder, {
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
-type TestMapProps = {
+type SandboxMapProps = {
   latitude: number;
   longitude: number;
   zoom?: number;
 };
 
-const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
+const SandboxMap = ({ latitude, longitude, zoom = 16 }: SandboxMapProps) => {
   const containerId = "map";
 
   useEffect(() => {
@@ -164,4 +164,4 @@ const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
   );
 };
 
-export default TestMap;
+export default SandboxMap;

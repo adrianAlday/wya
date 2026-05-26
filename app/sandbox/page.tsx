@@ -1,6 +1,6 @@
 import axios from "axios";
 import { headers } from "next/headers";
-import TestMap from "../_components/TestMap";
+import SandboxMap from "../_components/SandboxMap";
 
 const DataWrapper = async () => {
   const resolvedHeaders = await headers();
@@ -19,12 +19,12 @@ const DataWrapper = async () => {
 
   return (
     <div>
-      <TestMap latitude={latitude} longitude={longitude} zoom={7} />
+      <SandboxMap latitude={latitude} longitude={longitude} zoom={7} />
     </div>
   );
 };
 
-const TestPage = async () => {
+const SandboxPage = async () => {
   return (
     <main>
       <DataWrapper />
@@ -32,4 +32,4 @@ const TestPage = async () => {
   );
 };
 
-export default TestPage;
+export default SandboxPage;

@@ -22,3 +22,4 @@ export default HomePage;
 // copy link button
 // handle multiple locations, use query string
 // rename repo to wya-maps?
+// https://maplibre.org/maplibre-gl-js/docs/examples/measure-distances/
