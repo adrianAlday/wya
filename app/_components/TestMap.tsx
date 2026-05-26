@@ -1,7 +1,7 @@
 "use client";
 
 import { Fragment, useEffect } from "react";
-import maplibreGl from "maplibre-gl";
+import maplibreGl, { Marker } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import MaplibreGeocoder, {
   MaplibreGeocoderApi,
@@ -80,10 +80,13 @@ const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
     element.style.marginTop = `-${markerSize / 2}px`;
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
-      maplibregl: maplibreGl,
-      showResultsWhileTyping: true,
       enableEventLogging: false,
+      maplibregl: maplibreGl,
+      marker: { element } as unknown as Marker,
+      placeholder: "wya",
+      proximity: { latitude, longitude },
       showResultMarkers: { element },
+      showResultsWhileTyping: true,
     });
 
     mapInstance.addControl(geocoder);
