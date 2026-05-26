@@ -203,7 +203,7 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
         {markerCoordinates && (
           <Link href={`/${markerCoordinates[0]},${markerCoordinates[1]}`}>
             <button className="absolute bottom-4 inset-x-4 border border-[#3d444d] rounded-md bg-[#238636] py-1 flex items-center justify-center text-xs font-medium ">
-              <div>{"Let's go"}</div>
+              <div>{"Let's go 🚀"}</div>
             </button>
           </Link>
         )}
