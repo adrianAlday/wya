@@ -23,14 +23,6 @@ const PlaceHeader = ({
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
-      const newUrl = `http://${host}/test/${latitude}/${longitude}/${encodeParam(name)}`;
-
-      window.history.replaceState(
-        { ...window.history.state, as: newUrl, url: newUrl },
-        "",
-        newUrl,
-      );
-
       (document.activeElement as HTMLInputElement).blur();
     }
   };
@@ -42,6 +34,14 @@ const PlaceHeader = ({
           value={name}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setName(event.target.value);
+
+            const newUrl = `http://${host}/test/${latitude}/${longitude}/${encodeParam(event.target.value)}`;
+
+            window.history.replaceState(
+              { ...window.history.state, as: newUrl, url: newUrl },
+              "",
+              newUrl,
+            );
           }}
           onKeyDown={handleKeyDown}
         />
