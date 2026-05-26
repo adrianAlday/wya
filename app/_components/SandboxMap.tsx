@@ -15,10 +15,10 @@ import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 type SandboxMapProps = {
   latitude: number;
   longitude: number;
-  zoom?: number;
+  zoom: number;
 };
 
-const SandboxMap = ({ latitude, longitude, zoom = 16 }: SandboxMapProps) => {
+const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
   const containerId = "map";
 
   useEffect(() => {
