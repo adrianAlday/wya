@@ -4,6 +4,8 @@ import Map from "@/app/_components/Map";
 import Link from "next/link";
 import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
+import PlaceHeader from "@/app/_components/PlaceHeader";
+import { headers } from "next/headers";
 
 const getTitle = (decodedParams: Params) => {
   return (decodedParams.name ||
@@ -32,23 +34,18 @@ const PlacePage = async ({ params }: PlacePageProps) => {
 
   const title = getTitle(decodedParams);
   const subtitle = getSubtitle(decodedParams);
+  const resolvedHeaders = await headers();
+  const host = resolvedHeaders.get("host") as string;
 
   return (
     <div className="p-4">
-      <div className="text-sm font-semibold my-4">
-        <Link
-          target="_blank"
-          href={`https://www.google.com/search?q=${encodeURIComponent(title)}`}
-        >
-          {title}
-        </Link>
-
-        <div className="mt-2 text-[#9198a1]">
-          <CopyToClipboardButton text={subtitle}>
-            {subtitle}
-          </CopyToClipboardButton>
-        </div>
-      </div>
+      <PlaceHeader
+        latitude={latitude}
+        longitude={longitude}
+        title={title}
+        subtitle={subtitle}
+        host={host}
+      />
 
       <Map
         latitude={latitude as unknown as number}
