@@ -130,7 +130,7 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
       "top-right",
     );
 
-    mapInstance.on("idle", () => {
+    mapInstance.on("load", () => {
       setLoading(false);
     });
 
