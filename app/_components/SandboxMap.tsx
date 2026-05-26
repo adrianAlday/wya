@@ -98,7 +98,7 @@ const SandboxMap = ({ latitude, longitude, zoom = 16 }: SandboxMapProps) => {
       enableEventLogging: false,
       maplibregl: maplibreGl,
       marker: { element: generateMarkerElement() } as unknown as Marker,
-      placeholder: "wya",
+      placeholder: "Where to?",
       proximity: { latitude, longitude },
       showResultMarkers: { element: generateMarkerElement() },
       showResultsWhileTyping: true,
