@@ -1,7 +1,11 @@
 "use client";
 
 import { Fragment, useEffect } from "react";
-import maplibreGl, { Marker } from "maplibre-gl";
+import maplibreGl, {
+  GeolocateControl,
+  Marker,
+  NavigationControl,
+} from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import MaplibreGeocoder, {
   MaplibreGeocoderApi,
@@ -27,9 +31,16 @@ const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
       center: [longitude, latitude],
       zoom,
       attributionControl: false,
+      hash: true,
     });
 
     mapInstance.setStyle("https://tiles.openfreemap.org/styles/bright");
+
+    mapInstance.dragRotate.disable();
+    mapInstance.keyboard.disable();
+    mapInstance.touchZoomRotate.disableRotation();
+
+    mapInstance.setRenderWorldCopies(true);
 
     const geocoderApi = {
       forwardGeocode: async (config: { query: string }) => {
@@ -64,7 +75,7 @@ const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
             features.push(point);
           }
         } catch (error) {
-          console.error(`Failed to forwardGeocode with error: ${error}`);
+          console.error(`forwardGeocode Error: ${error}`);
         }
 
         return {
@@ -73,27 +84,62 @@ const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
       },
     } as MaplibreGeocoderApi;
 
-    const markerSize = 36;
-    const element = document.createElement("div");
-    element.textContent = "📍";
-    element.style.fontSize = `${markerSize}px`;
-    element.style.marginTop = `-${markerSize / 2}px`;
+    const generateMarkerElement = () => {
+      const markerSize = 36;
+      const element = document.createElement("div");
+      element.textContent = "📍";
+      element.style.fontSize = `${markerSize}px`;
+      element.style.marginTop = `-${markerSize / 2}px`;
+
+      return element;
+    };
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       enableEventLogging: false,
       maplibregl: maplibreGl,
-      marker: { element } as unknown as Marker,
+      marker: { element: generateMarkerElement() } as unknown as Marker,
       placeholder: "wya",
       proximity: { latitude, longitude },
-      showResultMarkers: { element },
+      showResultMarkers: { element: generateMarkerElement() },
       showResultsWhileTyping: true,
     });
-
-    mapInstance.addControl(geocoder);
 
     geocoder.on("result", (event) => {
       console.log(event);
     });
+
+    mapInstance.addControl(geocoder, "bottom-left");
+
+    mapInstance.on("click", (event) => {
+      console.log(event);
+
+      mapInstance.flyTo({
+        center: event.lngLat,
+      });
+
+      new Marker({ draggable: true, element: generateMarkerElement() })
+        .setLngLat([event.lngLat.lng, event.lngLat.lat])
+        .addTo(mapInstance);
+    });
+
+    const geolocateControl = new GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      trackUserLocation: true,
+    });
+
+    mapInstance.addControl(geolocateControl, "bottom-right");
+
+    mapInstance.addControl(
+      new NavigationControl({
+        visualizePitch: false,
+        visualizeRoll: false,
+        showZoom: true,
+        showCompass: false,
+      }),
+      "bottom-right",
+    );
   }, [latitude, longitude, zoom]);
 
   return (
