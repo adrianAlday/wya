@@ -19,7 +19,7 @@ const DataWrapper = async () => {
 
   return (
     <div>
-      <SandboxMap latitude={latitude} longitude={longitude} zoom={7} />
+      <SandboxMap latitude={latitude} longitude={longitude} zoom={0} />
     </div>
   );
 };
