@@ -73,8 +73,17 @@ const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
       },
     } as MaplibreGeocoderApi;
 
+    const markerSize = 36;
+    const element = document.createElement("div");
+    element.textContent = "📍";
+    element.style.fontSize = `${markerSize}px`;
+    element.style.marginTop = `-${markerSize / 2}px`;
+
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       maplibregl: maplibreGl,
+      showResultsWhileTyping: true,
+      enableEventLogging: false,
+      showResultMarkers: { element },
     });
 
     mapInstance.addControl(geocoder);
