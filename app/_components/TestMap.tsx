@@ -78,6 +78,10 @@ const TestMap = ({ latitude, longitude, zoom = 16 }: TestMapProps) => {
     });
 
     mapInstance.addControl(geocoder);
+
+    geocoder.on("result", (event) => {
+      console.log(event);
+    });
   }, [latitude, longitude, zoom]);
 
   return (
