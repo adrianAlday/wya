@@ -109,7 +109,7 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
     });
 
     const isMobile = window.screen.width <= 768;
-    const controlHeight = isMobile ? "bottom" : "top";
+    const controlHeight = !isMobile ? "bottom" : "top";
 
     mapInstance.addControl(geocoder, `${controlHeight}-left`);
 
