@@ -19,6 +19,9 @@ type TestMapProps = {
   zoom: number;
 };
 
+const roundCoordinate = (value: number, places = 5) =>
+  Math.round(value * 10 ** places) / 10 ** places;
+
 const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
   const [loading, setLoading] = useState(true);
   const [markerCoordinates, setMarkerCoordinates] = useState<
@@ -201,7 +204,9 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
         <div id={containerId} className={"h-dvh"} />
 
         {markerCoordinates && (
-          <Link href={`/${markerCoordinates[0]},${markerCoordinates[1]}`}>
+          <Link
+            href={`/${roundCoordinate(markerCoordinates[0])},${roundCoordinate(markerCoordinates[1])}`}
+          >
             <button className="absolute bottom-4 inset-x-4 border border-[#3d444d] rounded-md bg-[#238636] py-1 flex items-center justify-center text-xs font-medium ">
               <div>{"Let's go 🚀"}</div>
             </button>
