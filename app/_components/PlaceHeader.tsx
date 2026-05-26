@@ -23,9 +23,15 @@ const PlaceHeader = ({
 
   const handleKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
-      window.open(
-        `http://${host}/test/${latitude}/${longitude}/${encodeParam(name)}`,
+      const newUrl = `http://${host}/test/${latitude}/${longitude}/${encodeParam(name)}`;
+
+      window.history.replaceState(
+        { ...window.history.state, as: newUrl, url: newUrl },
+        "",
+        newUrl,
       );
+
+      (document.activeElement as HTMLInputElement).blur();
     }
   };
 
