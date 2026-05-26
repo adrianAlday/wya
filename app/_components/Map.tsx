@@ -43,6 +43,12 @@ const Map = ({ latitude, longitude }: MapProps) => {
       // recent issue: https://github.com/hyperknot/openfreemap/issues/112
     );
 
+    mapInstance.dragRotate.disable();
+    mapInstance.keyboard.disable();
+    mapInstance.touchZoomRotate.disableRotation();
+
+    mapInstance.setRenderWorldCopies(true);
+
     const markerSize = 36;
     const element = document.createElement("div");
     element.textContent = "📍";
