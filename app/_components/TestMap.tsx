@@ -11,6 +11,7 @@ import MaplibreGeocoder, {
   MaplibreGeocoderApi,
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+import Link from "next/link";
 
 type TestMapProps = {
   latitude: number;
@@ -19,9 +20,12 @@ type TestMapProps = {
 };
 
 const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
-  const containerId = "map";
+  const [loading, setLoading] = useState(true);
+  const [markerCoordinates, setMarkerCoordinates] = useState<
+    null | [number, number]
+  >(null);
 
-  const [markerCoordinates, setMarkerCoordinates] = useState([0, 0]);
+  const containerId = "map";
 
   useEffect(() => {
     if (!document.getElementById(containerId)) {
@@ -86,16 +90,6 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
       },
     } as MaplibreGeocoderApi;
 
-    // const generateMarkerElement = () => {
-    //   const markerSize = 36;
-    //   const element = document.createElement("div");
-    //   element.textContent = "📍";
-    //   element.style.fontSize = `${markerSize}px`;
-    //   element.style.marginTop = `-${markerSize / 2}px`;
-
-    //   return element;
-    // };
-
     const markerSize = 36;
     const element = document.createElement("div");
     element.textContent = "📍";
@@ -106,43 +100,14 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
       enableEventLogging: false,
       limit: 3,
       maplibregl: maplibreGl,
-      // marker: { element: generateMarkerElement() } as unknown as Marker,
       marker: { element } as unknown as Marker,
-      // marker: false,
       placeholder: "Where to?",
       proximity: { latitude, longitude },
-      // showResultMarkers: { element: generateMarkerElement() },
       showResultMarkers: { element },
-      // showResultMarkers: false,
       showResultsWhileTyping: true,
     });
 
-    geocoder.on("result", (event) => {
-      console.log(event);
-    });
-
-    const isMobile = window.screen.width <= 768;
-    const controlHeight = !isMobile ? "bottom" : "top";
-
-    mapInstance.addControl(geocoder, `${controlHeight}-left`);
-
-    mapInstance.on("click", (event) => {
-      console.log(event);
-
-      mapInstance.flyTo({
-        center: event.lngLat,
-      });
-
-      setMarkerCoordinates([event.lngLat.lat, event.lngLat.lng]);
-
-      new Marker({
-        draggable: true,
-        // element: generateMarkerElement(),
-        element,
-      })
-        .setLngLat([event.lngLat.lng, event.lngLat.lat])
-        .addTo(mapInstance);
-    });
+    mapInstance.addControl(geocoder, "top-left");
 
     const geolocateControl = new GeolocateControl({
       positionOptions: {
@@ -153,17 +118,7 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
       showAccuracyCircle: true,
     });
 
-    mapInstance.addControl(geolocateControl, `${controlHeight}-right`);
-
-    mapInstance.on("load", () => {
-      geolocateControl.trigger();
-
-      setTimeout(() => {
-        mapInstance.setZoom(15);
-
-        // setMarkerCoordinates([event.lngLat.lat, event.lngLat.lng]);
-      }, 1000);
-    });
+    mapInstance.addControl(geolocateControl, "top-right");
 
     mapInstance.addControl(
       new NavigationControl({
@@ -172,12 +127,64 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
         showZoom: true,
         showCompass: false,
       }),
-      `${controlHeight}-right`,
+      "top-right",
     );
+
+    mapInstance.on("idle", () => {
+      setLoading(false);
+    });
+
+    geocoder.on("result", (event) => {
+      console.log(event);
+
+      const [lng, lat] = event.result.center as [number, number];
+
+      setMarkerCoordinates([lat, lng]);
+    });
+
+    mapInstance.on("click", (event) => {
+      console.log(event);
+
+      new Marker({
+        element,
+      })
+        .setLngLat([event.lngLat.lng, event.lngLat.lat])
+        .addTo(mapInstance);
+
+      const { lng, lat } = event.lngLat;
+
+      setMarkerCoordinates([lat, lng]);
+    });
   }, [latitude, longitude, zoom]);
 
   return (
     <Fragment>
+      <div
+        className={`${loading ? "block" : "hidden"} flex items-center justify-center h-dvh`}
+      >
+        <svg
+          className="mr-3 -ml-1 size-5 animate-spin text-[rgb(189,190,191)]"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+        >
+          <circle
+            className="opacity-33"
+            cx="12"
+            cy="12"
+            r="10"
+            stroke="currentColor"
+            strokeWidth="4"
+          />
+
+          <path
+            className="opacity-100"
+            fill="currentColor"
+            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+          />
+        </svg>
+      </div>
+
       <style>
         {`
           .maplibregl-ctrl-geocoder {
@@ -190,13 +197,17 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
         `}
       </style>
 
-      <div
-        id={containerId}
-        className="h-svh"
-        style={{
-          maxHeight: 600 - 4 * 8,
-        }}
-      />
+      <div className={`${loading ? "hidden" : "block"} relative`}>
+        <div id={containerId} className={"h-dvh"} />
+
+        {markerCoordinates && (
+          <Link href={`/${markerCoordinates[0]},${markerCoordinates[1]}`}>
+            <button className="absolute bottom-16 inset-x-4 border border-[#3d444d] rounded-md bg-[#238636] py-1 flex items-center justify-center text-xs font-medium ">
+              <div>{"Let's go"}</div>
+            </button>
+          </Link>
+        )}
+      </div>
     </Fragment>
   );
 };
