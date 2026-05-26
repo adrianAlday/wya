@@ -12,13 +12,13 @@ import MaplibreGeocoder, {
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 
-type SandboxMapProps = {
+type TestMapProps = {
   latitude: number;
   longitude: number;
   zoom: number;
 };
 
-const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
+const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
   const containerId = "map";
 
   const [markerCoordinates, setMarkerCoordinates] = useState([0, 0]);
@@ -86,15 +86,15 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
       },
     } as MaplibreGeocoderApi;
 
-    const generateMarkerElement = () => {
-      const markerSize = 36;
-      const element = document.createElement("div");
-      element.textContent = "📍";
-      element.style.fontSize = `${markerSize}px`;
-      element.style.marginTop = `-${markerSize / 2}px`;
+    // const generateMarkerElement = () => {
+    //   const markerSize = 36;
+    //   const element = document.createElement("div");
+    //   element.textContent = "📍";
+    //   element.style.fontSize = `${markerSize}px`;
+    //   element.style.marginTop = `-${markerSize / 2}px`;
 
-      return element;
-    };
+    //   return element;
+    // };
 
     const markerSize = 36;
     const element = document.createElement("div");
@@ -192,7 +192,7 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
 
       <div
         id={containerId}
-        className="rounded-md my-3 h-lvw"
+        className="h-svh"
         style={{
           maxHeight: 600 - 4 * 8,
         }}
@@ -201,4 +201,4 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
   );
 };
 
-export default SandboxMap;
+export default TestMap;
