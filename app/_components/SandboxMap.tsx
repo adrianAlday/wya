@@ -108,7 +108,10 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
       console.log(event);
     });
 
-    mapInstance.addControl(geocoder, "bottom-left");
+    const isMobile = window.screen.width <= 768;
+    const controlHeight = isMobile ? "bottom" : "top";
+
+    mapInstance.addControl(geocoder, `${controlHeight}-left`);
 
     mapInstance.on("click", (event) => {
       console.log(event);
@@ -126,10 +129,16 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
       positionOptions: {
         enableHighAccuracy: true,
       },
+      showUserLocation: true,
       trackUserLocation: true,
+      showAccuracyCircle: true,
     });
 
-    mapInstance.addControl(geolocateControl, "bottom-right");
+    mapInstance.addControl(geolocateControl, `${controlHeight}-right`);
+
+    mapInstance.on("load", () => {
+      geolocateControl.trigger();
+    });
 
     mapInstance.addControl(
       new NavigationControl({
@@ -138,7 +147,7 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
         showZoom: true,
         showCompass: false,
       }),
-      "bottom-right",
+      `${controlHeight}-right`,
     );
   }, [latitude, longitude, zoom]);
 
@@ -146,6 +155,9 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
     <Fragment>
       <style>
         {`
+          .maplibregl-ctrl-geocoder {
+            width: 280px;
+          }
           .maplibregl-ctrl-geocoder--input::-webkit-search-cancel-button {
             -webkit-appearance: none;
             display: none;
