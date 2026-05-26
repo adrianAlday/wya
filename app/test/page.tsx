@@ -15,7 +15,7 @@ const DataWrapper = async () => {
 
   const { latitude, longitude } = response;
 
-  return <TestMap latitude={latitude} longitude={longitude} zoom={0} />;
+  return <TestMap latitude={latitude} longitude={longitude} zoom={5} />;
 };
 
 const TestPage = async () => {
