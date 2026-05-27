@@ -222,8 +222,8 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
             border-radius: 6px;
           }
           .maplibregl-ctrl-geocoder {
-            width: 330px;
-            border: 2px solid rgb(54,113,227)
+            width: calc(100dvw - 29px - 3*10px);
+            border: 2px solid rgb(92,180,224)
           }
           .maplibregl-ctrl-geocoder--input:focus {
             outline: none;
