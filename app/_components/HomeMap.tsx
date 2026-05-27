@@ -204,6 +204,9 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
   const roundCoordinate = (value: number, places = 5) =>
     Math.round(value * 10 ** places) / 10 ** places;
 
+  const roundedLatitude = roundCoordinate(markerCoordinates[0]);
+  const roundedLongitude = roundCoordinate(markerCoordinates[1]);
+
   return (
     <div className="w-dvw">
       <div
@@ -264,7 +267,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
         {markerCoordinates && (
           <Link
-            href={`/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}?${paramForNewPlace}`}
+            href={`/${roundedLatitude}/${roundedLongitude}?t=${roundedLatitude}+${roundedLongitude}&${paramForNewPlace}`}
           >
             <button
               id={goButtonId}
