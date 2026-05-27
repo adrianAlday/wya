@@ -192,7 +192,6 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       mapInstance.flyTo({
         center: event.lngLat,
-        zoom,
         speed,
         essential,
         ...(mapInstance.getZoom() < zoom ? { zoom } : {}),
