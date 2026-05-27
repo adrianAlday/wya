@@ -16,7 +16,7 @@ const DataWrapper = async () => {
 
   const { latitude, longitude } = response;
 
-  return <HomeMap latitude={latitude} longitude={longitude} zoom={5} />;
+  return <HomeMap latitude={latitude} longitude={longitude} geoZoom={5} />;
 };
 
 export const metadata: Metadata = {

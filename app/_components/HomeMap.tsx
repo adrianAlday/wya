@@ -17,10 +17,12 @@ import { speed, zoom } from "../_utils/map";
 type HomeMapProps = {
   latitude: number;
   longitude: number;
-  zoom: number;
+  geoZoom: number;
 };
 
-const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
+export const paramForNewPlace = "n";
+
+const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
 
   const [markerCoordinates, setMarkerCoordinates] = useState<
@@ -39,7 +41,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
     const mapInstance = new maplibreGl.Map({
       container: containerId,
       center: [longitude, latitude],
-      zoom,
+      zoom: geoZoom,
       attributionControl: false,
     });
 
@@ -108,7 +110,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
       placeholder: "Where to?",
       showResultMarkers: { element },
       showResultsWhileTyping: true,
-      zoom: 16,
+      zoom,
     });
 
     mapInstance.addControl(geocoder, "top-left");
@@ -175,7 +177,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
 
       mapInstance.flyTo({
         center: event.lngLat,
-        zoom: 16,
+        zoom,
         speed,
       });
 
@@ -241,7 +243,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
 
         {markerCoordinates && (
           <Link
-            href={`/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}?n`}
+            href={`/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}?${paramForNewPlace}`}
           >
             <button className="absolute bottom-4 inset-x-0 mx-auto border border-[rgb(61,125,64)] rounded-md max-w-[600px] bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-[rgb(255,255,255)] text-xs font-medium transition-all duration-80 transition-discrete">
               <div>{"Let's go 🚀"}</div>

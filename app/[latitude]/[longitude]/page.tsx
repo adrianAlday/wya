@@ -4,17 +4,21 @@ import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
 import PlaceHeader from "@/app/_components/PlaceHeader";
 import { headers } from "next/headers";
+import ShareButton from "@/app/_components/ShareButton";
 
 const getTitle = (decodedParams: Params) => {
-  return (decodedParams.name ||
+  return (decodedParams.t ||
     `${decodedParams.latitude}, ${decodedParams.longitude}`) as string;
 };
 const getSubtitle = (decodedParams: Params) => {
   return `${decodedParams.latitude}, ${decodedParams.longitude}` as string;
 };
 
-export const generateMetadata = async ({ params }: PlacePageProps) => {
-  const resolvedParams = await params;
+export const generateMetadata = async ({
+  params,
+  searchParams,
+}: PlacePageProps) => {
+  const resolvedParams = { ...(await params), ...(await searchParams) };
   const decodedParams = decodeParams(resolvedParams);
 
   return {
@@ -24,14 +28,16 @@ export const generateMetadata = async ({ params }: PlacePageProps) => {
 
 type PlacePageProps = {
   params: Promise<Params>;
+  searchParams: Promise<Params>;
 };
-const PlacePage = async ({ params }: PlacePageProps) => {
-  const resolvedParams = await params;
+const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
+  const resolvedParams = { ...(await params), ...(await searchParams) };
   const decodedParams = decodeParams(resolvedParams);
   const { latitude, longitude } = decodedParams;
 
   const title = getTitle(decodedParams);
   const subtitle = getSubtitle(decodedParams);
+
   const resolvedHeaders = await headers();
   const host = resolvedHeaders.get("host") as string;
 
@@ -73,6 +79,8 @@ const PlacePage = async ({ params }: PlacePageProps) => {
         url={`https://www.windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
         buttonStyle={ButtonStyles.Secondary}
       />
+
+      <ShareButton host={host} />
 
       <Button
         text={"Tiles from OpenFreeMap"}

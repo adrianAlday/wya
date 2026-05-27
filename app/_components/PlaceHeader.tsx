@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { encodeParam } from "../_utils/url";
 import { useSearchParams } from "next/navigation";
+import { paramForNewPlace } from "./HomeMap";
 
 type PlaceHeaderProps = {
   latitude: string;
@@ -25,7 +26,7 @@ const PlaceHeader = ({
   const inputId = "name";
 
   useEffect(() => {
-    if (searchParams.has("n")) {
+    if (searchParams.has(paramForNewPlace)) {
       const input = document.getElementById(inputId) as HTMLInputElement;
       input.focus();
       input.select();
@@ -33,7 +34,7 @@ const PlaceHeader = ({
   }, []);
 
   const setUrl = (nameValue: string) => {
-    const newUrl = `http://${host}/${latitude}/${longitude}/${encodeParam(nameValue)}`;
+    const newUrl = `http://${host}/${latitude}/${longitude}?t=${encodeParam(nameValue)}`;
 
     window.history.replaceState(
       { ...window.history.state, as: newUrl, url: newUrl },
