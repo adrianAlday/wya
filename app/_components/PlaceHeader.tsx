@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import Input from "./Input";
-import CopyToClipboardButton from "./CopyToClipboardButton";
+import React, { useEffect, useState } from "react";
 import { encodeParam } from "../_utils/url";
+import { useSearchParams } from "next/navigation";
 
 type PlaceHeaderProps = {
   latitude: string;
@@ -21,35 +20,66 @@ const PlaceHeader = ({
 }: PlaceHeaderProps) => {
   const [name, setName] = useState(title);
 
-  const handleKeyDown = (event: React.KeyboardEvent) => {
+  const searchParams = useSearchParams();
+
+  const inputId = "name";
+
+  useEffect(() => {
+    if (searchParams.has("n")) {
+      const input = document.getElementById(inputId) as HTMLInputElement;
+      input.focus();
+      input.select();
+    }
+  }, []);
+
+  const setUrl = (nameValue: string) => {
+    const newUrl = `http://${host}/${latitude}/${longitude}/${encodeParam(nameValue)}`;
+
+    window.history.replaceState(
+      { ...window.history.state, as: newUrl, url: newUrl },
+      "",
+      newUrl,
+    );
+  };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setName(event.target.value);
+
+    setUrl(event.target.value);
+  };
+
+  const handleInputKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
       (document.activeElement as HTMLInputElement).blur();
     }
   };
 
+  const handleInputBlur = () => {
+    setUrl(name);
+  };
+
+  const handleSubtitleClick = () => {
+    navigator.clipboard.writeText(subtitle.replaceAll(" ", ""));
+  };
+
   return (
     <React.Fragment>
       <div className="text-sm font-semibold my-4">
-        <Input
+        <input
+          id={inputId}
+          type="text"
+          placeholder={"Name"}
           value={name}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setName(event.target.value);
-
-            const newUrl = `http://${host}/${latitude}/${longitude}/${encodeParam(event.target.value)}`;
-
-            window.history.replaceState(
-              { ...window.history.state, as: newUrl, url: newUrl },
-              "",
-              newUrl,
-            );
-          }}
-          onKeyDown={handleKeyDown}
+          onChange={handleInputChange}
+          onKeyDown={handleInputKeyDown}
+          onBlur={handleInputBlur}
+          className="border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 px-3 text-base"
         />
 
         <div className="mt-2 px-3 text-[#9198a1]">
-          <CopyToClipboardButton text={subtitle}>
+          <button onClick={handleSubtitleClick} className="cursor-pointer">
             {subtitle}
-          </CopyToClipboardButton>
+          </button>
         </div>
       </div>
     </React.Fragment>
