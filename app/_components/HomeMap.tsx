@@ -201,11 +201,13 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     });
   }, [latitude, longitude, geoZoom, hasGeolocated]);
 
-  const roundCoordinate = (value: number, places = 5) =>
-    Math.round(value * 10 ** places) / 10 ** places;
+  const [roundedLatitude, roundedLongitude] = (markerCoordinates || [0, 0]).map(
+    (coordinate) => {
+      const places = 5;
 
-  const roundedLatitude = roundCoordinate(markerCoordinates[0]);
-  const roundedLongitude = roundCoordinate(markerCoordinates[1]);
+      return Math.round((coordinate || 0) * 10 ** places) / 10 ** places;
+    },
+  );
 
   return (
     <div className="w-dvw">
