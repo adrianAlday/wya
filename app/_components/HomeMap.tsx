@@ -114,6 +114,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       enableEventLogging: false,
+      debounceSearch: 400,
       flyTo: { speed, essential },
       limit: 3,
       maplibregl: maplibreGl,
