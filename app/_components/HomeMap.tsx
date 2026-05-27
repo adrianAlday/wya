@@ -26,6 +26,8 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
     null | [number, number]
   >(null);
 
+  const [hasGeolocated, setHasGeolocated] = useState(false);
+
   const containerId = "map";
 
   useEffect(() => {
@@ -104,7 +106,6 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
       maplibregl: maplibreGl,
       marker: { element } as unknown as Marker,
       placeholder: "Where to?",
-      proximity: { latitude, longitude },
       showResultMarkers: { element },
       showResultsWhileTyping: true,
       zoom: 16,
@@ -119,6 +120,22 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
       showUserLocation: true,
       trackUserLocation: true,
       showAccuracyCircle: true,
+    });
+
+    geolocateControl.on("geolocate", (event) => {
+      if (!hasGeolocated) {
+        setHasGeolocated(true);
+
+        const { latitude, longitude } = event.coords;
+
+        new Marker({
+          element,
+        })
+          .setLngLat([longitude, latitude])
+          .addTo(mapInstance);
+
+        setMarkerCoordinates([latitude, longitude]);
+      }
     });
 
     mapInstance.addControl(geolocateControl, "top-right");
@@ -146,19 +163,17 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
     });
 
     mapInstance.on("click", (event) => {
-      console.log(event);
+      const { lng, lat } = event.lngLat;
 
       new Marker({
         element,
       })
-        .setLngLat([event.lngLat.lng, event.lngLat.lat])
+        .setLngLat([lng, lat])
         .addTo(mapInstance);
-
-      const { lng, lat } = event.lngLat;
 
       setMarkerCoordinates([lat, lng]);
     });
-  }, [latitude, longitude, zoom]);
+  }, [latitude, longitude, zoom, hasGeolocated]);
 
   const roundCoordinate = (value: number, places = 5) =>
     Math.round(value * 10 ** places) / 10 ** places;
