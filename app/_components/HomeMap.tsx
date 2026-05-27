@@ -122,7 +122,6 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         enableHighAccuracy: true,
       },
       showUserLocation: true,
-      trackUserLocation: true,
       showAccuracyCircle: true,
     });
 
@@ -228,7 +227,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           }
           .maplibregl-ctrl-geocoder {
             width: calc(100dvw - 29px - 3*10px);
-            border: 2px solid rgb(92,180,224);
+            border: 2px solid rgb(75,161,236);
           }
           .maplibregl-ctrl-geocoder--input:focus {
             outline: none;
