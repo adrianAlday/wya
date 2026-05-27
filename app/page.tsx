@@ -20,7 +20,7 @@ const DataWrapper = async () => {
 };
 
 export const metadata: Metadata = {
-  title: "wya",
+  title: "wya maps",
 };
 
 const HomePage = async () => (
