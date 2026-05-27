@@ -1,6 +1,7 @@
 import axios from "axios";
 import { headers } from "next/headers";
-import TestMap from "./_components/TestMap";
+import HomeMap from "./_components/HomeMap";
+import { Metadata } from "next";
 
 const DataWrapper = async () => {
   const resolvedHeaders = await headers();
@@ -15,10 +16,14 @@ const DataWrapper = async () => {
 
   const { latitude, longitude } = response;
 
-  return <TestMap latitude={latitude} longitude={longitude} zoom={5} />;
+  return <HomeMap latitude={latitude} longitude={longitude} zoom={5} />;
 };
 
-const TestPage = async () => {
+export const metadata: Metadata = {
+  title: "wya",
+};
+
+const HomePage = async () => {
   return (
     <main>
       <DataWrapper />
@@ -26,4 +31,4 @@ const TestPage = async () => {
   );
 };
 
-export default TestPage;
+export default HomePage;

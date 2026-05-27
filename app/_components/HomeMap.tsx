@@ -13,7 +13,7 @@ import MaplibreGeocoder, {
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import Link from "next/link";
 
-type TestMapProps = {
+type HomeMapProps = {
   latitude: number;
   longitude: number;
   zoom: number;
@@ -22,7 +22,7 @@ type TestMapProps = {
 const roundCoordinate = (value: number, places = 5) =>
   Math.round(value * 10 ** places) / 10 ** places;
 
-const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
+const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
   const [markerCoordinates, setMarkerCoordinates] = useState<
     null | [number, number]
@@ -217,4 +217,4 @@ const TestMap = ({ latitude, longitude, zoom }: TestMapProps) => {
   );
 };
 
-export default TestMap;
+export default HomeMap;

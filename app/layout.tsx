@@ -1,10 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "wya",
-};
 
 type LayoutProps = {
   children: React.ReactNode;
