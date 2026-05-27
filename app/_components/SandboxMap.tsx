@@ -19,9 +19,9 @@ type SandboxMapProps = {
 };
 
 const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
-  const containerId = "map";
-
   const [markerCoordinates, setMarkerCoordinates] = useState([0, 0]);
+
+  const containerId = "map";
 
   useEffect(() => {
     if (!document.getElementById(containerId)) {
@@ -106,14 +106,18 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
       enableEventLogging: false,
       limit: 3,
       maplibregl: maplibreGl,
+
       // marker: { element: generateMarkerElement() } as unknown as Marker,
       marker: { element } as unknown as Marker,
       // marker: false,
+
       placeholder: "Where to?",
       proximity: { latitude, longitude },
-      // showResultMarkers: { element: generateMarkerElement() },
-      showResultMarkers: { element },
+
+      showResultMarkers: { element: generateMarkerElement() },
+      // showResultMarkers: { element },
       // showResultMarkers: false,
+
       showResultsWhileTyping: true,
     });
 
@@ -121,10 +125,7 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
       console.log(event);
     });
 
-    const isMobile = window.screen.width <= 768;
-    const controlHeight = !isMobile ? "bottom" : "top";
-
-    mapInstance.addControl(geocoder, `${controlHeight}-left`);
+    mapInstance.addControl(geocoder, "top-left");
 
     mapInstance.on("click", (event) => {
       console.log(event);
@@ -134,6 +135,8 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
       });
 
       setMarkerCoordinates([event.lngLat.lat, event.lngLat.lng]);
+
+      console.log(markerCoordinates);
 
       new Marker({
         draggable: true,
@@ -153,16 +156,10 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
       showAccuracyCircle: true,
     });
 
-    mapInstance.addControl(geolocateControl, `${controlHeight}-right`);
+    mapInstance.addControl(geolocateControl, "top-right");
 
     mapInstance.on("load", () => {
       geolocateControl.trigger();
-
-      setTimeout(() => {
-        mapInstance.setZoom(15);
-
-        // setMarkerCoordinates([event.lngLat.lat, event.lngLat.lng]);
-      }, 1000);
     });
 
     mapInstance.addControl(
@@ -172,9 +169,9 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
         showZoom: true,
         showCompass: false,
       }),
-      `${controlHeight}-right`,
+      "top-right",
     );
-  }, [latitude, longitude, zoom]);
+  }, [latitude, longitude, zoom, markerCoordinates]);
 
   return (
     <Fragment>

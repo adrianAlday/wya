@@ -5,18 +5,16 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
-const Layout = ({ children }: Readonly<LayoutProps>) => {
-  return (
-    <html lang="en" className={"subpixel-antialiased"}>
-      <body>
-        <div className="flex justify-center">
-          {children}
+const Layout = ({ children }: Readonly<LayoutProps>) => (
+  <html lang="en" className={"subpixel-antialiased"}>
+    <body>
+      <div className="flex justify-center">
+        {children}
 
-          <Analytics />
-        </div>
-      </body>
-    </html>
-  );
-};
+        <Analytics />
+      </div>
+    </body>
+  </html>
+);
 
 export default Layout;

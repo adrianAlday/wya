@@ -1,7 +1,5 @@
 import Button, { ButtonStyles } from "@/app/_components/Button";
-import CopyToClipboardButton from "@/app/_components/CopyToClipboardButton";
 import Map from "@/app/_components/Map";
-import Link from "next/link";
 import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
 import PlaceHeader from "@/app/_components/PlaceHeader";

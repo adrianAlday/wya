@@ -24,12 +24,10 @@ const DataWrapper = async () => {
   );
 };
 
-const SandboxPage = async () => {
-  return (
-    <main>
-      <DataWrapper />
-    </main>
-  );
-};
+const SandboxPage = async () => (
+  <main>
+    <DataWrapper />
+  </main>
+);
 
 export default SandboxPage;

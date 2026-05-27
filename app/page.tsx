@@ -23,12 +23,10 @@ export const metadata: Metadata = {
   title: "wya",
 };
 
-const HomePage = async () => {
-  return (
-    <main>
-      <DataWrapper />
-    </main>
-  );
-};
+const HomePage = async () => (
+  <main>
+    <DataWrapper />
+  </main>
+);
 
 export default HomePage;
