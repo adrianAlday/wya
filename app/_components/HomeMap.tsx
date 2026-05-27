@@ -31,7 +31,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
   const containerId = "map";
 
   useEffect(() => {
-    if (!document.getElementById(containerId)) {
+    if (!document.getElementById(containerId) || hasGeolocated) {
       return;
     }
 
@@ -40,7 +40,6 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
       center: [longitude, latitude],
       zoom,
       attributionControl: false,
-      hash: true,
     });
 
     mapInstance.setStyle("https://tiles.openfreemap.org/styles/bright");
@@ -99,9 +98,11 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
     element.style.fontSize = `${markerSize}px`;
     element.style.marginTop = `-${markerSize / 2}px`;
 
+    const speed = 0.6;
+
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       enableEventLogging: false,
-      flyTo: { speed: 0.6 },
+      flyTo: { speed },
       limit: 3,
       maplibregl: maplibreGl,
       marker: { element } as unknown as Marker,
@@ -122,6 +123,32 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
       showAccuracyCircle: true,
     });
 
+    mapInstance.addControl(geolocateControl, "top-right");
+
+    mapInstance.addControl(
+      new NavigationControl({
+        visualizePitch: false,
+        visualizeRoll: false,
+        showZoom: true,
+        showCompass: false,
+      }),
+      "top-right",
+    );
+
+    mapInstance.on("load", () => {
+      setLoading(false);
+
+      geolocateControl.trigger();
+    });
+
+    geocoder.on("result", (event) => {
+      console.log(event);
+
+      const [lng, lat] = event.result.center as [number, number];
+
+      setMarkerCoordinates([lat, lng]);
+    });
+
     geolocateControl.on("geolocate", (event) => {
       if (!hasGeolocated) {
         setHasGeolocated(true);
@@ -138,38 +165,22 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
       }
     });
 
-    mapInstance.addControl(geolocateControl, "top-right");
-
-    mapInstance.addControl(
-      new NavigationControl({
-        visualizePitch: false,
-        visualizeRoll: false,
-        showZoom: true,
-        showCompass: false,
-      }),
-      "top-right",
-    );
-
-    mapInstance.on("load", () => {
-      setLoading(false);
-    });
-
-    geocoder.on("result", (event) => {
-      console.log(event);
-
-      const [lng, lat] = event.result.center as [number, number];
-
-      setMarkerCoordinates([lat, lng]);
-    });
-
     mapInstance.on("click", (event) => {
       const { lng, lat } = event.lngLat;
+
+      geocoder.clear();
 
       new Marker({
         element,
       })
         .setLngLat([lng, lat])
         .addTo(mapInstance);
+
+      mapInstance.flyTo({
+        center: event.lngLat,
+        zoom: 16,
+        speed,
+      });
 
       setMarkerCoordinates([lat, lng]);
     });
@@ -234,7 +245,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
           <Link
             href={`/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}`}
           >
-            <button className="absolute bottom-4 inset-x-4 border border-[#3d444d] rounded-md bg-[#238636] py-1 flex items-center justify-center text-xs font-medium ">
+            <button className="absolute bottom-4 inset-x-0 mx-auto border border-[#rgb(61,125,64)] rounded-md max-w-[600px] bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-[rgb(255,255,255)] text-xs font-medium transition-all duration-80 transition-discrete">
               <div>{"Let's go 🚀"}</div>
             </button>
           </Link>
