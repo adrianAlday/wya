@@ -146,7 +146,8 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       element,
     });
 
-    const goButton = document.getElementById(goButtonId);
+    const getGoButton = () =>
+      document.getElementById(goButtonId) as HTMLElement;
 
     mapInstance.on("load", () => {
       setLoading(false);
@@ -157,7 +158,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     geocoder.on("loading", () => {
       marker.remove();
 
-      goButton?.focus();
+      getGoButton().focus();
 
       setMarkerCoordinates(initialMarkerCoordinates);
     });
@@ -185,7 +186,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       geocoder.clear();
 
-      goButton?.focus();
+      getGoButton().focus();
 
       marker.setLngLat([lng, lat]).addTo(mapInstance);
 
