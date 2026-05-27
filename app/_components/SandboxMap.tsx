@@ -11,6 +11,7 @@ import MaplibreGeocoder, {
   MaplibreGeocoderApi,
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
+import { essential } from "../_utils/map";
 
 type SandboxMapProps = {
   latitude: number;
@@ -132,7 +133,7 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
 
       mapInstance.flyTo({
         center: event.lngLat,
-        essential: true,
+        essential,
       });
 
       setMarkerCoordinates([event.lngLat.lat, event.lngLat.lng]);

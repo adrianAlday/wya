@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { speed, zoom } from "../_utils/map";
+import { speed, zoom, essential } from "../_utils/map";
 
 type PlaceMapProps = {
   latitude: number;
@@ -76,7 +76,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       mapInstance.flyTo({
         ...initialPosition,
         speed,
-        essential: true,
+        essential,
       });
 
       mapInstance.once("move", () => {

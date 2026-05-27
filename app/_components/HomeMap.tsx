@@ -12,7 +12,7 @@ import MaplibreGeocoder, {
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import Link from "next/link";
-import { speed, zoom } from "../_utils/map";
+import { zoom, speed, essential } from "../_utils/map";
 
 type HomeMapProps = {
   latitude: number;
@@ -107,7 +107,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       enableEventLogging: false,
-      flyTo: { speed },
+      flyTo: { speed, essential },
       limit: 3,
       maplibregl: maplibreGl,
       marker: { element } as unknown as Marker,
@@ -187,7 +187,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           center: event.lngLat,
           zoom,
           speed,
-          essential: true,
+          essential,
         });
       }
 
