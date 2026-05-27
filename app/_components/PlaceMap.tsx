@@ -50,8 +50,11 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     );
 
     mapInstance.dragRotate.disable();
-    mapInstance.keyboard.disable();
     mapInstance.touchZoomRotate.disableRotation();
+    mapInstance.keyboard.disable();
+
+    mapInstance.setMaxPitch(0);
+    mapInstance.touchPitch.disable();
 
     mapInstance.setRenderWorldCopies(true);
 
