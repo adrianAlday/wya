@@ -160,9 +160,17 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     geocoder.on("loading", () => {
       marker.remove();
 
-      getById(emptyButton).focus();
-
       setMarkerCoordinates(initialMarkerCoordinates);
+    });
+
+    (
+      document.getElementsByClassName(
+        "maplibregl-ctrl-geocoder--input",
+      )[0] as HTMLInputElement
+    ).addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        getById(emptyButton).focus();
+      }
     });
 
     geocoder.on("result", (event) => {
@@ -285,7 +293,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           </Link>
         )}
 
-        <button id={emptyButton} />
+        <button id={emptyButton} className="absolute top-0" />
       </div>
     </div>
   );
