@@ -69,8 +69,8 @@ const PlacePage = async ({ params }: PlacePageProps) => {
       />
 
       <Button
-        text={"NOAA"}
-        url={`https://forecast.weather.gov/MapClick.php?w0=t&w1=td&w2=wc&w3=sfcwind&w3u=1&w4=sky&w5=pop&w6=rh&w7=rain&w8=thunder&w9=snow&w10=fzg&w11=sleet&w12=fog&w13u=0&w15=lal&w16u=1&AheadHour=0&Submit=Submit&FcstType=graphical&textField1=${latitude}&textField2=${longitude}&site=all&unit=0&dd=&bw=`}
+        text={"Windy"}
+        url={`https://www.windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
         buttonStyle={ButtonStyles.Secondary}
       />
 
