@@ -33,17 +33,21 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
   const [hasGeolocated, setHasGeolocated] = useState(false);
 
-  const containerId = "map";
+  const mapContainerId = "map";
 
   const goButtonId = "go";
 
+  const emptyDivId = "empty";
+
   useEffect(() => {
-    if (!document.getElementById(containerId) || hasGeolocated) {
+    const getById = (id: string) => document.getElementById(id) as HTMLElement;
+
+    if (!getById(mapContainerId) || hasGeolocated) {
       return;
     }
 
     const mapInstance = new maplibreGl.Map({
-      container: containerId,
+      container: mapContainerId,
       center: [longitude, latitude],
       zoom: geoZoom,
       attributionControl: false,
@@ -146,9 +150,6 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       element,
     });
 
-    const getGoButton = () =>
-      document.getElementById(goButtonId) as HTMLElement;
-
     mapInstance.on("load", () => {
       setLoading(false);
 
@@ -158,7 +159,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     geocoder.on("loading", () => {
       marker.remove();
 
-      getGoButton().focus();
+      getById(emptyDivId).focus();
 
       setMarkerCoordinates(initialMarkerCoordinates);
     });
@@ -186,7 +187,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       geocoder.clear();
 
-      getGoButton().focus();
+      getById(emptyDivId).focus();
 
       marker.setLngLat([lng, lat]).addTo(mapInstance);
 
@@ -265,7 +266,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       </style>
 
       <div className={`${loading ? "hidden" : "block"} relative`}>
-        <div id={containerId} className={"h-dvh"} />
+        <div id={mapContainerId} className={"h-dvh"} />
 
         {markerCoordinates && (
           <Link
@@ -284,6 +285,8 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
             </button>
           </Link>
         )}
+
+        <div id={emptyDivId} />
       </div>
     </div>
   );
