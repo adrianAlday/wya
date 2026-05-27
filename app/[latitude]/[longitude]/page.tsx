@@ -83,7 +83,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       <ShareButton host={host} />
 
       <Button
-        text={"Wya"}
+        text={"Home"}
         url={`http://${host}`}
         buttonStyle={ButtonStyles.Secondary}
       />
