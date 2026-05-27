@@ -10,7 +10,7 @@ const Layout = ({ children }: Readonly<LayoutProps>) => {
     <html lang="en" className={"subpixel-antialiased"}>
       <body>
         <div className="flex justify-center">
-          <div className="w-lvw max-w-[600px]">
+          <div className="w-dvw max-w-[600px]">
             {children}
 
             <Analytics />
