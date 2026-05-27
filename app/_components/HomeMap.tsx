@@ -52,8 +52,11 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     mapInstance.setStyle("https://tiles.openfreemap.org/styles/bright");
 
     mapInstance.dragRotate.disable();
-    mapInstance.keyboard.disable();
     mapInstance.touchZoomRotate.disableRotation();
+    mapInstance.keyboard.disable();
+
+    mapInstance.setMaxPitch(0);
+    mapInstance.touchPitch.disable();
 
     mapInstance.setRenderWorldCopies(true);
 
