@@ -25,9 +25,11 @@ export const paramForNewPlace = "n";
 const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
 
+  const initialMarkerCoordinates = null;
+
   const [markerCoordinates, setMarkerCoordinates] = useState<
     null | [number, number]
-  >(null);
+  >(initialMarkerCoordinates);
 
   const [hasGeolocated, setHasGeolocated] = useState(false);
 
@@ -136,10 +138,20 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       "top-right",
     );
 
+    const marker = new Marker({
+      element,
+    });
+
     mapInstance.on("load", () => {
       setLoading(false);
 
       geolocateControl.trigger();
+    });
+
+    geocoder.on("loading", () => {
+      marker.remove();
+
+      setMarkerCoordinates(initialMarkerCoordinates);
     });
 
     geocoder.on("result", (event) => {
@@ -154,11 +166,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
         const { latitude, longitude } = event.coords;
 
-        new Marker({
-          element,
-        })
-          .setLngLat([longitude, latitude])
-          .addTo(mapInstance);
+        marker.setLngLat([longitude, latitude]).addTo(mapInstance);
 
         setMarkerCoordinates([latitude, longitude]);
       }
@@ -169,11 +177,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       geocoder.clear();
 
-      new Marker({
-        element,
-      })
-        .setLngLat([lng, lat])
-        .addTo(mapInstance);
+      marker.setLngLat([lng, lat]).addTo(mapInstance);
 
       mapInstance.flyTo({
         center: event.lngLat,
@@ -183,7 +187,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       setMarkerCoordinates([lat, lng]);
     });
-  }, [latitude, longitude, zoom, hasGeolocated]);
+  }, [latitude, longitude, geoZoom, hasGeolocated]);
 
   const roundCoordinate = (value: number, places = 5) =>
     Math.round(value * 10 ** places) / 10 ** places;
