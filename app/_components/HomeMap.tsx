@@ -221,6 +221,9 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
             -webkit-appearance: none;
             display: none;
           }
+          .maplibregl-ctrl-geocoder--result-icon {
+            display: none;
+          }
         `}
       </style>
 
