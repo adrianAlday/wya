@@ -64,7 +64,7 @@ const PlaceHeader = ({
 
   return (
     <React.Fragment>
-      <div className="text-sm font-semibold my-4">
+      <div className="text-sm font-semibold mb-4">
         <input
           id={inputId}
           type="text"
@@ -76,7 +76,7 @@ const PlaceHeader = ({
           className="border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 px-3 text-base"
         />
 
-        <div className="mt-2 px-3 text-[#9198a1]">
+        <div className="mt-2 px-3 text-[#9198a1] hover:text-[#f0f6fc] active:text-[#ab7df8]">
           <button onClick={handleSubtitleClick} className="cursor-pointer">
             {subtitle}
           </button>

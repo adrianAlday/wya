@@ -12,6 +12,7 @@ import MaplibreGeocoder, {
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import Link from "next/link";
+import { speed, zoom } from "../_utils/map";
 
 type HomeMapProps = {
   latitude: number;
@@ -97,8 +98,6 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
     element.textContent = "📍";
     element.style.fontSize = `${markerSize}px`;
     element.style.marginTop = `-${markerSize / 2}px`;
-
-    const speed = 0.6;
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       enableEventLogging: false,
@@ -222,6 +221,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
           }
           .maplibregl-ctrl-geocoder {
             width: 330px;
+            border: 2px solid rgb(54,113,227)
           }
           .maplibregl-ctrl-geocoder--input:focus {
             outline: none;
@@ -243,7 +243,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
           <Link
             href={`/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}?n`}
           >
-            <button className="absolute bottom-4 inset-x-0 mx-auto border border-[#rgb(61,125,64)] rounded-md max-w-[600px] bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-[rgb(255,255,255)] text-xs font-medium transition-all duration-80 transition-discrete">
+            <button className="absolute bottom-4 inset-x-0 mx-auto border border-[rgb(61,125,64)] rounded-md max-w-[600px] bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-[rgb(255,255,255)] text-xs font-medium transition-all duration-80 transition-discrete">
               <div>{"Let's go 🚀"}</div>
             </button>
           </Link>

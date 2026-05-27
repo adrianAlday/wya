@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import { speed, zoom } from "../_utils/map";
 
 type PlaceMapProps = {
   latitude: number;
@@ -10,17 +11,22 @@ type PlaceMapProps = {
 };
 
 const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
-  const containerId = "map";
+  const mapContainerId = "map";
+  const recenterButtonId = "recenter";
 
   useEffect(() => {
-    if (!document.getElementById(containerId)) {
+    if (!document.getElementById(mapContainerId)) {
       return;
     }
 
+    const initialPosition = {
+      center: [longitude, latitude] as [number, number],
+      zoom,
+    };
+
     const mapInstance = new maplibreGl.Map({
-      container: containerId,
-      center: [longitude, latitude],
-      zoom: 16,
+      container: mapContainerId,
+      ...initialPosition,
       attributionControl: false,
     });
 
@@ -57,17 +63,46 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     new maplibreGl.Marker({ element })
       .setLngLat(mapInstance.getCenter())
       .addTo(mapInstance);
+
+    const recenterButton = document.getElementById(
+      recenterButtonId,
+    ) as HTMLElement;
+
+    mapInstance.on("movestart", () => {
+      recenterButton.style.display = "block";
+    });
+
+    recenterButton.addEventListener("click", () => {
+      mapInstance.flyTo({
+        ...initialPosition,
+        speed,
+      });
+
+      mapInstance.once("move", () => {
+        recenterButton.style.display = "none";
+      });
+    });
   }, [latitude, longitude]);
 
   return (
-    <div
-      id={containerId}
-      className="rounded-md my-3 h-lvw"
-      style={{
-        height: "calc(100dvw - 2*4*4px)",
-        maxHeight: 600 - 2 * 4 * 4,
-      }}
-    />
+    <div className="relative">
+      <div
+        id={mapContainerId}
+        className="rounded-md my-3 h-lvw"
+        style={{
+          height: "calc(100dvw - 2*4*4px)",
+          maxHeight: 600 - 2 * 4 * 4,
+        }}
+      />
+
+      <button
+        id={recenterButtonId}
+        className="absolute bottom-4 inset-x-0 mx-auto border border-[rgb(211,217,223)] rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-xs font-medium transition-all duration-80 transition-discrete"
+        style={{ display: "none" }}
+      >
+        <div>{"Recenter"}</div>
+      </button>
+    </div>
   );
 };
 
