@@ -83,8 +83,14 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       <ShareButton host={host} />
 
       <Button
+        text={"Wya"}
+        url={`http://${host}`}
+        buttonStyle={ButtonStyles.Secondary}
+      />
+
+      <Button
         text={"Tiles from OpenFreeMap"}
-        url={"https://openfreemap.org/quick_start/"}
+        url={"https://openfreemap.org/quick_start"}
         buttonStyle={ButtonStyles.Tertiary}
       />
 
