@@ -182,14 +182,13 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       marker.setLngLat([lng, lat]).addTo(mapInstance);
 
-      if (mapInstance.getZoom() < zoom) {
-        mapInstance.flyTo({
-          center: event.lngLat,
-          zoom,
-          speed,
-          essential,
-        });
-      }
+      mapInstance.flyTo({
+        center: event.lngLat,
+        zoom,
+        speed,
+        essential,
+        ...(mapInstance.getZoom() < zoom ? { zoom } : {}),
+      });
 
       setMarkerCoordinates([lat, lng]);
     });
