@@ -1,6 +1,6 @@
 "use client";
 
-import { Fragment, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import maplibreGl, {
   GeolocateControl,
   Marker,
@@ -21,6 +21,7 @@ type HomeMapProps = {
 
 const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
+
   const [markerCoordinates, setMarkerCoordinates] = useState<
     null | [number, number]
   >(null);
@@ -98,6 +99,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       enableEventLogging: false,
+      flyTo: { speed: 0.6 },
       limit: 3,
       maplibregl: maplibreGl,
       marker: { element } as unknown as Marker,
@@ -105,6 +107,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
       proximity: { latitude, longitude },
       showResultMarkers: { element },
       showResultsWhileTyping: true,
+      zoom: 16,
     });
 
     mapInstance.addControl(geocoder, "top-left");
