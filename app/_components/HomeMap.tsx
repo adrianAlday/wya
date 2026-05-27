@@ -19,9 +19,6 @@ type HomeMapProps = {
   zoom: number;
 };
 
-const roundCoordinate = (value: number, places = 5) =>
-  Math.round(value * 10 ** places) / 10 ** places;
-
 const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
   const [markerCoordinates, setMarkerCoordinates] = useState<
@@ -160,8 +157,11 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
     });
   }, [latitude, longitude, zoom]);
 
+  const roundCoordinate = (value: number, places = 5) =>
+    Math.round(value * 10 ** places) / 10 ** places;
+
   return (
-    <Fragment>
+    <div className="w-dvw">
       <div
         className={`${loading ? "block" : "hidden"} flex items-center justify-center h-dvh`}
       >
@@ -190,8 +190,14 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
 
       <style>
         {`
+          .maplibregl-ctrl {
+            border-radius: 6px;
+          }
           .maplibregl-ctrl-geocoder {
             width: 330px;
+          }
+          .maplibregl-ctrl-geocoder--input:focus {
+            outline: none;
           }
           .maplibregl-ctrl-geocoder--input::-webkit-search-cancel-button {
             -webkit-appearance: none;
@@ -213,7 +219,7 @@ const HomeMap = ({ latitude, longitude, zoom }: HomeMapProps) => {
           </Link>
         )}
       </div>
-    </Fragment>
+    </div>
   );
 };
 

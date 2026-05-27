@@ -38,7 +38,7 @@ const PlacePage = async ({ params }: PlacePageProps) => {
   const host = resolvedHeaders.get("host") as string;
 
   return (
-    <div className="p-4">
+    <div className="w-dvw max-w-[600px] p-4">
       <PlaceHeader
         latitude={latitude}
         longitude={longitude}
