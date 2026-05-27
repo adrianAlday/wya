@@ -250,7 +250,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
             href={`/${roundCoordinate(markerCoordinates[0])}/${roundCoordinate(markerCoordinates[1])}?${paramForNewPlace}`}
           >
             <button
-              className="absolute bottom-4 inset-x-0 mx-auto border border-[rgb(61,125,64)] rounded-md bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-[rgb(255,255,255)] text-xs font-medium transition-all duration-80 transition-discrete"
+              className="absolute bottom-4 inset-x-0 mx-auto border border-[rgb(61,125,64)] rounded-md bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-[rgb(255,255,255)] text-base font-medium transition-all duration-80 transition-discrete"
               style={{
                 maxWidth: "min(calc(100dvw - 2*4*4px), 600px)",
               }}
