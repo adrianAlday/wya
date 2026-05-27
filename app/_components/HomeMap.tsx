@@ -187,6 +187,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           center: event.lngLat,
           zoom,
           speed,
+          essential: true,
         });
       }
 

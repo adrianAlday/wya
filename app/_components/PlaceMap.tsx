@@ -76,6 +76,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       mapInstance.flyTo({
         ...initialPosition,
         speed,
+        essential: true,
       });
 
       mapInstance.once("move", () => {

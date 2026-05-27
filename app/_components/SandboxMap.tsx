@@ -132,6 +132,7 @@ const SandboxMap = ({ latitude, longitude, zoom }: SandboxMapProps) => {
 
       mapInstance.flyTo({
         center: event.lngLat,
+        essential: true,
       });
 
       setMarkerCoordinates([event.lngLat.lat, event.lngLat.lng]);
