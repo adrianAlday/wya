@@ -33,6 +33,18 @@ const PlaceHeader = ({
     }
   }, []);
 
+  const debounce = (functionToDebounce: () => void, delay = 300) => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    return (...args: [() => void, number]) => {
+      clearTimeout(timer);
+
+      timer = setTimeout(() => {
+        functionToDebounce.apply(this, args as unknown as []);
+      }, delay);
+    };
+  };
+
   const setUrl = (nameValue: string) => {
     const newUrl = `http://${host}/${latitude}/${longitude}?t=${encodeParam(nameValue)}`;
 
@@ -46,7 +58,9 @@ const PlaceHeader = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
 
-    setUrl(event.target.value);
+    debounce(() => {
+      setUrl(event.target.value);
+    });
   };
 
   const handleInputKeyDown = (event: React.KeyboardEvent) => {
