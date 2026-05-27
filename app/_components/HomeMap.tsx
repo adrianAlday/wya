@@ -37,7 +37,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
   const goButtonId = "go";
 
-  const emptyDivId = "empty";
+  const emptyButton = "empty";
 
   useEffect(() => {
     const getById = (id: string) => document.getElementById(id) as HTMLElement;
@@ -159,7 +159,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     geocoder.on("loading", () => {
       marker.remove();
 
-      getById(emptyDivId).focus();
+      getById(emptyButton).focus();
 
       setMarkerCoordinates(initialMarkerCoordinates);
     });
@@ -187,7 +187,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       geocoder.clear();
 
-      getById(emptyDivId).focus();
+      getById(emptyButton).focus();
 
       marker.setLngLat([lng, lat]).addTo(mapInstance);
 
@@ -284,7 +284,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           </Link>
         )}
 
-        <div id={emptyDivId} />
+        <button id={emptyButton} />
       </div>
     </div>
   );
