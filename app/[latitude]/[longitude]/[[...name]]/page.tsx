@@ -1,5 +1,5 @@
 import Button, { ButtonStyles } from "@/app/_components/Button";
-import Map from "@/app/_components/Map";
+import PlaceMap from "@/app/_components/PlaceMap";
 import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
 import PlaceHeader from "@/app/_components/PlaceHeader";
@@ -45,7 +45,7 @@ const PlacePage = async ({ params }: PlacePageProps) => {
         host={host}
       />
 
-      <Map
+      <PlaceMap
         latitude={latitude as unknown as number}
         longitude={longitude as unknown as number}
       />

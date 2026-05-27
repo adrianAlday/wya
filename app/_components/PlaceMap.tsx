@@ -4,12 +4,12 @@ import { useEffect } from "react";
 import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 
-type MapProps = {
+type PlaceMapProps = {
   latitude: number;
   longitude: number;
 };
 
-const Map = ({ latitude, longitude }: MapProps) => {
+const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
   const containerId = "map";
 
   useEffect(() => {
@@ -71,4 +71,4 @@ const Map = ({ latitude, longitude }: MapProps) => {
   );
 };
 
-export default Map;
+export default PlaceMap;
