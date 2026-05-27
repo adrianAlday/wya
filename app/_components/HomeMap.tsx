@@ -176,6 +176,8 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     geocoder.on("result", (event) => {
       const [lng, lat] = event.result.center as [number, number];
 
+      getById(emptyButton).focus();
+
       setMarkerCoordinates([lat, lng]);
     });
 
