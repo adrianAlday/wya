@@ -92,12 +92,10 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     <div className="relative">
       <div
         id={mapContainerId}
-        className="mb-4 h-lvw"
+        className="mb-4 h-lvw rounded-md"
         style={{
           height: "calc(100dvw - 2*4*4px)",
           maxHeight: 600 - 2 * 4 * 4,
-          borderRadius:
-            "calc( ( min( (600px - 2*4*4px), (100dvw - 2*4*4px) ) - 3*16px) * 0.25 * 0.225 )",
         }}
       />
 
@@ -106,8 +104,6 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
         className="absolute bottom-4 inset-x-0 mx-auto border border-[rgb(211,217,223)] rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-base font-medium transition-all duration-80 transition-discrete"
         style={{
           display: "none",
-          borderRadius:
-            "calc( ( min( (600px - 2*4*4px), (100dvw - 2*4*4px) ) - 3*16px) * 0.25 * 0.225 )",
         }}
       >
         <div>{"Recenter"}</div>
