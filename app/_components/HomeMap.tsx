@@ -66,15 +66,26 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
     mapInstance.setRenderWorldCopies(true);
 
+    let searchAbortController: AbortController;
+    let reverseAbortController: AbortController;
+
     const geocoderApi = {
       forwardGeocode: async (config: { query: string }) => {
         const features = [];
+
+        if (searchAbortController) {
+          searchAbortController.abort();
+        }
+
+        searchAbortController = new AbortController();
+        const signal = searchAbortController.signal;
 
         try {
           const search = await fetch(
             `https://nominatim.openstreetmap.org/search?format=geojson&polygon_geojson=1&addressdetails=1&q=${
               config.query
             }`,
+            { signal },
           ).then(async (response) => await response.json());
 
           for (const feature of search.features) {
@@ -107,6 +118,40 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         };
       },
     } as MaplibreGeocoderApi;
+
+    const setMarker = async (coordinates: [number, number] | null) => {
+      const nextCoordinates = coordinates
+        ? (coordinates.map((coordinate) => {
+            const places = 5;
+
+            return Math.round((coordinate || 0) * 10 ** places) / 10 ** places;
+          }) as [number, number])
+        : coordinates;
+
+      setMarkerCoordinates(nextCoordinates);
+
+      if (reverseAbortController) {
+        reverseAbortController.abort();
+      }
+
+      if (nextCoordinates) {
+        const [nextLatitude, nextLongitude] = nextCoordinates;
+
+        setReverseName(`${nextLatitude}, ${nextLongitude}`);
+
+        reverseAbortController = new AbortController();
+        const signal = reverseAbortController.signal;
+
+        const reverse = await fetch(
+          `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${nextLatitude}&lon=${nextLongitude}`,
+          { signal },
+        ).then(async (response) => await response.json());
+
+        setReverseName(reverse.features[0].properties.display_name);
+      } else {
+        setReverseName("");
+      }
+    };
 
     const markerSize = 36;
     const element = document.createElement("div");
@@ -154,14 +199,6 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       draggable: true,
     });
 
-    // const setMarker = async (coordinates: [number, number]) => {
-    //   setMarkerCoordinates(coordinates);
-
-    //   await fetch(
-    //     `https://nominatim.openstreetmap.org/reverse?lat=${}&lon=<value>&<params>`,
-    //   );
-    // };
-
     mapInstance.on("load", () => {
       setLoading(false);
 
@@ -171,7 +208,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     geocoder.on("loading", () => {
       marker.remove();
 
-      setMarkerCoordinates(initialMarkerCoordinates);
+      setMarker(initialMarkerCoordinates);
     });
 
     (
@@ -189,7 +226,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       getById(emptyButton).focus();
 
-      setMarkerCoordinates([lat, lng]);
+      setMarker([lat, lng]);
     });
 
     geolocateControl.on("geolocate", (event) => {
@@ -200,7 +237,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
         marker.setLngLat([longitude, latitude]).addTo(mapInstance);
 
-        setMarkerCoordinates([latitude, longitude]);
+        setMarker([latitude, longitude]);
       }
     });
 
@@ -220,29 +257,9 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         ...(mapInstance.getZoom() < zoom ? { zoom } : {}),
       });
 
-      setMarkerCoordinates([lat, lng]);
+      setMarker([lat, lng]);
     });
   }, [latitude, longitude, geoZoom, hasGeolocated]);
-
-  const [roundedLatitude, roundedLongitude] = (markerCoordinates || [0, 0]).map(
-    (coordinate) => {
-      const places = 5;
-
-      return Math.round((coordinate || 0) * 10 ** places) / 10 ** places;
-    },
-  );
-
-  useEffect(() => {
-    (async () => {
-      setReverseName(`${roundedLatitude}, ${roundedLongitude}`);
-
-      const reverse = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${roundedLatitude}&lon=${roundedLongitude}`,
-      ).then(async (response) => await response.json());
-
-      setReverseName(reverse.features[0].properties.display_name);
-    })();
-  }, [roundedLatitude, roundedLongitude]);
 
   return (
     <div className="w-dvw">
@@ -302,7 +319,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
         {markerCoordinates && (
           <Link
-            href={`/${roundedLatitude}/${roundedLongitude}?t=${reverseName}&${paramForNewPlace}`}
+            href={`/${markerCoordinates[0]}/${markerCoordinates[1]}?t=${reverseName}&${paramForNewPlace}`}
           >
             <button
               id={goButtonId}
