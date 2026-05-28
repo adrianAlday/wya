@@ -43,13 +43,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
   return (
     <div className="w-dvw max-w-[600px] p-4">
-      <PlaceHeader
-        latitude={latitude}
-        longitude={longitude}
-        title={title}
-        subtitle={subtitle}
-        host={host}
-      />
+      <PlaceHeader title={title} subtitle={subtitle} />
 
       <PlaceMap
         latitude={latitude as unknown as number}

@@ -2,25 +2,17 @@
 
 import React, { useEffect, useState } from "react";
 import { encodeParam } from "../_utils/url";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { paramForNewPlace } from "./HomeMap";
 
 type PlaceHeaderProps = {
-  latitude: string;
-  longitude: string;
-  host: string;
   title: string;
   subtitle: string;
 };
-const PlaceHeader = ({
-  latitude,
-  longitude,
-  host,
-  title,
-  subtitle,
-}: PlaceHeaderProps) => {
+const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   const [name, setName] = useState(title);
 
+  const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const inputId = "name";
@@ -33,20 +25,8 @@ const PlaceHeader = ({
     }
   }, []);
 
-  const debounce = (functionToDebounce: () => void, delay = 300) => {
-    let timer: ReturnType<typeof setTimeout>;
-
-    return (...args: [() => void, number]) => {
-      clearTimeout(timer);
-
-      timer = setTimeout(() => {
-        functionToDebounce.apply(this, args as unknown as []);
-      }, delay);
-    };
-  };
-
   const setUrl = (nameValue: string) => {
-    const newUrl = `http://${host}/${latitude}/${longitude}?t=${encodeParam(nameValue)}`;
+    const newUrl = `${pathname}?t=${encodeParam(nameValue)}`;
 
     window.history.replaceState(
       { ...window.history.state, as: newUrl, url: newUrl },
@@ -58,9 +38,7 @@ const PlaceHeader = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
 
-    debounce(() => {
-      setUrl(event.target.value);
-    });
+    setUrl(event.target.value);
   };
 
   const handleInputKeyDown = (event: React.KeyboardEvent) => {
