@@ -31,13 +31,13 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     setUrl(value);
   };
 
-  useEffect(() => {
-    (async () => {
-      if (searchParams.has(paramForNewPlace)) {
-        setNameAndUrl(window.prompt("Location name?", title) || name);
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     if (searchParams.has(paramForNewPlace)) {
+  //       setNameAndUrl(window.prompt("Location name?", title) || name);
+  //     }
+  //   })();
+  // }, []);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setNameAndUrl(event.target.value);
@@ -57,11 +57,57 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     navigator.clipboard.writeText(subtitle.replaceAll(" ", ""));
   };
 
+  const nameInputId = "name";
+
+  // const thingy = () => {
+  //   if (searchParams.has(paramForNewPlace)) {
+  //     const input = document.getElementById(nameInputId) as HTMLInputElement;
+  //     const temporaryInput = document.createElement("input");
+
+  //     temporaryInput.style.position = "absolute";
+  //     temporaryInput.style.top = input.offsetTop + 7 + "px";
+  //     temporaryInput.style.left = input.offsetLeft + "px";
+  //     temporaryInput.style.height = "0";
+  //     temporaryInput.style.opacity = "0";
+  //     document.body.appendChild(temporaryInput);
+  //     temporaryInput.focus();
+
+  //     setTimeout(() => {
+  //       input.focus();
+  //       input.click();
+  //       document.body.removeChild(temporaryInput);
+  //     }, 300);
+  //   }
+  // };
+
+  useEffect(() => {
+    if (searchParams.has(paramForNewPlace)) {
+      const input = document.getElementById(nameInputId) as HTMLInputElement;
+      const temporaryInput = document.createElement("input");
+
+      temporaryInput.style.position = "absolute";
+      temporaryInput.style.top = input.offsetTop + 7 + "px";
+      temporaryInput.style.left = input.offsetLeft + "px";
+      temporaryInput.style.height = "0";
+      temporaryInput.style.opacity = "0";
+      document.body.appendChild(temporaryInput);
+      temporaryInput.focus();
+
+      setTimeout(() => {
+        input.focus();
+        input.click();
+        document.body.removeChild(temporaryInput);
+      }, 300);
+    }
+  }, []);
+
   return (
     <React.Fragment>
       <div className="text-sm font-semibold mb-4">
         <input
+          id={nameInputId}
           type="text"
+          enterKeyHint="done"
           placeholder={"Name"}
           value={name}
           onChange={handleInputChange}
