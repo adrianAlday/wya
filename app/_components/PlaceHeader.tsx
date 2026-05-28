@@ -17,17 +17,6 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
 
   const inputId = "name";
 
-  useEffect(() => {
-    if (searchParams.has(paramForNewPlace)) {
-      const timer = setTimeout(() => {
-        const input = document.getElementById(inputId) as HTMLInputElement;
-        input.select();
-        input.focus();
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, []);
-
   const setUrl = (nameValue: string) => {
     const newUrl = `${pathname}?t=${encodeParam(nameValue)}`;
 
@@ -38,11 +27,27 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     );
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setName(event.target.value);
+  const setNameAndUrl = (value: string) => {
+    setName(value);
 
-    setUrl(event.target.value);
+    setUrl(value);
   };
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameAndUrl(event.target.value);
+  };
+
+  useEffect(() => {
+    (async () => {
+      if (searchParams.has(paramForNewPlace)) {
+        const response = window.prompt("Name?", title);
+
+        if (response !== null) {
+          setNameAndUrl(response);
+        }
+      }
+    })();
+  }, []);
 
   const handleInputKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
