@@ -367,7 +367,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
               id={goButtonId}
               className="absolute bottom-[10px] inset-x-0 mx-auto border-2 border-[rgb(62,127,66)] rounded-md bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-base text-[rgb(255,255,255)] font-normal transition-all duration-80 transition-discrete"
               style={{
-                maxWidth: "min(calc(100dvw - 2*10px), 360px)",
+                maxWidth: "min(calc(100dvw - 2*10px), 440px)",
                 boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.05)",
               }}
             >
