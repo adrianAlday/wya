@@ -254,15 +254,13 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           .maplibregl-ctrl,
           .maplibregl-ctrl-geocoder--input {
             border-radius: 6px;
+            box-shadow: 0 0 0 2px #0000001a;
           }
           .maplibregl-ctrl-geocoder--input:focus {
-            -webkit-appearance: none;
-            appearance: none;
             outline: none;
           }
           .maplibregl-ctrl-geocoder {
             width: calc(100dvw - 29px - 3*10px);
-            border: 2px solid rgb(75,161,236);
           }
           .maplibregl-ctrl-geocoder--input::-webkit-search-cancel-button {
             -webkit-appearance: none;
