@@ -35,14 +35,16 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     );
   };
 
-  const setNameAndUrl = (value: string) => {
+  const setNameUrlAndTitle = (value: string) => {
     setName(value);
 
     setUrl(value);
+
+    document.title = value || subtitle;
   };
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNameAndUrl(event.target.value);
+    setNameUrlAndTitle(event.target.value);
   };
 
   const handleInputKeyDown = (event: React.KeyboardEvent) => {
@@ -81,7 +83,7 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
             <button
               className="absolute right-0 top-1/2 -translate-y-1/2 pr-3 pl-2 py-1 text-xl hover:text-[rgb(74,119,145)]"
               onClick={() => {
-                setNameAndUrl("");
+                setNameUrlAndTitle("");
               }}
             >
               ✕
