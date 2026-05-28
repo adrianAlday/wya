@@ -80,16 +80,19 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   //   }
   // };
 
-  useEffect(() => {
-    if (searchParams.has(paramForNewPlace)) {
-      const input = document.getElementById(nameInputId) as HTMLInputElement;
-      const temporaryInput = document.createElement("input");
+  const hasParamForNewPlace = searchParams.has(paramForNewPlace);
 
-      temporaryInput.style.position = "absolute";
-      temporaryInput.style.top = input.offsetTop + 7 + "px";
-      temporaryInput.style.left = input.offsetLeft + "px";
-      temporaryInput.style.height = "0";
-      temporaryInput.style.opacity = "0";
+  useEffect(() => {
+    const input = document.getElementById(nameInputId) as HTMLInputElement;
+    const temporaryInput = document.createElement("input");
+
+    temporaryInput.style.position = "absolute";
+    temporaryInput.style.top = input.offsetTop + 7 + "px";
+    temporaryInput.style.left = input.offsetLeft + "px";
+    temporaryInput.style.height = "0";
+    temporaryInput.style.opacity = "0";
+
+    if (hasParamForNewPlace) {
       document.body.appendChild(temporaryInput);
       temporaryInput.focus();
 
