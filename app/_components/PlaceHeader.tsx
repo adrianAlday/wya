@@ -15,8 +15,6 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const inputId = "name";
-
   const setUrl = (nameValue: string) => {
     const newUrl = `${pathname}?t=${encodeParam(nameValue)}`;
 
@@ -33,14 +31,10 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     setUrl(value);
   };
 
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setNameAndUrl(event.target.value);
-  };
-
   useEffect(() => {
     (async () => {
       if (searchParams.has(paramForNewPlace)) {
-        const response = window.prompt("Name?", title);
+        const response = window.prompt("Location name?", title);
 
         if (response !== null) {
           setNameAndUrl(response);
@@ -48,6 +42,10 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
       }
     })();
   }, []);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNameAndUrl(event.target.value);
+  };
 
   const handleInputKeyDown = (event: React.KeyboardEvent) => {
     if (event.key === "Enter") {
@@ -67,7 +65,6 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     <React.Fragment>
       <div className="text-sm font-semibold mb-4">
         <input
-          id={inputId}
           type="text"
           placeholder={"Name"}
           value={name}
