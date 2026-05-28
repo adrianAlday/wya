@@ -93,7 +93,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         />
 
         <Button
-          text={"Built with love by Adrian"}
+          text={"Made with love by Adrian"}
           url={"https://github.com/adrianAlday"}
           buttonStyle={ButtonStyles.Tertiary}
         />
