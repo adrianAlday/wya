@@ -273,7 +273,9 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       </style>
 
       <div className={`${loading ? "hidden" : "block"} relative`}>
-        <div id={mapContainerId} className={"h-dvh"} />
+        <form action={"."}>
+          <div id={mapContainerId} className={"h-dvh"} />
+        </form>
 
         {markerCoordinates && (
           <Link
