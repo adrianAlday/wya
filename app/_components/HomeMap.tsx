@@ -33,6 +33,8 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
   const [hasGeolocated, setHasGeolocated] = useState(false);
 
+  const [reverseName, setReverseName] = useState("");
+
   const mapContainerId = "map";
 
   const goButtonId = "go";
@@ -69,13 +71,13 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         const features = [];
 
         try {
-          const geojson = await fetch(
+          const search = await fetch(
             `https://nominatim.openstreetmap.org/search?format=geojson&polygon_geojson=1&addressdetails=1&q=${
               config.query
             }`,
           ).then(async (response) => await response.json());
 
-          for (const feature of geojson.features) {
+          for (const feature of search.features) {
             const center = [
               feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
               feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
@@ -152,6 +154,14 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       draggable: true,
     });
 
+    // const setMarker = async (coordinates: [number, number]) => {
+    //   setMarkerCoordinates(coordinates);
+
+    //   await fetch(
+    //     `https://nominatim.openstreetmap.org/reverse?lat=${}&lon=<value>&<params>`,
+    //   );
+    // };
+
     mapInstance.on("load", () => {
       setLoading(false);
 
@@ -222,6 +232,18 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     },
   );
 
+  useEffect(() => {
+    (async () => {
+      setReverseName(`${roundedLatitude}, ${roundedLongitude}`);
+
+      const reverse = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${roundedLatitude}&lon=${roundedLongitude}`,
+      ).then(async (response) => await response.json());
+
+      setReverseName(reverse.features[0].properties.display_name);
+    })();
+  }, [roundedLatitude, roundedLongitude]);
+
   return (
     <div className="w-dvw">
       <div
@@ -280,7 +302,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
         {markerCoordinates && (
           <Link
-            href={`/${roundedLatitude}/${roundedLongitude}?t=${roundedLatitude}+${roundedLongitude}&${paramForNewPlace}`}
+            href={`/${roundedLatitude}/${roundedLongitude}?t=${reverseName}&${paramForNewPlace}`}
           >
             <button
               id={goButtonId}
