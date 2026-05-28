@@ -34,11 +34,7 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   useEffect(() => {
     (async () => {
       if (searchParams.has(paramForNewPlace)) {
-        const response = window.prompt("Location name?", title);
-
-        if (response !== null) {
-          setNameAndUrl(response);
-        }
+        setNameAndUrl(window.prompt("Location name?", title) || name);
       }
     })();
   }, []);
