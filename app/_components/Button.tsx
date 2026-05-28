@@ -15,9 +15,9 @@ const Button = ({ url, text, buttonStyle }: ButtonProps) => {
   return (
     <Link target="_blank" href={url}>
       <div
-        className={`mt-4 text-xs ${
+        className={`mt-2.5 text-xs ${
           buttonStyle === ButtonStyles.Tertiary
-            ? "text-[#9198a14D] hover:text-[rgb(146,152,160)] active:text-[rgb(89,149,242)] active:underline"
+            ? "text-[rgb(74,74,74)] hover:text-[rgb(146,152,160)] active:text-[rgb(89,149,242)] active:underline"
             : `border border-[#3d444d] rounded-md ${"bg-[#212830] hover:bg-[rgb(39,44,53)] active:bg-[rgb(42,49,59)]"} transition-colors py-1 flex items-center justify-center font-medium`
         }`}
       >
