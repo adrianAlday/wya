@@ -54,21 +54,25 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       <div className="grid grid-cols-4 gap-4">
         <SquareButton
           text={"Apple"}
+          imagePath={"/apple.png"}
           url={`https://maps.apple.com/place?coordinate=${latitude},${longitude}`}
         />
 
         <SquareButton
           text={"Google"}
+          imagePath={"/google.png"}
           url={`https://maps.google.com?q=${latitude},${longitude}`}
         />
 
         <SquareButton
           text={"Waze"}
+          imagePath={"/waze.png"}
           url={`https://ul.waze.com/ul?ll=${latitude},${longitude}`}
         />
 
         <SquareButton
           text={"Windy"}
+          imagePath={"/windy.png"}
           url={`https://www.windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
         />
 
