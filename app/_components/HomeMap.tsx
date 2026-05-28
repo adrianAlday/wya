@@ -252,11 +252,10 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       <style>
         {`
           .maplibregl-ctrl,
-          .maplibregl-ctrl-geocoder--input {
+          .maplibregl-ctrl-geocoder--input,
+          .maplibregl-ctrl-geocoder--input:focus {
             border-radius: 6px;
             box-shadow: 0 0 0 2px #0000001a;
-          }
-          .maplibregl-ctrl-geocoder--input:focus {
             outline: none;
           }
           .maplibregl-ctrl-geocoder {
