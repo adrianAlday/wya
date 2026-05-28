@@ -78,7 +78,11 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
         <ShareButton host={host} />
 
-        <SquareButton text={"Home"} url={`http://${host}`} />
+        <SquareButton
+          text={"Home"}
+          imagePath={"/search.png"}
+          url={`http://${host}`}
+        />
       </div>
 
       <div className="flex justify-between">
