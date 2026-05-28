@@ -110,7 +110,11 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
             features.push(point);
           }
         } catch (error) {
-          console.error(`forwardGeocode Error: ${error}`);
+          if ((error as { name: string }).name === "AbortError") {
+            console.log("Request was canceled");
+          } else {
+            console.error(`forwardGeocode Error: ${error}`);
+          }
         }
 
         return {
@@ -119,7 +123,10 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       },
     } as MaplibreGeocoderApi;
 
-    const setMarker = async (coordinates: [number, number] | null) => {
+    const setMarker = async (
+      coordinates: [number, number] | null,
+      nextDelay = 2,
+    ) => {
       const nextCoordinates = coordinates
         ? (coordinates.map((coordinate) => {
             const places = 5;
@@ -142,12 +149,47 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         reverseAbortController = new AbortController();
         const signal = reverseAbortController.signal;
 
-        const reverse = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=geojson&lat=${nextLatitude}&lon=${nextLongitude}`,
-          { signal },
-        ).then(async (response) => await response.json());
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=geocodejson&lat=${nextLatitude}&lon=${nextLongitude}&extratags=1&namedetails=1&layer=address,poi,natural`,
+            { signal },
+          );
 
-        setReverseName(reverse.features[0].properties.display_name);
+          if (!response.ok) {
+            throw new Error(`${response.status}`);
+          }
+
+          const reverse = await response.json();
+
+          const reverseGeocoding = reverse.features[0].properties.geocoding;
+
+          const constructedLabel = [
+            reverseGeocoding.name,
+            [reverseGeocoding.housenumber, reverseGeocoding.street]
+              .filter(Boolean)
+              .join(" "),
+            reverseGeocoding.city,
+            reverseGeocoding.extra?.opening_hours,
+          ]
+            .filter(Boolean)
+            .join(", ");
+
+          setReverseName(constructedLabel);
+        } catch (error) {
+          if ((error as { name: string }).name === "AbortError") {
+            console.log("Request was canceled");
+          } else if ((error as { message: string }).message === "503") {
+            console.log("Retrying reverseGeocode");
+
+            await new Promise((resolve) =>
+              setTimeout(resolve, nextDelay * 1000),
+            );
+
+            setMarker(coordinates, nextDelay * 2);
+          } else {
+            console.error(`reverseGeocode Error: ${error}`);
+          }
+        }
       } else {
         setReverseName("");
       }
