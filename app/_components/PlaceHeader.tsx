@@ -15,12 +15,12 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const hasParamForNewPlace = searchParams.has(paramForNewPlace);
+  const initiallyHadParamForNewPlace = searchParams.has(paramForNewPlace);
 
   const nameInputId = "name";
 
   useEffect(() => {
-    if (hasParamForNewPlace) {
+    if (initiallyHadParamForNewPlace) {
       document.getElementById(nameInputId)?.focus();
     }
   }, []);
@@ -59,6 +59,8 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     navigator.clipboard.writeText(subtitle.replaceAll(" ", ""));
   };
 
+  const showClearButton = initiallyHadParamForNewPlace && !!name.length;
+
   return (
     <React.Fragment>
       <div className="text-sm font-semibold mb-4">
@@ -72,10 +74,10 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
             onBlur={handleInputBlur}
-            className="border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 pl-3 pr-9 text-base"
+            className={`border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
           />
 
-          {!!name.length && (
+          {showClearButton && (
             <button
               className="absolute right-0 top-1/2 -translate-y-1/2 pr-3 pl-2 py-1 text-xl hover:text-[rgb(74,119,145)]"
               onClick={() => {
