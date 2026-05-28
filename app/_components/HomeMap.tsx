@@ -254,7 +254,8 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         {`
           .maplibregl-ctrl,
           .maplibregl-ctrl-geocoder--input,
-          .maplibregl-ctrl-geocoder--input:focus {
+          .maplibregl-ctrl-geocoder--input:focus,
+          .maplibregl-ctrl-geocoder .suggestions {
             border-radius: 6px;
             box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
             outline: none;
