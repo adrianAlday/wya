@@ -74,12 +74,12 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
             onBlur={handleInputBlur}
-            className={`border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-10" : "px-3"} text-base`}
+            className={`border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
           />
 
           {showClearButton && (
             <button
-              className="absolute right-0 top-1/2 -translate-y-1/2 pr-5 pl-2 py-1 text-xl hover:text-[rgb(74,119,145)]"
+              className="absolute right-0 top-1/2 -translate-y-1/2 pr-3 pl-2 py-1 text-xl hover:text-[rgb(74,119,145)]"
               onClick={() => {
                 setNameAndUrl("");
               }}
