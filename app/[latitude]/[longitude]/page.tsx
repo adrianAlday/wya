@@ -4,6 +4,7 @@ import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
 import PlaceHeader from "@/app/_components/PlaceHeader";
 import { headers } from "next/headers";
+import SquareButton from "@/app/_components/SquareButton";
 import ShareButton from "@/app/_components/ShareButton";
 
 const getTitle = (decodedParams: Params) => {
@@ -50,49 +51,45 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         longitude={longitude as unknown as number}
       />
 
-      <Button
-        text={"Apple"}
-        url={`https://maps.apple.com/place?coordinate=${latitude},${longitude}`}
-        buttonStyle={ButtonStyles.Secondary}
-      />
+      <div className="grid grid-cols-4 gap-4">
+        <SquareButton
+          text={"Apple"}
+          url={`https://maps.apple.com/place?coordinate=${latitude},${longitude}`}
+        />
 
-      <Button
-        text={"Google"}
-        url={`https://maps.google.com?q=${latitude},${longitude}`}
-        buttonStyle={ButtonStyles.Secondary}
-      />
+        <SquareButton
+          text={"Google"}
+          url={`https://maps.google.com?q=${latitude},${longitude}`}
+        />
 
-      <Button
-        text={"Waze"}
-        url={`https://ul.waze.com/ul?ll=${latitude},${longitude}`}
-        buttonStyle={ButtonStyles.Secondary}
-      />
+        <SquareButton
+          text={"Waze"}
+          url={`https://ul.waze.com/ul?ll=${latitude},${longitude}`}
+        />
 
-      <Button
-        text={"Windy"}
-        url={`https://www.windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
-        buttonStyle={ButtonStyles.Secondary}
-      />
+        <SquareButton
+          text={"Windy"}
+          url={`https://www.windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
+        />
 
-      <ShareButton host={host} />
+        <ShareButton host={host} />
 
-      <Button
-        text={"Home"}
-        url={`http://${host}`}
-        buttonStyle={ButtonStyles.Secondary}
-      />
+        <SquareButton text={"Home"} url={`http://${host}`} />
+      </div>
 
-      <Button
-        text={"Tiles from OpenFreeMap"}
-        url={"https://openfreemap.org/quick_start"}
-        buttonStyle={ButtonStyles.Tertiary}
-      />
+      <div className="flex justify-between">
+        <Button
+          text={"Tiles from OpenFreeMap"}
+          url={"https://openfreemap.org/quick_start"}
+          buttonStyle={ButtonStyles.Tertiary}
+        />
 
-      <Button
-        text={"Built by Adrian"}
-        url={"https://github.com/adrianAlday"}
-        buttonStyle={ButtonStyles.Tertiary}
-      />
+        <Button
+          text={"Built with love by Adrian"}
+          url={"https://github.com/adrianAlday"}
+          buttonStyle={ButtonStyles.Tertiary}
+        />
+      </div>
     </div>
   );
 };

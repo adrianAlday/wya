@@ -63,7 +63,7 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
 
   return (
     <React.Fragment>
-      <div className="text-sm font-semibold mb-4">
+      <div className="font-semibold">
         <div className="relative">
           <input
             id={nameInputId}
@@ -74,12 +74,16 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
             onBlur={handleInputBlur}
-            className={`border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
+            className={`border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px w-full py-2 ${showClearButton ? "pl-5 pr-10" : "px-5"} text-base`}
+            style={{
+              borderRadius:
+                "calc( ( min( (600px - 2*4*4px), (100dvw - 2*4*4px) ) - 3*16px) * 0.25 * 0.225 )",
+            }}
           />
 
           {showClearButton && (
             <button
-              className="absolute right-0 top-1/2 -translate-y-1/2 pr-3 pl-2 py-1 text-xl hover:text-[rgb(74,119,145)]"
+              className="absolute right-0 top-1/2 -translate-y-1/2 pr-5 pl-2 py-1 text-xl hover:text-[rgb(74,119,145)]"
               onClick={() => {
                 setNameAndUrl("");
               }}
@@ -89,7 +93,7 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
           )}
         </div>
 
-        <div className="mt-2 px-3 text-[#9198a1] hover:text-[#f0f6fc] active:text-[#ab7df8]">
+        <div className="py-2 px-5 text-sm text-[#9198a1] hover:text-[#f0f6fc] active:text-[#ab7df8]">
           <button onClick={handleSubtitleClick} className="cursor-pointer">
             {subtitle}
           </button>

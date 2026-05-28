@@ -1,0 +1,20 @@
+import Link from "next/link";
+
+type SquareButtonProps = {
+  url: string | object;
+  text: string;
+};
+
+const SquareButton = ({ url, text }: SquareButtonProps) => {
+  return (
+    <Link target="_blank" href={url}>
+      <div
+        className={`text-base border border-[#3d444d] rounded-[22.5%] ${"bg-[#212830] hover:bg-[rgb(39,44,53)] active:bg-[rgb(42,49,59)]"} aspect-square transition-colors py-1 flex items-center justify-center font-medium`}
+      >
+        <div className="text-center">{text}</div>
+      </div>
+    </Link>
+  );
+};
+
+export default SquareButton;

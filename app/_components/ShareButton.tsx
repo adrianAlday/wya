@@ -7,7 +7,7 @@ const ShareButton = ({ host }: ShareButtonProps) => {
     typeof window === "undefined" ? host : window.location.href;
 
   return (
-    <div className="my-4">
+    <div>
       <button
         onClick={async () => {
           const url = getUrl();
@@ -24,9 +24,9 @@ const ShareButton = ({ host }: ShareButtonProps) => {
         className="cursor-pointer w-full"
       >
         <div
-          className={`border border-[#3d444d] rounded-md text-xs bg-[#212830] hover:bg-[rgb(39,44,53)] active:bg-[rgb(42,49,59)] transition-colors py-1 flex items-center justify-center font-medium`}
+          className={`text-base border border-[#3d444d] rounded-[22.5%] ${"bg-[#212830] hover:bg-[rgb(39,44,53)] active:bg-[rgb(42,49,59)]"} aspect-square transition-colors py-1 flex items-center justify-center font-medium`}
         >
-          <div>Share</div>
+          <div>{"Share"}</div>
         </div>
       </button>
     </div>
