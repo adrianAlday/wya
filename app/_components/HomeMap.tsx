@@ -341,8 +341,10 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
             box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
             outline: none;
           }
+          .maplibregl-ctrl-top-left, 
           .maplibregl-ctrl-geocoder {
             width: calc(100dvw - 29px - 3*10px);
+            max-width: 720px;
           }
           .maplibregl-ctrl-geocoder--input::-webkit-search-cancel-button {
             -webkit-appearance: none;
