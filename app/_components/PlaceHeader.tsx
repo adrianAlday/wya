@@ -21,6 +21,7 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     if (searchParams.has(paramForNewPlace)) {
       const input = document.getElementById(inputId) as HTMLInputElement;
       input.click();
+      input.select();
     }
   }, []);
 
