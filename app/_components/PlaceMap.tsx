@@ -92,9 +92,10 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     <div className="relative">
       <div
         id={mapContainerId}
-        className="mb-4 h-lvw rounded-md"
+        className="mb-4 rounded-md"
         style={{
-          height: "calc(100dvw - 2*4*4px)",
+          height:
+            "calc( 100dvh - 2*4*4px - 70px - 48px - (( min((100dvw - 2*4*4px), (600px - 2*4*4px)) - 3*4*4px ) / 4 * 2 + 4*4px ) )",
           maxHeight: 600 - 2 * 4 * 4,
         }}
       />
