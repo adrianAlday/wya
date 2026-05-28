@@ -43,7 +43,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const host = resolvedHeaders.get("host") as string;
 
   return (
-    <div className="w-dvw max-w-[600px] p-4">
+    <div className="w-dvw max-w-[600px] p-4 overflow-y-hidden">
       <PlaceHeader title={title} subtitle={subtitle} />
 
       <PlaceMap
