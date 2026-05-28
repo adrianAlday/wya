@@ -17,7 +17,7 @@ const SquareButton = ({
   return (
     <Link target="_blank" href={url}>
       <div
-        className={`text-base border border-[#3d444d] rounded-[22.5%] ${"bg-[#212830] hover:bg-[rgb(39,44,53)] active:bg-[rgb(42,49,59)]"} aspect-square transition-colors py-1 flex items-center justify-center font-medium relative`}
+        className={"rounded-[22.5%] bg-[rgb(74,74,74)] aspect-square relative"}
       >
         {imagePath ? (
           <Image

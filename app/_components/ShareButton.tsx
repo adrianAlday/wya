@@ -26,7 +26,9 @@ const ShareButton = ({ host }: ShareButtonProps) => {
         className="cursor-pointer w-full"
       >
         <div
-          className={`text-base border border-[#3d444d] rounded-[22.5%] ${"bg-[#212830] hover:bg-[rgb(39,44,53)] active:bg-[rgb(42,49,59)]"} aspect-square transition-colors py-1 flex items-center justify-center font-medium relative`}
+          className={
+            "rounded-[22.5%] bg-[rgb(74,74,74)] aspect-square relative"
+          }
         >
           <Image
             src={"/share.png"}
