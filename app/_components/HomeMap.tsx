@@ -149,6 +149,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
     const marker = new Marker({
       element,
+      draggable: true,
     });
 
     mapInstance.on("load", () => {
