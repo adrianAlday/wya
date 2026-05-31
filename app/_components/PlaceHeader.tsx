@@ -4,11 +4,13 @@ import React, { useEffect, useState } from "react";
 import { encodeParam } from "../_utils/url";
 import { usePathname, useSearchParams } from "next/navigation";
 import { paramForNewPlace } from "./HomeMap";
+import { useToast } from "./ToastContext";
 
 type PlaceHeaderProps = {
   title: string;
   subtitle: string;
 };
+
 const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   const [name, setName] = useState(title);
 
@@ -53,12 +55,18 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     }
   };
 
+  const { addToast } = useToast();
+
   const handleInputBlur = () => {
     setUrl(name);
+
+    addToast({ title: "Title saved", subtitle: name });
   };
 
   const handleSubtitleClick = () => {
     navigator.clipboard.writeText(subtitle.replaceAll(" ", ""));
+
+    addToast({ title: "Coordinates copied", subtitle: subtitle });
   };
 
   const showClearButton = initiallyHadParamForNewPlace && !!name.length;

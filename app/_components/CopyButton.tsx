@@ -1,25 +1,25 @@
 "use client";
 
 import Image from "next/image";
+import { useToast } from "./ToastContext";
 
-type ShareButtonProps = { host: string };
+type CopyButtonProps = { host: string };
 
-const ShareButton = ({ host }: ShareButtonProps) => {
+const CopyButton = ({ host }: CopyButtonProps) => {
   const getUrl = () =>
     typeof window === "undefined" ? host : window.location.href;
+
+  const { addToast } = useToast();
 
   return (
     <div>
       <button
         onClick={async () => {
           const url = getUrl();
-          const title = new URL(url)?.searchParams.get("t") || url;
 
-          try {
-            await navigator.share({ url, title });
-          } catch (error: unknown) {
-            console.log(error);
-          }
+          navigator.clipboard.writeText(url);
+
+          addToast({ title: "Link copied", subtitle: url });
         }}
         className="cursor-pointer w-full"
       >
@@ -29,8 +29,8 @@ const ShareButton = ({ host }: ShareButtonProps) => {
           }
         >
           <Image
-            src={"/share.png"}
-            alt={"Share"}
+            src={"/copy.png"}
+            alt={"Copy"}
             fill
             className={"rounded-[22.5%]"}
           />
@@ -40,4 +40,4 @@ const ShareButton = ({ host }: ShareButtonProps) => {
   );
 };
 
-export default ShareButton;
+export default CopyButton;

@@ -6,6 +6,8 @@ import PlaceHeader from "@/app/_components/PlaceHeader";
 import { headers } from "next/headers";
 import SquareButton from "@/app/_components/SquareButton";
 import ShareButton from "@/app/_components/ShareButton";
+import { pageMaxWidthClass } from "@/app/_utils/styling";
+import CopyButton from "@/app/_components/CopyButton";
 
 const getTitle = (decodedParams: Params) => {
   return (decodedParams.t ||
@@ -43,7 +45,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const host = resolvedHeaders.get("host") as string;
 
   return (
-    <div className="w-dvw max-w-[600px] p-4">
+    <div className={`w-dvw ${pageMaxWidthClass} p-4 relative`}>
       <PlaceHeader title={title} subtitle={subtitle} />
 
       <PlaceMap
@@ -77,6 +79,8 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         />
 
         <ShareButton host={host} />
+
+        <CopyButton host={host} />
 
         <SquareButton
           text={"Home"}
