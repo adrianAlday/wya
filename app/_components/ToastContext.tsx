@@ -36,6 +36,7 @@ export const ToastProvider = ({ children }: ToastProvideProps) => {
   const pageIsFullWidth = ["/"].includes(pathname);
 
   const transitionDuration = 350;
+  const wholeTransitionDurationClass = `duration-${transitionDuration}`;
 
   const addToast = useCallback(({ title, subtitle, type }: AddToastParam) => {
     const id = `toast-${Date.now()}`;
@@ -70,7 +71,7 @@ export const ToastProvider = ({ children }: ToastProvideProps) => {
         <div
           key={toast.id}
           id={toast.id}
-          className={`absolute top-0 z-50 w-dvw ${pageIsFullWidth ? "" : pageMaxWidthClass} bg-[#151b23] pt-2 px-2 translate-y-[calc(-100%)] opacity-0 invisible transition-all duration-${transitionDuration} ease-out open:translate-y-0 open:opacity-100 open:visible`}
+          className={`absolute top-0 z-50 w-dvw ${pageIsFullWidth ? "" : pageMaxWidthClass} bg-[#151b23] pt-2 px-2 translate-y-[calc(-100%)] opacity-0 invisible transition-all ${wholeTransitionDurationClass} ease-out open:translate-y-0 open:opacity-100 open:visible`}
         >
           <div className="border border-[#3d444d] rounded-md px-2 py-2 flex">
             <div
