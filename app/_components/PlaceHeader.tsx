@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { encodeParam } from "../_utils/url";
 import { usePathname, useSearchParams } from "next/navigation";
 import { paramForNewPlace } from "./HomeMap";
 import { useToast } from "./ToastContext";
+import { useKeyboardOpen } from "../_utils/useKeyboardOpen";
 
 type PlaceHeaderProps = {
   title: string;
@@ -55,13 +56,29 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     }
   };
 
+  const { isKeyboardOpen, hasKeyboardOpened } = useKeyboardOpen();
+
   const { addToast } = useToast();
 
-  const handleInputBlur = () => {
+  const handleDoneWithInput = () => {
     setUrl(name);
 
     addToast({ title: "Title saved", subtitle: name });
   };
+
+  const isFirstRender = useRef(true);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+
+      return;
+    }
+
+    if (!isKeyboardOpen) {
+      handleDoneWithInput();
+    }
+  }, [isKeyboardOpen]);
 
   const handleSubtitleClick = () => {
     navigator.clipboard.writeText(subtitle.replaceAll(" ", ""));
@@ -83,7 +100,11 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
             value={name}
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
-            onBlur={handleInputBlur}
+            onBlur={() => {
+              if (!hasKeyboardOpened) {
+                handleDoneWithInput();
+              }
+            }}
             className={`border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
           />
 

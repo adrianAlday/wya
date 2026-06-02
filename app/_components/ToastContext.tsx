@@ -60,7 +60,7 @@ export const ToastProvider = ({ children }: ToastProvideProps) => {
           );
         }, transitionDuration);
       }, 1000);
-    }, 10);
+    }, 20);
   }, []);
 
   return (
