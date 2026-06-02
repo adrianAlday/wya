@@ -12,7 +12,7 @@ import MaplibreGeocoder, {
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import Link from "next/link";
-import { zoom, speed, essential } from "../_utils/map";
+import { zoom, speed, minZoom, essential } from "../_utils/map";
 
 type HomeMapProps = {
   latitude: number;
@@ -52,6 +52,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       container: mapContainerId,
       center: [longitude, latitude],
       zoom: geoZoom,
+      minZoom,
       attributionControl: false,
     });
 
@@ -63,8 +64,6 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
     mapInstance.setMaxPitch(0);
     mapInstance.touchPitch.disable();
-
-    mapInstance.setRenderWorldCopies(true);
 
     let searchAbortController: AbortController;
     let reverseAbortController: AbortController;
@@ -243,6 +242,10 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
     mapInstance.on("load", () => {
       setLoading(false);
+
+      mapInstance.setProjection({
+        type: "globe",
+      });
 
       geolocateControl.trigger();
     });

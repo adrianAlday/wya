@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { speed, zoom, essential } from "../_utils/map";
+import { speed, zoom, minZoom, essential } from "../_utils/map";
 
 type PlaceMapProps = {
   latitude: number;
@@ -27,6 +27,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     const mapInstance = new maplibreGl.Map({
       container: mapContainerId,
       ...initialPosition,
+      minZoom,
       attributionControl: false,
     });
 
@@ -56,7 +57,11 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     mapInstance.setMaxPitch(0);
     mapInstance.touchPitch.disable();
 
-    mapInstance.setRenderWorldCopies(true);
+    mapInstance.on("load", () => {
+      mapInstance.setProjection({
+        type: "globe",
+      });
+    });
 
     const markerSize = 36;
     const element = document.createElement("div");
