@@ -52,11 +52,12 @@ export const generateMetadata = async ({
     title,
     openGraph: {
       title,
+      description: title,
       images: [
         {
           url: `http://tile.openstreetmap.org/${z}/${x}/${y}.png`,
-          width: 256,
-          height: 256,
+          width: 630,
+          height: 630,
         },
       ],
     },
