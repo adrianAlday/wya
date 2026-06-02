@@ -17,6 +17,25 @@ const getSubtitle = (decodedParams: Params) => {
   return `${decodedParams.latitude}, ${decodedParams.longitude}` as string;
 };
 
+function getTileNumbers(latitude: number, longitude: number, zoom: number) {
+  const sideTiles = Math.pow(2, zoom);
+  const latitudeRadians = (latitude * Math.PI) / 180;
+
+  const x = Math.floor(((longitude + 180) / 360) * sideTiles);
+
+  const y = Math.floor(
+    ((1 -
+      Math.log(Math.tan(latitudeRadians) + 1 / Math.cos(latitudeRadians)) /
+        Math.PI) /
+      2) *
+      sideTiles,
+  );
+
+  const z = zoom;
+
+  return { x, y, z };
+}
+
 export const generateMetadata = async ({
   params,
   searchParams,
@@ -24,8 +43,23 @@ export const generateMetadata = async ({
   const resolvedParams = { ...(await params), ...(await searchParams) };
   const decodedParams = decodeParams(resolvedParams);
 
+  const title = getTitle(decodedParams);
+
+  const { latitude, longitude } = decodedParams;
+  const { x, y, z } = getTileNumbers(Number(latitude), Number(longitude), 15);
+
   return {
-    title: getTitle(decodedParams),
+    title,
+    openGraph: {
+      title,
+      images: [
+        {
+          url: `http://tile.openstreetmap.org/${z}/${x}/${y}.png`,
+          width: 256,
+          height: 256,
+        },
+      ],
+    },
   };
 };
 
@@ -33,6 +67,7 @@ type PlacePageProps = {
   params: Promise<Params>;
   searchParams: Promise<Params>;
 };
+
 const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const resolvedParams = { ...(await params), ...(await searchParams) };
   const decodedParams = decodeParams(resolvedParams);
