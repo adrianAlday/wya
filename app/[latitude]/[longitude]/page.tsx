@@ -71,12 +71,6 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         <SquareButton
           text={"Waze"}
           imagePath={"/waze.png"}
-          url={`https://ul.waze.com/ul?ll=${latitude},${longitude}&navigate=yes`}
-        />
-
-        <SquareButton
-          text={"Waze"}
-          imagePath={"/waze.png"}
           url={`https://ul.waze.com/ul?ll=${latitude},${longitude}`}
         />
 
