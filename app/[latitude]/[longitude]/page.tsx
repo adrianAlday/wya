@@ -89,6 +89,12 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
           imagePath={"/search.png"}
           url={`http://${host}`}
         />
+
+        <SquareButton
+          text={"Messages"}
+          imagePath={"/messages.png"}
+          url={`sms:${process.env.NEXT_PUBLIC_COMMENT_BOX}&body=${"wya map, i have thoughts: ".replaceAll(" ", "%20")}`}
+        />
       </div>
 
       <div className="flex justify-between">
