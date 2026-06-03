@@ -80,7 +80,15 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         const signal = searchAbortController.signal;
 
         try {
-          const search = await fetch(`/api/search?query=${config.query}`, {
+          const { lat, lng } = mapInstance.getCenter();
+
+          const search = await fetch("/api/search", {
+            method: "POST",
+            body: JSON.stringify({
+              latitude: lat,
+              longitude: lng,
+              query: config.query,
+            }),
             signal,
           }).then(async (response) => await response.json());
 
