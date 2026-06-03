@@ -1,4 +1,3 @@
-import axios from "axios";
 import { headers } from "next/headers";
 import SandboxMap from "../_components/SandboxMap";
 
@@ -6,11 +5,10 @@ const DataWrapper = async () => {
   const resolvedHeaders = await headers();
   const host = resolvedHeaders.get("host");
 
-  const response = await axios
-    .get(`http://${host}/api/geo`)
-    .then((response) => response.data)
-    .catch(async (error) => {
-      console.log(error);
+  const response = await fetch(`http://${host}/api/geo`)
+    .then(async (response) => await response.json())
+    .catch((error) => {
+      console.error(`Geocode Error: ${error}`);
     });
 
   console.log(response);
