@@ -6,7 +6,7 @@ const DataWrapper = async () => {
   const resolvedHeaders = await headers();
   const host = resolvedHeaders.get("host");
 
-  const response = await fetch(`http://${host}/api/geo`)
+  const response = await fetch(`http://${host}/api/geolocate`)
     .then(async (response) => await response.json())
     .catch((error) => {
       console.error(`Geocode Error: ${error}`);
