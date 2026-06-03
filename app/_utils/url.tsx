@@ -15,4 +15,4 @@ export const decodeParams = (resolvedParams: Params) =>
   );
 
 export const encodeParam = (value: string) =>
-  encodeURIComponent(value).replace(/%20/g, "+");
+  encodeURIComponent(value).replace(/%20/g, "+").replace(/%2C/g, ",");
