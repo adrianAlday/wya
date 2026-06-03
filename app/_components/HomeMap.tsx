@@ -80,30 +80,32 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
         const signal = searchAbortController.signal;
 
         try {
-          const search = await fetch(
-            `https://nominatim.openstreetmap.org/search?format=geojson&polygon_geojson=1&addressdetails=1&q=${
-              config.query
-            }`,
-            { signal },
-          ).then(async (response) => await response.json());
+          const search = await fetch(`/api/search?query=${config.query}`, {
+            signal,
+          }).then(async (response) => await response.json());
 
-          for (const feature of search.features) {
-            const center = [
-              feature.bbox[0] + (feature.bbox[2] - feature.bbox[0]) / 2,
-              feature.bbox[1] + (feature.bbox[3] - feature.bbox[1]) / 2,
-            ];
+          for (const { place } of search.mapsResult) {
+            const idCenter = place.mapsId.shardedId.center;
+            const center = [idCenter.lng, idCenter.lat];
+
+            const { component } = place;
+            const { name } = component.find(
+              (component: { type: string }) =>
+                component.type === "COMPONENT_TYPE_RESULT_SNIPPET",
+            ).value[0].resultSnippet;
+            const { shortAddress } = component.find(
+              (component: { type: string }) =>
+                component.type === "COMPONENT_TYPE_ADDRESS_OBJECT",
+            ).value[0].addressObject;
+            const placeName = [name, shortAddress].join(", ");
 
             const point = {
-              type: "Feature",
+              center,
               geometry: {
                 type: "Point",
                 coordinates: center,
               },
-              place_name: feature.properties.display_name,
-              properties: feature.properties,
-              text: feature.properties.display_name,
-              place_type: ["place"],
-              center,
+              place_name: placeName,
             };
 
             features.push(point);
@@ -116,9 +118,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           }
         }
 
-        return {
-          features,
-        };
+        return { features };
       },
     } as MaplibreGeocoderApi;
 
