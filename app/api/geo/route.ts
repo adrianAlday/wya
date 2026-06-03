@@ -1,7 +1,8 @@
 import { isDev } from "@/app/_utils/isDev";
 import { geolocation } from "@vercel/functions";
+import { NextRequest, NextResponse } from "next/server";
 
-export const GET = (request: Request) => {
+export const GET = (request: NextRequest) => {
   const details = isDev
     ? {
         city: "Alexandria",
@@ -15,5 +16,5 @@ export const GET = (request: Request) => {
       }
     : geolocation(request);
 
-  return Response.json(details);
+  return NextResponse.json(details);
 };
