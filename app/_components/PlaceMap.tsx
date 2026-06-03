@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { speed, zoom, minZoom, essential } from "../_utils/map";
+import MeasuresControl from "maplibre-gl-measures";
 
 type PlaceMapProps = {
   latitude: number;
@@ -90,6 +91,57 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       mapInstance.once("move", () => {
         recenterButton.style.display = "none";
       });
+    });
+
+    const measureDistanceTitle = "Measure Distance";
+    const measureAreaTitle = "Measure Area";
+    const clearMeasurementsTitle = "Clear measurements";
+
+    mapInstance.addControl(
+      new MeasuresControl({
+        lang: {
+          lengthMeasurementButtonTitle: measureDistanceTitle,
+          areaMeasurementButtonTitle: measureAreaTitle,
+          clearMeasurementsButtonTitle: clearMeasurementsTitle,
+        },
+        showOnlyTotalLineLength: true,
+        style: {
+          text: { font: "-apple-system", color: "rgb(0,0,0)" },
+          common: {
+            midPointColor: "rgb(0,0,0)",
+          },
+          lengthMeasurement: {
+            lineColor: "rgb(0,0,0)",
+          },
+        },
+      }),
+      "bottom-right",
+    );
+
+    const measureDistance = document.querySelector(
+      `[title="${measureDistanceTitle}"]`,
+    ) as HTMLButtonElement;
+    const measureArea = document.querySelector(
+      `[title="${measureAreaTitle}"]`,
+    ) as HTMLButtonElement;
+    const clearMeasurements = document.querySelector(
+      `[title="${clearMeasurementsTitle}"]`,
+    ) as HTMLButtonElement;
+
+    const borderRadius = "6px";
+    measureDistance.style.borderRadius = borderRadius;
+    clearMeasurements.style.borderRadius = borderRadius;
+
+    measureArea.style.display = "none";
+    clearMeasurements.style.display = "none";
+
+    measureDistance.addEventListener("click", () => {
+      measureDistance.style.display = "none";
+      clearMeasurements.style.display = "block";
+    });
+    clearMeasurements.addEventListener("click", () => {
+      clearMeasurements.style.display = "none";
+      measureDistance.style.display = "block";
     });
   }, [latitude, longitude]);
 
