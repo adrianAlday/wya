@@ -93,7 +93,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         <SquareButton
           text={"Messages"}
           imagePath={"/messages.png"}
-          url={`sms:${process.env.NEXT_PUBLIC_COMMENT_BOX}&body=${"wya map, i have thoughts: ".replaceAll(" ", "%20")}`}
+          url={`sms:${process.env.NEXT_PUBLIC_COMMENT_BOX}&body=${"wya maps, i have thoughts: ".replaceAll(" ", "%20")}`}
         />
       </div>
 
