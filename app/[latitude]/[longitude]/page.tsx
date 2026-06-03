@@ -99,7 +99,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
       <div className="flex justify-between">
         <Button
-          text={"Tiles from OpenFreeMap"}
+          text={"Vector tiles from OpenFreeMap"}
           url={"https://openfreemap.org/quick_start"}
           buttonStyle={ButtonStyles.Tertiary}
         />
