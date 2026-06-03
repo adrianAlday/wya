@@ -98,15 +98,17 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
             const center = [idCenter.lng, idCenter.lat];
 
             const { component } = place;
-            const { name } = component.find(
+            const name = component.find(
               (component: { type: string }) =>
                 component.type === "COMPONENT_TYPE_RESULT_SNIPPET",
-            ).value[0].resultSnippet;
-            const { shortAddress } = component.find(
+            ).value?.[0].resultSnippet.name;
+            const shortAddress = component.find(
               (component: { type: string }) =>
                 component.type === "COMPONENT_TYPE_ADDRESS_OBJECT",
-            ).value[0].addressObject;
-            const placeName = [name, shortAddress].join(", ");
+            ).value?.[0].addressObject.shortAddress;
+            const placeName = [name, shortAddress]
+              .filter((value) => ![undefined, null, ""].includes(value))
+              .join(", ");
 
             const point = {
               center,
