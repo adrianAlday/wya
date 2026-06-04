@@ -61,3 +61,5 @@ export default HomePage;
 // reverse geocode and get hours from apple maps?
 // cleanup components
 // rename to route to geoip
+// loader at top instead of centered
+// toasts on right edge if full width
