@@ -2,7 +2,11 @@ import { headers } from "next/headers";
 import HomeMap from "./_components/HomeMap";
 import { Metadata } from "next";
 
-const DataWrapper = async () => {
+export const metadata: Metadata = {
+  title: "wya maps",
+};
+
+const HomePage = async () => {
   const resolvedHeaders = await headers();
   const host = resolvedHeaders.get("host");
 
@@ -14,18 +18,12 @@ const DataWrapper = async () => {
 
   const { latitude, longitude } = response;
 
-  return <HomeMap latitude={latitude} longitude={longitude} geoZoom={5} />;
+  return (
+    <main>
+      <HomeMap latitude={latitude} longitude={longitude} geoZoom={5} />;
+    </main>
+  );
 };
-
-export const metadata: Metadata = {
-  title: "wya maps",
-};
-
-const HomePage = async () => (
-  <main>
-    <DataWrapper />
-  </main>
-);
 
 export default HomePage;
 
