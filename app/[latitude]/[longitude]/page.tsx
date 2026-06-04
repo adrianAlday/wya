@@ -1,4 +1,4 @@
-import Button, { ButtonStyles } from "@/app/_components/Button";
+import FooterButton from "@/app/_components/FooterButton";
 import PlaceMap from "@/app/_components/PlaceMap";
 import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
@@ -98,16 +98,14 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       </div>
 
       <div className="flex justify-between">
-        <Button
+        <FooterButton
           text={"Vector tiles from OpenFreeMap"}
           url={"https://openfreemap.org/quick_start"}
-          buttonStyle={ButtonStyles.Tertiary}
         />
 
-        <Button
+        <FooterButton
           text={"Made with love by Adrian"}
           url={"https://github.com/adrianAlday/wya"}
-          buttonStyle={ButtonStyles.Tertiary}
         />
       </div>
     </div>

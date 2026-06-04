@@ -59,3 +59,4 @@ export default HomePage;
 // get apple symbols
 // change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
+// cleanup components
