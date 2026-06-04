@@ -12,8 +12,9 @@ import MaplibreGeocoder, {
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import Link from "next/link";
-import { zoom, speed, minZoom, essential } from "../_utils/map";
+import { zoom, speed, minZoom, maxZoom, essential } from "../_utils/map";
 import { isStandalone } from "../_utils/isStandalone";
+import { isDev } from "../_utils/isDev";
 
 type HomeMapProps = {
   latitude: number;
@@ -54,7 +55,9 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       center: [longitude, latitude],
       zoom: geoZoom,
       minZoom,
+      maxZoom,
       attributionControl: false,
+      ...(isDev ? { hash: true } : {}),
     });
 
     mapInstance.setStyle("https://tiles.openfreemap.org/styles/bright");

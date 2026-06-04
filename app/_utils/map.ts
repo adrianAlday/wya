@@ -4,4 +4,6 @@ export const zoom = 16;
 
 export const minZoom = 1;
 
+export const maxZoom = 18;
+
 export const essential = true;
