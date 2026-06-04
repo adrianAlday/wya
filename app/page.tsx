@@ -60,3 +60,4 @@ export default HomePage;
 // change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
 // cleanup components
+// rename to route to geoip
