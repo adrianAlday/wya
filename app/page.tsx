@@ -64,3 +64,5 @@ export default HomePage;
 // loader at top instead of centered
 // toasts on right edge if full width
 // about page
+// share preview image, try setting only url? on prod?
+// remove hexcodes

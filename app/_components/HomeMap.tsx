@@ -15,6 +15,7 @@ import Link from "next/link";
 import { zoom, speed, minZoom, maxZoom, essential } from "../_utils/map";
 import { isStandalone } from "../_utils/isStandalone";
 import { isDev } from "../_utils/isDev";
+import { goButtonMaxWidthStyle } from "../_utils/styling";
 
 type HomeMapProps = {
   latitude: number;
@@ -28,7 +29,6 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
 
   const initialMarkerCoordinates = null;
-
   const [markerCoordinates, setMarkerCoordinates] = useState<
     null | [number, number]
   >(initialMarkerCoordinates);
@@ -38,10 +38,8 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
   const [reverseName, setReverseName] = useState("");
 
   const mapContainerId = "map";
-
   const goButtonId = "go";
-
-  const emptyButton = "empty";
+  const emptyButtonId = "empty";
 
   useEffect(() => {
     const getById = (id: string) => document.getElementById(id) as HTMLElement;
@@ -292,14 +290,14 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       )[0] as HTMLInputElement
     ).addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
-        getById(emptyButton).focus();
+        getById(emptyButtonId).focus();
       }
     });
 
     geocoder.on("result", (event) => {
       const [lng, lat] = event.result.center as [number, number];
 
-      getById(emptyButton).focus();
+      getById(emptyButtonId).focus();
 
       setMarker([lat, lng]);
     });
@@ -321,7 +319,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       geocoder.clear();
 
-      getById(emptyButton).focus();
+      getById(emptyButtonId).focus();
 
       marker.setLngLat([lng, lat]).addTo(mapInstance);
 
@@ -402,7 +400,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
               id={goButtonId}
               className={`absolute ${isStandalone() ? "bottom-[36px]" : "bottom-[10px]"} inset-x-0 mx-auto border-2 border-[rgb(62,127,66)] rounded-md overflow-hidden bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-base text-[rgb(255,255,255)] font-normal transition-all duration-80 transition-discrete`}
               style={{
-                maxWidth: "min(calc(100dvw - 2*10px), 440px)",
+                ...goButtonMaxWidthStyle,
                 boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.05)",
               }}
             >
@@ -413,7 +411,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
           </Link>
         )}
 
-        <button id={emptyButton} className="absolute top-0" />
+        <button id={emptyButtonId} className="absolute top-0" />
       </div>
     </div>
   );

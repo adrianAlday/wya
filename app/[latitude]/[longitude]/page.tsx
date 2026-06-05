@@ -1,13 +1,12 @@
-import FooterButton from "@/app/_components/FooterButton";
+import FooterLink from "@/app/_components/FooterLink";
 import PlaceMap from "@/app/_components/PlaceMap";
 import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
 import PlaceHeader from "@/app/_components/PlaceHeader";
 import { headers } from "next/headers";
-import SquareButton from "@/app/_components/SquareButton";
-import ShareButton from "@/app/_components/ShareButton";
-import { pageMaxWidthClass } from "@/app/_utils/styling";
-import CopyButton from "@/app/_components/CopyButton";
+import SquircleLink from "@/app/_components/SquircleLink";
+import ShareButtons from "@/app/_components/ShareButtons";
+import { placePageMaxWidthStyle } from "@/app/_utils/styling";
 
 const getTitle = (decodedParams: Params) => {
   return (decodedParams.t ||
@@ -47,7 +46,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const host = resolvedHeaders.get("host") as string;
 
   return (
-    <div className={`w-dvw ${pageMaxWidthClass} p-4 relative`}>
+    <div className={"w-dvw p-4 relative"} style={{ ...placePageMaxWidthStyle }}>
       <PlaceHeader title={title} subtitle={subtitle} />
 
       <PlaceMap
@@ -56,55 +55,53 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       />
 
       <div className="grid grid-cols-4 gap-4">
-        <SquareButton
-          text={"Apple"}
-          imagePath={"/apple.png"}
+        <SquircleLink
           url={`https://maps.apple.com/place?coordinate=${latitude},${longitude}`}
+          imagePath={"/apple.png"}
+          imageAltText={"Apple"}
         />
 
-        <SquareButton
-          text={"Google"}
-          imagePath={"/google.png"}
+        <SquircleLink
           url={`https://maps.google.com?q=${latitude},${longitude}`}
+          imagePath={"/google.png"}
+          imageAltText={"Google"}
         />
 
-        <SquareButton
-          text={"Waze"}
-          imagePath={"/waze.png"}
+        <SquircleLink
           url={`https://ul.waze.com/ul?ll=${latitude},${longitude}`}
+          imagePath={"/waze.png"}
+          imageAltText={"Waze"}
         />
 
-        <SquareButton
-          text={"Windy"}
-          imagePath={"/windy.png"}
+        <SquircleLink
           url={`https://www.windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
+          imagePath={"/windy.png"}
+          imageAltText={"Windy"}
         />
 
-        <ShareButton host={host} />
+        <ShareButtons host={host} />
 
-        <CopyButton host={host} />
-
-        <SquareButton
-          text={"Home"}
-          imagePath={"/plus.png"}
-          imageClassNames={"p-8"}
+        <SquircleLink
           url={`http://${host}`}
+          imagePath={"/plus.png"}
+          imageAltText={"Home"}
+          imageClasses={"p-8"}
         />
 
-        <SquareButton
-          text={"Messages"}
-          imagePath={"/messages.png"}
+        <SquircleLink
           url={`sms:${process.env.NEXT_PUBLIC_COMMENT_BOX}&body=${"wya maps, i have thoughts: ".replaceAll(" ", "%20")}`}
+          imagePath={"/messages.png"}
+          imageAltText={"Messages"}
         />
       </div>
 
       <div className="flex justify-between">
-        <FooterButton
+        <FooterLink
           text={"Vector tiles from OpenFreeMap"}
           url={"https://openfreemap.org/quick_start"}
         />
 
-        <FooterButton
+        <FooterLink
           text={"Made with love by Adrian"}
           url={"https://github.com/adrianAlday/wya"}
         />
