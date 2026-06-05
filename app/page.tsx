@@ -45,24 +45,22 @@ export default HomePage;
 //   "Zǒuba",
 // ];
 // real modal for title
-// use apple clear icon?
 // clear button for pin search
 // make place pin draggable when new?
 // add title to link out queries to like google?
-// add apple icon
 // allow toasts with diff icons?
 // fix title saved toast fires when sharing
 // edit title button?
 // apple maps auto complete?
 // go button still too low on pwa
 // pwa manifest
-// get apple symbols
 // change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
-// cleanup components
 // rename to route to geoip
 // loader at top instead of centered
-// toasts on right edge if full width
+// toasts on right edge if full width?
 // about page
 // share preview image, try setting only url? on prod?
 // remove hexcodes
+// pulse input border when new?
+// cleanup components
