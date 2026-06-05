@@ -60,8 +60,24 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       ...(isDev ? { hash: true } : {}),
     });
 
-    mapInstance.setStyle("https://tiles.openfreemap.org/styles/bright");
-
+    mapInstance.setStyle(
+      "https://tiles.openfreemap.org/styles/bright",
+      // fallback
+      // {
+      //   transformStyle: (_previousStyle, nextStyle) => {
+      //     nextStyle.sources.openmaptiles = {
+      //       type: "vector",
+      //       tiles: [
+      //         "https://tiles.openfreemap.org/planet/20260513_001001_pt/{z}/{x}/{y}.pbf",
+      //       ],
+      //       minzoom: 0,
+      //       maxzoom: 14,
+      //     };
+      //     return nextStyle;
+      //   },
+      // }
+      // recent issue: https://github.com/hyperknot/openfreemap/issues/112
+    );
     mapInstance.dragRotate.disable();
     mapInstance.touchZoomRotate.disableRotation();
     mapInstance.keyboard.disable();
