@@ -86,7 +86,8 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
         <SquareButton
           text={"Home"}
-          imagePath={"/search.png"}
+          imagePath={"/plus.png"}
+          imageClassNames={"p-8"}
           url={`http://${host}`}
         />
 

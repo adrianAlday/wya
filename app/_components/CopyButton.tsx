@@ -32,7 +32,8 @@ const CopyButton = ({ host }: CopyButtonProps) => {
             src={"/copy.png"}
             alt={"Copy"}
             fill
-            className={"rounded-[22.5%]"}
+            style={{ objectFit: "contain" }}
+            className={"rounded-[22.5%] p-6"}
           />
         </div>
       </button>

@@ -24,6 +24,7 @@ const SquareButton = ({
             src={imagePath}
             alt={text}
             fill
+            style={{ objectFit: "contain" }}
             className={`rounded-[22.5%] ${imageClassNames}`}
           />
         ) : (

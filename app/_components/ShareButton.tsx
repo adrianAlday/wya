@@ -32,7 +32,8 @@ const ShareButton = ({ host }: ShareButtonProps) => {
             src={"/share.png"}
             alt={"Share"}
             fill
-            className={"rounded-[22.5%]"}
+            style={{ objectFit: "contain" }}
+            className={"rounded-[22.5%] p-4"}
           />
         </div>
       </button>

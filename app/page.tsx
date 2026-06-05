@@ -63,3 +63,4 @@ export default HomePage;
 // rename to route to geoip
 // loader at top instead of centered
 // toasts on right edge if full width
+// about page
