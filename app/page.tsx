@@ -3,7 +3,7 @@ import HomeMap from "./_components/HomeMap";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "wya maps",
+  title: "wya Maps",
 };
 
 const HomePage = async () => {
@@ -56,7 +56,6 @@ export default HomePage;
 // pwa manifest
 // change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
-// about page
 // share preview image, try setting only url? on prod?
 // remove hexcodes
 // pulse input border when new?
