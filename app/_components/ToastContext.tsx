@@ -95,10 +95,12 @@ export const ToastProvider = ({ children }: ToastProvideProps) => {
               imageAltText="wya"
             />
 
-            <div className="grow text-md truncate">
+            <div className="grow text-md truncate flex flex-col justify-center">
               <div className="font-semibold">{toast.title}</div>
 
-              <div className="truncate">{toast.subtitle}</div>
+              {toast.subtitle && (
+                <div className="truncate">{toast.subtitle}</div>
+              )}
             </div>
           </div>
         </div>
