@@ -14,7 +14,10 @@ import {
 } from "../_utils/map";
 import MeasuresControl from "maplibre-gl-measures";
 import { isDev } from "../_utils/isDev";
-import { buttonStateTransitionClasses } from "../_utils/styling";
+import {
+  mapButtonShadowStyle,
+  buttonStateTransitionClasses,
+} from "../_utils/styling";
 import { useToast } from "./ToastContext";
 
 type PlaceMapProps = {
@@ -168,7 +171,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
         className={`absolute bottom-4 inset-x-0 mx-auto rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-base font-medium ${buttonStateTransitionClasses}`}
         style={{
           display: "none",
-          boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.05)",
+          ...mapButtonShadowStyle,
         }}
       >
         Recenter

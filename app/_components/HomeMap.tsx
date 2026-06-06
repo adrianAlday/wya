@@ -21,6 +21,7 @@ import {
 import { isStandalone } from "../_utils/isStandalone";
 import { isDev } from "../_utils/isDev";
 import {
+  mapButtonShadowStyle,
   buttonStateTransitionClasses,
   goButtonMaxWidthStyle,
 } from "../_utils/styling";
@@ -356,7 +357,7 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
               className={`absolute ${isStandalone() ? "bottom-[36px]" : "bottom-[10px]"} inset-x-0 mx-auto border-2 border-[rgb(62,127,66)] rounded-md overflow-hidden bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-base text-[rgb(255,255,255)] font-normal ${buttonStateTransitionClasses}`}
               style={{
                 ...goButtonMaxWidthStyle,
-                boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.05)",
+                ...mapButtonShadowStyle,
               }}
             >
               <div>

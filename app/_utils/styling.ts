@@ -6,6 +6,10 @@ export const placePageMaxWidthStyle = {
   maxWidth: "600px",
 };
 
+export const mapButtonShadowStyle = {
+  boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.05)",
+};
+
 export const borderClasses = "border border-[rgb(61,68,77)]";
 
 export const buttonStateTransitionClasses =
