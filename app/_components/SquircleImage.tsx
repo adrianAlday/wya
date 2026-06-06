@@ -12,18 +12,16 @@ const SquircleImage = ({
   imageClasses,
   imagePath,
   imageAltText,
-}: SquircleImageProps) => {
-  return (
-    <div className={`rounded-[22.5%] aspect-square relative ${wrapperClasses}`}>
-      <Image
-        className={`rounded-[22.5%] ${imageClasses}`}
-        src={imagePath}
-        alt={imageAltText}
-        fill
-        style={{ objectFit: "contain" }}
-      />
-    </div>
-  );
-};
+}: SquircleImageProps) => (
+  <div className={`rounded-[22.5%] aspect-square relative ${wrapperClasses}`}>
+    <Image
+      className={`rounded-[22.5%] ${imageClasses}`}
+      src={imagePath}
+      alt={imageAltText}
+      fill
+      style={{ objectFit: "contain" }}
+    />
+  </div>
+);
 
 export default SquircleImage;

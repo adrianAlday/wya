@@ -143,7 +143,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
           display: "none",
         }}
       >
-        <div>{"Recenter"}</div>
+        Recenter
       </button>
     </div>
   );

@@ -3,7 +3,7 @@ type SpinnerProps = {
 };
 
 const Spinner = ({ classNames }: SpinnerProps) => (
-  <div className={`flex items-center justify-center h-dvh ${classNames} `}>
+  <div className={`flex items-center justify-center h-dvh ${classNames}`}>
     <svg
       className="mr-3 -ml-1 size-5 animate-spin text-[rgb(189,190,191)]"
       xmlns="http://www.w3.org/2000/svg"
