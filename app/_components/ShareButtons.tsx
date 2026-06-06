@@ -32,7 +32,7 @@ const ShareButtons = ({ host }: ShareButtonsProps) => {
       >
         <SquircleImage
           wrapperClasses={squircleButtonBackgroundClass}
-          imageClasses={"p-3"}
+          imageClasses={"p-2"}
           imagePath={"/share.svg"}
           imageAltText={"Share"}
         />
