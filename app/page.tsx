@@ -10,7 +10,7 @@ const HomePage = async () => {
   const resolvedHeaders = await headers();
   const host = resolvedHeaders.get("host");
 
-  const response = await fetch(`http://${host}/api/geolocate`)
+  const response = await fetch(`http://${host}/api/geoip`)
     .then(async (response) => await response.json())
     .catch((error) => {
       console.error(`Geocode Error: ${error}`);
@@ -56,11 +56,7 @@ export default HomePage;
 // pwa manifest
 // change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
-// rename to route to geoip
-// toasts on right edge if full width?
 // about page
 // share preview image, try setting only url? on prod?
 // remove hexcodes
 // pulse input border when new?
-// cleanup components
-// svg other icons
