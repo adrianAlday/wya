@@ -58,3 +58,4 @@ export default HomePage;
 // share preview image, try setting only url? on prod?
 // pulse input border when new?
 // allow strict mode
+// home map, spacing controls 16px from edge?
