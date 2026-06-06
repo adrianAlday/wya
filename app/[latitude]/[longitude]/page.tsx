@@ -7,6 +7,7 @@ import { headers } from "next/headers";
 import SquircleLink from "@/app/_components/SquircleLink";
 import ShareButtons from "@/app/_components/ShareButtons";
 import { placePageMaxWidthStyle } from "@/app/_utils/styling";
+import { isDev } from "@/app/_utils/isDev";
 
 const getTitle = (decodedParams: Params) => {
   return (decodedParams.t ||
@@ -82,9 +83,9 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         <ShareButtons host={host} />
 
         <SquircleLink
-          url={`http://${host}`}
+          url={`http${isDev ? "" : "s"}://${host}`}
           imagePath={"/plus.svg"}
-          imageAltText={"Home"}
+          imageAltText={"New"}
           imageClasses={"p-8"}
         />
 
