@@ -59,3 +59,4 @@ export default HomePage;
 // share preview image, try setting only url? on prod?
 // remove hexcodes
 // pulse input border when new?
+// allow strict mode

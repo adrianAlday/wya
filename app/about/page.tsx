@@ -16,7 +16,7 @@ const AboutPage = () => {
 
       <div>Apple Maps and OpenStreetMap Nominatim APIs</div>
 
-      <div>MapLibre library with plugins</div>
+      <div>MapLibre library and plugins</div>
 
       <div>OpenFreeMap vector tiles</div>
 
