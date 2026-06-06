@@ -57,6 +57,5 @@ export default HomePage;
 // change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
 // share preview image, try setting only url? on prod?
-// remove hexcodes
 // pulse input border when new?
 // allow strict mode

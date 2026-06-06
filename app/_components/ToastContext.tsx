@@ -9,6 +9,7 @@ import {
   useContext,
 } from "react";
 import {
+  borderClasses,
   goButtonMaxWidthStyle,
   placePageMaxWidthStyle,
 } from "../_utils/styling";
@@ -37,9 +38,7 @@ export const ToastProvider = ({ children }: ToastProvideProps) => {
   const pathname = usePathname();
   const pageIsFullWidth = ["/"].includes(pathname);
 
-  const backgroundClass = "bg-[#151b23]";
-
-  const borderClasses = "border border-[#3d444d]";
+  const backgroundClass = "bg-[rgb(22,27,34)]";
 
   const transitionDuration = 350;
   const uninterpolatedDurationClass = "duration-350";

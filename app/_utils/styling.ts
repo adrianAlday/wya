@@ -6,6 +6,8 @@ export const placePageMaxWidthStyle = {
   maxWidth: "600px",
 };
 
+export const borderClasses = "border border-[rgb(61,68,77)]";
+
 export const buttonStateTransitionClasses =
   "transition-all duration-80 transition-discrete";
 

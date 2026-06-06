@@ -6,7 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { paramForNewPlace } from "./HomeMap";
 import { useToast } from "./ToastContext";
 import { useKeyboardOpen } from "../_utils/useKeyboardOpen";
-import { buttonStateTransitionClasses } from "../_utils/styling";
+import { borderClasses, buttonStateTransitionClasses } from "../_utils/styling";
 
 type PlaceHeaderProps = {
   title: string;
@@ -106,7 +106,7 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
                 handleDoneWithInput();
               }
             }}
-            className={`border border-[#3d444d] focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
+            className={`${borderClasses} focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
           />
 
           {showClearButton && (
@@ -131,7 +131,7 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
         </div>
 
         <button
-          className="py-2 px-3 text-sm text-[#9198a1] hover:text-[#f0f6fc] active:text-[#ab7df8] cursor-pointer"
+          className="py-2 px-3 text-sm text-[rgb(145,152,161)] hover:text-[rgb(240,246,252)] active:text-[rgb(171,125,248)] cursor-pointer"
           onClick={handleSubtitleClick}
         >
           {subtitle}
