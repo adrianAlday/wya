@@ -54,7 +54,6 @@ export default HomePage;
 // apple maps auto complete?
 // go button still too low on pwa
 // pwa manifest
-// change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
 // share preview image, try setting only url? on prod?
 // pulse input border when new?
