@@ -165,9 +165,10 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
 
       <button
         id={recenterButtonId}
-        className={`absolute bottom-4 inset-x-0 mx-auto border border-[rgb(211,217,223)] rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-base font-medium ${buttonStateTransitionClasses}`}
+        className={`absolute bottom-4 inset-x-0 mx-auto rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-base font-medium ${buttonStateTransitionClasses}`}
         style={{
           display: "none",
+          boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.05)",
         }}
       >
         Recenter
