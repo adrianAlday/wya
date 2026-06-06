@@ -6,4 +6,7 @@ export const placePageMaxWidthStyle = {
   maxWidth: "600px",
 };
 
+export const buttonStateTransitionClasses =
+  "transition-all duration-80 transition-discrete";
+
 export const squircleButtonBackgroundClass = "bg-[rgb(74,74,74)]";

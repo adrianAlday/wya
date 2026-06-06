@@ -83,7 +83,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
         <SquircleLink
           url={`http://${host}`}
-          imagePath={"/plus.png"}
+          imagePath={"/plus.svg"}
           imageAltText={"Home"}
           imageClasses={"p-8"}
         />

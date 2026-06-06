@@ -14,6 +14,7 @@ import {
 } from "../_utils/map";
 import MeasuresControl from "maplibre-gl-measures";
 import { isDev } from "../_utils/isDev";
+import { buttonStateTransitionClasses } from "../_utils/styling";
 
 type PlaceMapProps = {
   latitude: number;
@@ -138,7 +139,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
 
       <button
         id={recenterButtonId}
-        className="absolute bottom-4 inset-x-0 mx-auto border border-[rgb(211,217,223)] rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-base font-medium transition-all duration-80 transition-discrete"
+        className={`absolute bottom-4 inset-x-0 mx-auto border border-[rgb(211,217,223)] rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-base font-medium ${buttonStateTransitionClasses}`}
         style={{
           display: "none",
         }}

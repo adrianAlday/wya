@@ -20,7 +20,10 @@ import {
 } from "../_utils/map";
 import { isStandalone } from "../_utils/isStandalone";
 import { isDev } from "../_utils/isDev";
-import { goButtonMaxWidthStyle } from "../_utils/styling";
+import {
+  buttonStateTransitionClasses,
+  goButtonMaxWidthStyle,
+} from "../_utils/styling";
 import Spinner from "./Spinner";
 
 type HomeMapProps = {
@@ -350,7 +353,7 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
           >
             <button
               id={goButtonId}
-              className={`absolute ${isStandalone() ? "bottom-[36px]" : "bottom-[10px]"} inset-x-0 mx-auto border-2 border-[rgb(62,127,66)] rounded-md overflow-hidden bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-base text-[rgb(255,255,255)] font-normal transition-all duration-80 transition-discrete`}
+              className={`absolute ${isStandalone() ? "bottom-[36px]" : "bottom-[10px]"} inset-x-0 mx-auto border-2 border-[rgb(62,127,66)] rounded-md overflow-hidden bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-base text-[rgb(255,255,255)] font-normal ${buttonStateTransitionClasses}`}
               style={{
                 ...goButtonMaxWidthStyle,
                 boxShadow: "0 0 0 2px rgba(0, 0, 0, 0.05)",
