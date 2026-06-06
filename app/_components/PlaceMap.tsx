@@ -142,6 +142,17 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
 
   return (
     <div className="relative">
+      <style>
+        {`
+          .maplibregl-ctrl-bottom-right .maplibregl-ctrl {
+            margin: 0px 16px 16px 0px;
+          }
+          .maplibregl-ctrl-group button {
+            height: 32px;
+            width: 32px;
+          }
+        `}
+      </style>
       <div
         id={mapContainerId}
         className="mb-4 rounded-md"
