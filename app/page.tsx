@@ -20,7 +20,7 @@ const HomePage = async () => {
 
   return (
     <main>
-      <HomeMap latitude={latitude} longitude={longitude} geoZoom={5} />;
+      <HomeMap latitude={latitude} longitude={longitude} />;
     </main>
   );
 };
@@ -57,10 +57,10 @@ export default HomePage;
 // change svgs on line meassure thing
 // reverse geocode and get hours from apple maps?
 // rename to route to geoip
-// loader at top instead of centered
 // toasts on right edge if full width?
 // about page
 // share preview image, try setting only url? on prod?
 // remove hexcodes
 // pulse input border when new?
 // cleanup components
+// svg other icons

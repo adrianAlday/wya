@@ -1,31 +1,36 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import maplibreGl, {
-  GeolocateControl,
-  Marker,
-  NavigationControl,
-} from "maplibre-gl";
+import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import MaplibreGeocoder, {
   MaplibreGeocoderApi,
 } from "@maplibre/maplibre-gl-geocoder";
 import "@maplibre/maplibre-gl-geocoder/dist/maplibre-gl-geocoder.css";
 import Link from "next/link";
-import { zoom, speed, minZoom, maxZoom, essential } from "../_utils/map";
+import {
+  zoom,
+  speed,
+  minZoom,
+  maxZoom,
+  essential,
+  getById,
+  setupMap,
+  generateMarkerElementOption,
+} from "../_utils/map";
 import { isStandalone } from "../_utils/isStandalone";
 import { isDev } from "../_utils/isDev";
 import { goButtonMaxWidthStyle } from "../_utils/styling";
+import Spinner from "./Spinner";
 
 type HomeMapProps = {
   latitude: number;
   longitude: number;
-  geoZoom: number;
 };
 
 export const paramForNewPlace = "n";
 
-const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
+const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
 
   const initialMarkerCoordinates = null;
@@ -42,8 +47,6 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
   const emptyButtonId = "empty";
 
   useEffect(() => {
-    const getById = (id: string) => document.getElementById(id) as HTMLElement;
-
     if (!getById(mapContainerId) || hasGeolocated) {
       return;
     }
@@ -51,37 +54,14 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     const mapInstance = new maplibreGl.Map({
       container: mapContainerId,
       center: [longitude, latitude],
-      zoom: geoZoom,
+      zoom: 5,
       minZoom,
       maxZoom,
       attributionControl: false,
       ...(isDev ? { hash: true } : {}),
     });
 
-    mapInstance.setStyle(
-      "https://tiles.openfreemap.org/styles/bright",
-      // fallback
-      // {
-      //   transformStyle: (_previousStyle, nextStyle) => {
-      //     nextStyle.sources.openmaptiles = {
-      //       type: "vector",
-      //       tiles: [
-      //         "https://tiles.openfreemap.org/planet/20260513_001001_pt/{z}/{x}/{y}.pbf",
-      //       ],
-      //       minzoom: 0,
-      //       maxzoom: 14,
-      //     };
-      //     return nextStyle;
-      //   },
-      // }
-      // recent issue: https://github.com/hyperknot/openfreemap/issues/112
-    );
-    mapInstance.dragRotate.disable();
-    mapInstance.touchZoomRotate.disableRotation();
-    mapInstance.keyboard.disable();
-
-    mapInstance.setMaxPitch(0);
-    mapInstance.touchPitch.disable();
+    setupMap(mapInstance);
 
     let searchAbortController: AbortController;
     let reverseAbortController: AbortController;
@@ -222,11 +202,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       }
     };
 
-    const markerSize = 36;
-    const element = document.createElement("div");
-    element.textContent = "📍";
-    element.style.fontSize = `${markerSize}px`;
-    element.style.marginTop = `-${markerSize / 2}px`;
+    const markerElementOption = generateMarkerElementOption();
 
     const geocoder = new MaplibreGeocoder(geocoderApi, {
       enableEventLogging: false,
@@ -234,16 +210,16 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       flyTo: { speed, essential },
       limit: 3,
       maplibregl: maplibreGl,
-      marker: { element } as unknown as Marker,
+      marker: markerElementOption as unknown as maplibregl.Marker,
       placeholder: "Where to?",
-      showResultMarkers: { element },
+      showResultMarkers: markerElementOption,
       showResultsWhileTyping: true,
       zoom,
     });
 
     mapInstance.addControl(geocoder, "top-left");
 
-    const geolocateControl = new GeolocateControl({
+    const geolocateControl = new maplibreGl.GeolocateControl({
       positionOptions: {
         enableHighAccuracy: true,
       },
@@ -254,7 +230,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
     mapInstance.addControl(geolocateControl, "top-right");
 
     mapInstance.addControl(
-      new NavigationControl({
+      new maplibreGl.NavigationControl({
         visualizePitch: false,
         visualizeRoll: false,
         showZoom: true,
@@ -263,23 +239,23 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
       "top-right",
     );
 
-    const marker = new Marker({
-      element,
+    const userMarker = new maplibreGl.Marker({
+      ...markerElementOption,
       draggable: true,
     });
 
     mapInstance.on("load", () => {
-      setLoading(false);
-
       mapInstance.setProjection({
         type: "globe",
       });
+
+      setLoading(false);
 
       geolocateControl.trigger();
     });
 
     geocoder.on("loading", () => {
-      marker.remove();
+      userMarker.remove();
 
       setMarker(initialMarkerCoordinates);
     });
@@ -308,7 +284,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
         const { latitude, longitude } = event.coords;
 
-        marker.setLngLat([longitude, latitude]).addTo(mapInstance);
+        userMarker.setLngLat([longitude, latitude]).addTo(mapInstance);
 
         setMarker([latitude, longitude]);
       }
@@ -321,7 +297,7 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       getById(emptyButtonId).focus();
 
-      marker.setLngLat([lng, lat]).addTo(mapInstance);
+      userMarker.setLngLat([lng, lat]).addTo(mapInstance);
 
       mapInstance.flyTo({
         center: event.lngLat,
@@ -332,35 +308,11 @@ const HomeMap = ({ latitude, longitude, geoZoom }: HomeMapProps) => {
 
       setMarker([lat, lng]);
     });
-  }, [latitude, longitude, geoZoom, hasGeolocated]);
+  }, [latitude, longitude, hasGeolocated]);
 
   return (
     <div className="w-dvw">
-      <div
-        className={`${loading ? "block" : "hidden"} flex items-center justify-center h-dvh`}
-      >
-        <svg
-          className="mr-3 -ml-1 size-5 animate-spin text-[rgb(189,190,191)]"
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <circle
-            className="opacity-33"
-            cx="12"
-            cy="12"
-            r="10"
-            stroke="currentColor"
-            strokeWidth="4"
-          />
-
-          <path
-            className="opacity-100"
-            fill="currentColor"
-            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-          />
-        </svg>
-      </div>
+      <Spinner classNames={loading ? "block" : "hidden"} />
 
       <style>
         {`

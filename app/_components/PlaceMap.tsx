@@ -3,8 +3,17 @@
 import { useEffect } from "react";
 import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
-import { speed, zoom, minZoom, essential } from "../_utils/map";
+import {
+  speed,
+  zoom,
+  minZoom,
+  essential,
+  getById,
+  setupMap,
+  generateMarkerElementOption,
+} from "../_utils/map";
 import MeasuresControl from "maplibre-gl-measures";
+import { isDev } from "../_utils/isDev";
 
 type PlaceMapProps = {
   latitude: number;
@@ -16,7 +25,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
   const recenterButtonId = "recenter";
 
   useEffect(() => {
-    if (!document.getElementById(mapContainerId)) {
+    if (!getById(mapContainerId)) {
       return;
     }
 
@@ -30,33 +39,10 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       ...initialPosition,
       minZoom,
       attributionControl: false,
+      ...(isDev ? {} : {}),
     });
 
-    mapInstance.setStyle(
-      "https://tiles.openfreemap.org/styles/bright",
-      // fallback
-      // {
-      //   transformStyle: (_previousStyle, nextStyle) => {
-      //     nextStyle.sources.openmaptiles = {
-      //       type: "vector",
-      //       tiles: [
-      //         "https://tiles.openfreemap.org/planet/20260513_001001_pt/{z}/{x}/{y}.pbf",
-      //       ],
-      //       minzoom: 0,
-      //       maxzoom: 14,
-      //     };
-      //     return nextStyle;
-      //   },
-      // }
-      // recent issue: https://github.com/hyperknot/openfreemap/issues/112
-    );
-
-    mapInstance.dragRotate.disable();
-    mapInstance.touchZoomRotate.disableRotation();
-    mapInstance.keyboard.disable();
-
-    mapInstance.setMaxPitch(0);
-    mapInstance.touchPitch.disable();
+    setupMap(mapInstance);
 
     mapInstance.on("load", () => {
       mapInstance.setProjection({
@@ -64,18 +50,11 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       });
     });
 
-    const markerSize = 36;
-    const element = document.createElement("div");
-    element.textContent = "📍";
-    element.style.fontSize = `${markerSize}px`;
-    element.style.marginTop = `-${markerSize / 2}px`;
-    new maplibreGl.Marker({ element })
+    new maplibreGl.Marker(generateMarkerElementOption())
       .setLngLat(mapInstance.getCenter())
       .addTo(mapInstance);
 
-    const recenterButton = document.getElementById(
-      recenterButtonId,
-    ) as HTMLElement;
+    const recenterButton = getById(recenterButtonId);
 
     mapInstance.on("movestart", () => {
       recenterButton.style.display = "block";
