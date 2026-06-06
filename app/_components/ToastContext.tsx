@@ -17,7 +17,7 @@ import SquircleImage from "./SquircleImage";
 
 type AddToastParam = {
   title: string;
-  subtitle: string;
+  subtitle?: string;
 };
 
 const ToastContext = createContext<{

@@ -15,6 +15,7 @@ import {
 import MeasuresControl from "maplibre-gl-measures";
 import { isDev } from "../_utils/isDev";
 import { buttonStateTransitionClasses } from "../_utils/styling";
+import { useToast } from "./ToastContext";
 
 type PlaceMapProps = {
   latitude: number;
@@ -24,6 +25,8 @@ type PlaceMapProps = {
 const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
   const mapContainerId = "map";
   const recenterButtonId = "recenter";
+
+  const { addToast } = useToast();
 
   useEffect(() => {
     if (!getById(mapContainerId)) {
@@ -128,6 +131,8 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     measureDistance.addEventListener("click", () => {
       measureDistance.style.display = "none";
       clearMeasurements.style.display = "block";
+
+      addToast({ title: "Tap to measure" });
     });
     clearMeasurements.addEventListener("click", () => {
       clearMeasurements.style.display = "none";
