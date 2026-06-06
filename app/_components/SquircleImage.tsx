@@ -20,7 +20,7 @@ const SquircleImage = ({
       alt={imageAltText}
       fill
       style={{ objectFit: "contain" }}
-      unoptimized={imagePath.includes(".svg")}
+      unoptimized={imagePath.endsWith(".svg")}
     />
   </div>
 );
