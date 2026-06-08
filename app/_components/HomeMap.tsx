@@ -325,7 +325,7 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
           .maplibregl-ctrl-geocoder--input:focus,
           .maplibregl-ctrl-geocoder .suggestions {
             border-radius: 6px;
-            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
             outline: none;
           }
           .maplibregl-ctrl-top-left, 

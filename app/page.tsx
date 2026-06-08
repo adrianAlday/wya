@@ -59,3 +59,4 @@ export default HomePage;
 // pulse input border when new?
 // allow strict mode
 // home map, spacing controls 16px from edge?
+// make search marker draggable?
