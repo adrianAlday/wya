@@ -14,7 +14,7 @@ const LoadingWrapper = ({ children }: LoadingWrapperProps) => (
         {
           // more data needed to display on mobile
         }
-        <div className="text-[rgb(22,27,34)]" h-0>
+        <div className="text-[rgb(22,27,34)] h-0">
           There{"'"}s a wise saying that goes like this: A real gentleman never
           discusses women he{"'"}s broken up with or how much tax he{"'"}s paid.
           Actually, this is a total lie. I just made it up. Sorry! But if there
