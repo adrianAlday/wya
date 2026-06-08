@@ -19,13 +19,17 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const initiallyHadParamForNewPlace = searchParams.has(paramForNewPlace);
+  const titleRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
-  const nameInputId = "name";
+  const initiallyHadParamForNewPlace = searchParams.has(paramForNewPlace);
 
   useEffect(() => {
     if (initiallyHadParamForNewPlace) {
-      document.getElementById(nameInputId)?.focus();
+      inputRef.current?.focus();
+
+      const length = inputRef.current?.value.length as number;
+      inputRef.current?.setSelectionRange(length, length);
     }
   }, []);
 
@@ -57,6 +61,14 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     }
   };
 
+  const showClearButton = initiallyHadParamForNewPlace && !!name.length;
+
+  const handleClearClick = () => {
+    inputRef.current?.focus();
+
+    setNameUrlAndTitle("");
+  };
+
   const { isKeyboardOpen, hasKeyboardOpened } = useKeyboardOpen();
 
   const { addToast } = useToast();
@@ -81,7 +93,17 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
     }
   }, [isKeyboardOpen]);
 
-  const showClearButton = initiallyHadParamForNewPlace && !!name.length;
+  const handleTitleBlur = () => {
+    setTimeout(() => {
+      if (titleRef.current?.contains(document.activeElement)) {
+        return;
+      }
+
+      if (!hasKeyboardOpened) {
+        handleDoneWithInput();
+      }
+    }, 0);
+  };
 
   const handleSubtitleClick = () => {
     navigator.clipboard.writeText(subtitle.replaceAll(" ", ""));
@@ -92,42 +114,33 @@ const PlaceHeader = ({ title, subtitle }: PlaceHeaderProps) => {
   return (
     <React.Fragment>
       <div className="font-semibold">
-        <div className="relative">
+        <div ref={titleRef} onBlur={handleTitleBlur} className="relative">
           <input
-            id={nameInputId}
+            ref={inputRef}
             type="text"
             enterKeyHint="done"
             placeholder={"Name"}
             value={name}
             onChange={handleInputChange}
             onKeyDown={handleInputKeyDown}
-            onBlur={() => {
-              if (!hasKeyboardOpened) {
-                handleDoneWithInput();
-              }
-            }}
             className={`${borderClasses} focus:border-2 focus:border-[rgb(54,113,227)] focus:-m-px rounded-md w-full py-1 ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
           />
 
-          {showClearButton && (
-            <button
-              className={`absolute right-0 top-1/2 -translate-y-1/2 pr-3 pl-2 py-1 hover:text-[rgb(54,113,227)] ${buttonStateTransitionClasses}`}
-              onMouseDown={() => {
-                setNameUrlAndTitle("");
-              }}
+          <button
+            className={`absolute right-0 top-1/2 -translate-y-1/2 pr-3 pl-2 py-1 hover:text-[rgb(54,113,227)] ${buttonStateTransitionClasses} ${showClearButton ? "" : "hidden"}`}
+            onClick={handleClearClick}
+          >
+            <svg
+              height={16}
+              viewBox="0 0 35.9517 35.6001"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              <svg
-                height={16}
-                viewBox="0 0 35.9517 35.6001"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0.494407 35.1057C1.17995 35.7561 2.2698 35.7561 2.93777 35.1057L17.7737 20.2522L32.6272 35.1057C33.2776 35.7561 34.4026 35.7737 35.053 35.1057C35.721 34.4202 35.721 33.3303 35.053 32.68L20.2171 17.8264L35.053 2.97292C35.721 2.32253 35.7385 1.21511 35.053 0.547141C34.385-0.10325 33.2776-0.10325 32.6272 0.547141L17.7737 15.4007L2.93777 0.547141C2.2698-0.10325 1.16238-0.120828 0.494407 0.547141C-0.155984 1.23269-0.155984 2.32253 0.494407 2.97292L15.3479 17.8264L0.494407 32.68C-0.155984 33.3303-0.173562 34.4378 0.494407 35.1057Z"
-                  fill="currentColor"
-                />
-              </svg>
-            </button>
-          )}
+              <path
+                d="M0.494407 35.1057C1.17995 35.7561 2.2698 35.7561 2.93777 35.1057L17.7737 20.2522L32.6272 35.1057C33.2776 35.7561 34.4026 35.7737 35.053 35.1057C35.721 34.4202 35.721 33.3303 35.053 32.68L20.2171 17.8264L35.053 2.97292C35.721 2.32253 35.7385 1.21511 35.053 0.547141C34.385-0.10325 33.2776-0.10325 32.6272 0.547141L17.7737 15.4007L2.93777 0.547141C2.2698-0.10325 1.16238-0.120828 0.494407 0.547141C-0.155984 1.23269-0.155984 2.32253 0.494407 2.97292L15.3479 17.8264L0.494407 32.68C-0.155984 33.3303-0.173562 34.4378 0.494407 35.1057Z"
+                fill="currentColor"
+              />
+            </svg>
+          </button>
         </div>
 
         <button
