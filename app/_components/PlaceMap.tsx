@@ -51,6 +51,16 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
 
     setupMap(mapInstance);
 
+    const geolocateControl = new maplibreGl.GeolocateControl({
+      positionOptions: {
+        enableHighAccuracy: true,
+      },
+      showUserLocation: true,
+      showAccuracyCircle: true,
+    });
+
+    mapInstance.addControl(geolocateControl, "top-right");
+
     mapInstance.on("load", () => {
       mapInstance.setProjection({
         type: "globe",
@@ -147,6 +157,9 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
     <div className="relative">
       <style>
         {`
+          .maplibregl-ctrl-top-right .maplibregl-ctrl {
+            margin: 16px 16px 0px 0px;
+          }
           .maplibregl-ctrl-bottom-right .maplibregl-ctrl {
             margin: 0px 16px 16px 0px;
           }
