@@ -320,6 +320,12 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
 
       <style>
         {`
+          .maplibregl-ctrl-top-left .maplibregl-ctrl {
+            margin: 16px 0px 0px 16px;
+          }
+          .maplibregl-ctrl-top-right .maplibregl-ctrl {
+            margin: 16px 16px 0px 0px;
+          }
           .maplibregl-ctrl,
           .maplibregl-ctrl-geocoder--input,
           .maplibregl-ctrl-geocoder--input:focus,
@@ -330,7 +336,7 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
           }
           .maplibregl-ctrl-top-left, 
           .maplibregl-ctrl-geocoder {
-            width: calc(100dvw - 29px - 3*10px);
+            width: calc(100dvw - 29px - 3*16px);
             max-width: 720px;
           }
           .maplibregl-ctrl-geocoder--input::-webkit-search-cancel-button {
@@ -354,7 +360,7 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
           >
             <button
               id={goButtonId}
-              className={`absolute ${isStandalone() ? "bottom-[36px]" : "bottom-[10px]"} inset-x-0 mx-auto border-2 border-[rgb(62,127,66)] rounded-md overflow-hidden bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-base text-[rgb(255,255,255)] font-normal ${buttonStateTransitionClasses}`}
+              className={`absolute ${isStandalone() ? "bottom-9" : "bottom-4"} inset-x-0 mx-auto border-2 border-[rgb(62,127,66)] rounded-md overflow-hidden bg-[rgb(67,133,70)] hover:bg-[rgb(62,127,66)] active:bg-[rgb(58,119,61)] py-1 flex items-center justify-center text-base text-[rgb(255,255,255)] font-normal ${buttonStateTransitionClasses}`}
               style={{
                 ...goButtonMaxWidthStyle,
                 ...mapButtonShadowStyle,

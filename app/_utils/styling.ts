@@ -1,5 +1,5 @@
 export const goButtonMaxWidthStyle = {
-  maxWidth: "min(calc(100dvw - 2*10px), 440px)",
+  maxWidth: "min(calc(100dvw - 2*16px), 440px)",
 };
 
 export const placePageMaxWidthStyle = {
