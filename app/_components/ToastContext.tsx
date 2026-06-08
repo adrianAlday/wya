@@ -98,8 +98,8 @@ export const ToastProvider = ({ children }: ToastProvideProps) => {
             <div className="grow text-md truncate flex flex-col justify-center">
               <div className="font-semibold">{toast.title}</div>
 
-              {toast.subtitle && (
-                <div className="truncate">{toast.subtitle}</div>
+              {Object.hasOwn(toast, "subtitle") && (
+                <div className="truncate min-h-[1lh]">{toast.subtitle}</div>
               )}
             </div>
           </div>
