@@ -20,7 +20,7 @@ const HomePage = async () => {
 
   return (
     <main>
-      <HomeMap latitude={latitude} longitude={longitude} />;
+      <HomeMap latitude={latitude} longitude={longitude} />
     </main>
   );
 };
