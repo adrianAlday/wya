@@ -27,7 +27,7 @@ type PlaceMapProps = {
 
 const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
   const mapContainerId = "map";
-  const recenterButtonId = "recenter";
+  const resetMapButtonId = "reset";
 
   const { addToast } = useToast();
 
@@ -71,13 +71,13 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       .setLngLat(mapInstance.getCenter())
       .addTo(mapInstance);
 
-    const recenterButton = getById(recenterButtonId);
+    const resetMapButton = getById(resetMapButtonId);
 
     mapInstance.on("movestart", () => {
-      recenterButton.style.display = "block";
+      resetMapButton.style.display = "block";
     });
 
-    recenterButton.addEventListener("click", () => {
+    resetMapButton.addEventListener("click", () => {
       mapInstance.flyTo({
         ...initialPosition,
         speed,
@@ -85,7 +85,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       });
 
       mapInstance.once("move", () => {
-        recenterButton.style.display = "none";
+        resetMapButton.style.display = "none";
       });
     });
 
@@ -180,14 +180,14 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       />
 
       <button
-        id={recenterButtonId}
+        id={resetMapButtonId}
         className={`absolute bottom-4 inset-x-0 mx-auto rounded-md max-w-[180px] bg-[rgb(247,248,250)] hover:bg-[rgb(239,242,245)] active:hover:bg-[rgb(231,234,238)] py-1 flex items-center justify-center text-[rgb(38,41,46)] text-base font-medium ${buttonStateTransitionClasses}`}
         style={{
           display: "none",
           ...mapButtonShadowStyle,
         }}
       >
-        Recenter
+        Reset
       </button>
     </div>
   );
