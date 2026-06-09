@@ -25,7 +25,6 @@ import {
   buttonStateTransitionClasses,
   goButtonMaxWidthStyle,
 } from "../_utils/styling";
-import Spinner from "./Spinner";
 import Bouncer from "./Bouncer";
 
 type HomeMapProps = {
