@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
@@ -17,6 +17,7 @@ import { isDev } from "../_utils/isDev";
 import {
   mapButtonShadowStyle,
   buttonStateTransitionClasses,
+  squircleButtonBackgroundClass,
 } from "../_utils/styling";
 import { useToast } from "./ToastContext";
 
@@ -26,6 +27,8 @@ type PlaceMapProps = {
 };
 
 const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
+  const [loading, setLoading] = useState(true);
+
   const mapContainerId = "map";
   const resetMapButtonId = "reset";
 
@@ -65,6 +68,8 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       mapInstance.setProjection({
         type: "globe",
       });
+
+      setLoading(false);
     });
 
     new maplibreGl.Marker(generateMarkerElementOption())
@@ -155,6 +160,24 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
 
   return (
     <div className="relative">
+      <div
+        className={`z-50 absolute inset-0 rounded-md ${squircleButtonBackgroundClass} animate-pulse flex items-center justify-center ${loading ? "block" : "hidden"}`}
+      >
+        <div className="mb-4">
+          <svg
+            className="size-5 animate-spin text-[rgb(240,246,252)]"
+            fill="none"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            />
+          </svg>
+        </div>
+      </div>
+
       <style>
         {`
           .maplibregl-ctrl-top-right .maplibregl-ctrl {
@@ -171,11 +194,12 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       </style>
       <div
         id={mapContainerId}
-        className="mb-4 rounded-md"
+        className={"mb-4 rounded-md"}
         style={{
           height:
             "calc( 100dvh - 2*4*4px - 70px - 48px - (( min((100dvw - 2*4*4px), (600px - 2*4*4px)) - 3*4*4px ) / 4 * 2 + 4*4px ) )",
           maxHeight: 600 - 2 * 4 * 4,
+          opacity: loading ? 0 : 100,
         }}
       />
 

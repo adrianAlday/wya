@@ -56,7 +56,7 @@ export const ToastProvider = ({ children }: ToastProvideProps) => {
     setTimeout(() => {
       const toast = document.getElementById(id) as HTMLElement;
 
-      toast.setAttribute("open", "");
+      toast?.setAttribute("open", "");
 
       setTimeout(() => {
         toast.removeAttribute("open");
