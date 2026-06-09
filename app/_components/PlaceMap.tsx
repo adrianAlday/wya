@@ -163,7 +163,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
       <div
         className={`z-50 absolute inset-0 rounded-md ${squircleButtonBackgroundClass} animate-pulse flex items-center justify-center ${loading ? "block" : "hidden"}`}
       >
-        <div className="mb-4">
+        <div className="mb-12">
           <svg
             className="size-5 animate-spin text-[rgb(240,246,252)]"
             fill="none"
