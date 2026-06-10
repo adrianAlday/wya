@@ -1,9 +1,40 @@
 import { XMLParser } from "fast-xml-parser";
 import { NextRequest, NextResponse } from "next/server";
 
+const parseGpx = (gpx: string) => {
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: "",
+  });
+  const json = parser.parse(gpx);
+
+  return json.gpx.trk.trkseg.trkpt.map((point: { [key: string]: string }) => [
+    point.lon,
+    point.lat,
+  ]);
+};
+
 export const POST = async (request: NextRequest) => {
   try {
     const { source, value } = await request.json();
+
+    if (source === "garmin_course") {
+      const gpx = await fetch(
+        `https://connect.garmin.com/gc-api/course-service/course/gpx/${value}`,
+        {
+          method: "GET",
+          headers: {
+            Cookie: process.env.GARMIN_COOKIE as string,
+            "connect-csrf-token": process.env.GARMIN_TOKEN as string,
+            "sec-fetch-site": "same-origin",
+          },
+        },
+      ).then(async (response) => await response.text());
+
+      const lngLats = parseGpx(gpx);
+
+      return NextResponse.json(lngLats);
+    }
 
     if (["strava_activity", "strava_route"].includes(source)) {
       const stravaRequestOptions = {
@@ -28,20 +59,12 @@ export const POST = async (request: NextRequest) => {
       }
 
       if (source === "strava_route") {
-        const xml = await fetch(
+        const gpx = await fetch(
           `https://www.strava.com/routes/${value}/export_gpx`,
           stravaRequestOptions,
         ).then(async (response) => await response.text());
 
-        const parser = new XMLParser({
-          ignoreAttributes: false,
-          attributeNamePrefix: "",
-        });
-        const json = parser.parse(xml);
-
-        const lngLats = json.gpx.trk.trkseg.trkpt.map(
-          (point: { [key: string]: string }) => [point.lon, point.lat],
-        );
+        const lngLats = parseGpx(gpx);
 
         return NextResponse.json(lngLats);
       }
