@@ -27,6 +27,7 @@ import {
   goButtonMaxWidthStyle,
 } from "../_utils/styling";
 import Bouncer from "./Bouncer";
+import { encodeParam } from "../_utils/url";
 
 type HomeMapProps = {
   latitude: number;
@@ -355,7 +356,7 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
 
         {markerCoordinates && (
           <Link
-            href={`/${markerCoordinates[0]}/${markerCoordinates[1]}?t=${reverseName}&${paramForNewPlace}`}
+            href={`/${markerCoordinates[0]}/${markerCoordinates[1]}?t=${encodeParam(reverseName)}&${paramForNewPlace}`}
           >
             <button
               id={goButtonId}
