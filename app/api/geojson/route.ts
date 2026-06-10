@@ -54,6 +54,8 @@ export const POST = async (request: NextRequest) => {
           stravaRequestOptions,
         ).then(async (response) => await response.json());
 
+        console.log(streams);
+
         const lngLats = streams?.latlng.map((latlng: number[]) =>
           latlng.reverse(),
         );
@@ -66,6 +68,8 @@ export const POST = async (request: NextRequest) => {
           `https://www.strava.com/routes/${value}/export_gpx`,
           stravaRequestOptions,
         ).then(async (response) => await response.text());
+
+        console.log(gpx);
 
         const lngLats = parseGpx(gpx);
 
