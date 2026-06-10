@@ -67,3 +67,8 @@ export default HomePage;
 // get strava acivity via gpx?
 // animate line once
 // is logging in on garmin every call too much? is this cached?
+// disable console in prod?
+// compiler: {
+//   removeConsole: process.env.NODE_ENV === "production",
+// },
+// use strava api?
