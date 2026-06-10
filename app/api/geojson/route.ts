@@ -40,7 +40,10 @@ export const POST = async (request: NextRequest) => {
       const stravaRequestOptions = {
         method: "GET",
         headers: {
-          Cookie: process.env.STRAVA_COOKIE as string,
+          Cookie: (process.env.STRAVA_COOKIE as string).replace(
+            /^['"]+|\*+['"]+$/g,
+            "",
+          ),
           "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)",
         },
       };
