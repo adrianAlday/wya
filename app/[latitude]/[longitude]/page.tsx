@@ -16,6 +16,24 @@ const getSubtitle = (decodedParams: Params) => {
   return `${decodedParams.latitude}, ${decodedParams.longitude}` as string;
 };
 
+const getGeoJson = async (decodedParams: Params, host: string) => {
+  const { strava_activity } = decodedParams;
+
+  if (strava_activity) {
+    const geoJson = await fetch(`http://${host}/api/geojson`, {
+      method: "POST",
+      body: JSON.stringify({
+        source: "strava_activity",
+        value: strava_activity,
+      }),
+    }).then(async (response) => await response.json());
+
+    return geoJson;
+  }
+
+  return null;
+};
+
 export const generateMetadata = async ({
   params,
   searchParams,
@@ -45,6 +63,8 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const resolvedHeaders = await headers();
   const host = resolvedHeaders.get("host") as string;
 
+  const geoJson = await getGeoJson(decodedParams, host);
+
   return (
     <div className={"w-dvw p-4 relative"} style={{ ...placePageMaxWidthStyle }}>
       <PlaceTopSection
@@ -52,6 +72,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         subtitle={subtitle}
         latitude={latitude as unknown as number}
         longitude={longitude as unknown as number}
+        geoJson={geoJson}
       />
 
       <div className="grid grid-cols-4 gap-4">

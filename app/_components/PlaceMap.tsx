@@ -7,6 +7,7 @@ import {
   speed,
   zoom,
   minZoom,
+  maxZoom,
   essential,
   getById,
   setupMap,
@@ -26,9 +27,15 @@ type PlaceMapProps = {
   latitude: number;
   longitude: number;
   headerHeight: number;
+  geoJson: null | [number, number][];
 };
 
-const PlaceMap = ({ latitude, longitude, headerHeight }: PlaceMapProps) => {
+const PlaceMap = ({
+  latitude,
+  longitude,
+  headerHeight,
+  geoJson,
+}: PlaceMapProps) => {
   const [loading, setLoading] = useState(true);
 
   const mapContainerId = "map";
@@ -41,8 +48,10 @@ const PlaceMap = ({ latitude, longitude, headerHeight }: PlaceMapProps) => {
       return;
     }
 
+    const initialCenter = [longitude, latitude] as [number, number];
+
     const initialPosition = {
-      center: [longitude, latitude] as [number, number],
+      center: initialCenter,
       zoom,
     };
 
@@ -66,10 +75,51 @@ const PlaceMap = ({ latitude, longitude, headerHeight }: PlaceMapProps) => {
 
     mapInstance.addControl(geolocateControl, "top-right");
 
+    const geoJsonBounds = (geoJson || []).reduce(
+      (bounds, coord) => {
+        return bounds.extend(coord);
+      },
+      new maplibreGl.LngLatBounds(initialCenter, initialCenter),
+    );
+    const fitBoundsOptions = {
+      padding: 16 + 32 + 16,
+      maxZoom,
+    };
+
     mapInstance.on("load", () => {
       mapInstance.setProjection({
         type: "globe",
       });
+
+      if (geoJson) {
+        mapInstance.addSource("route", {
+          type: "geojson",
+          data: {
+            type: "Feature",
+            geometry: {
+              type: "LineString",
+              coordinates: geoJson,
+            },
+            properties: {},
+          },
+        });
+
+        mapInstance.addLayer({
+          source: "route",
+          id: "route",
+          type: "line",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round",
+          },
+          paint: {
+            "line-width": 2,
+            "line-color": "rgb(252,82,0)",
+          },
+        });
+
+        mapInstance.fitBounds(geoJsonBounds, fitBoundsOptions);
+      }
 
       setLoading(false);
     });
@@ -81,13 +131,15 @@ const PlaceMap = ({ latitude, longitude, headerHeight }: PlaceMapProps) => {
     const resetMapButton = getById(resetMapButtonId);
 
     mapInstance.on("moveend", () => {
-      const center = mapInstance.getCenter();
+      if (!geoJson) {
+        const center = mapInstance.getCenter();
 
-      if (
-        roundCoordinate(center.lat) !== roundCoordinate(latitude) ||
-        roundCoordinate(center.lng) !== roundCoordinate(longitude)
-      ) {
-        resetMapButton.style.display = "block";
+        if (
+          roundCoordinate(center.lat) !== roundCoordinate(latitude) ||
+          roundCoordinate(center.lng) !== roundCoordinate(longitude)
+        ) {
+          resetMapButton.style.display = "block";
+        }
       }
     });
 

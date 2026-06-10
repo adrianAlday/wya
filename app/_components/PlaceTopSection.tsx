@@ -9,6 +9,7 @@ type PlaceTopSection = {
   subtitle: string;
   latitude: number;
   longitude: number;
+  geoJson: null | [number, number][];
 };
 
 const PlaceTopSection = ({
@@ -16,6 +17,7 @@ const PlaceTopSection = ({
   subtitle,
   latitude,
   longitude,
+  geoJson,
 }: PlaceTopSection) => {
   const [title, setTitle] = useState(initialTitle);
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -43,6 +45,7 @@ const PlaceTopSection = ({
         latitude={latitude}
         longitude={longitude}
         headerHeight={headerHeight}
+        geoJson={geoJson}
       />
     </div>
   );
