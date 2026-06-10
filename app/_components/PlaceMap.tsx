@@ -11,6 +11,7 @@ import {
   getById,
   setupMap,
   generateMarkerElementOption,
+  roundCoordinate,
 } from "../_utils/map";
 import MeasuresControl from "maplibre-gl-measures";
 import { isDev } from "../_utils/isDev";
@@ -24,9 +25,10 @@ import { useToast } from "./ToastContext";
 type PlaceMapProps = {
   latitude: number;
   longitude: number;
+  headerHeight: number;
 };
 
-const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
+const PlaceMap = ({ latitude, longitude, headerHeight }: PlaceMapProps) => {
   const [loading, setLoading] = useState(true);
 
   const mapContainerId = "map";
@@ -78,8 +80,15 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
 
     const resetMapButton = getById(resetMapButtonId);
 
-    mapInstance.on("movestart", () => {
-      resetMapButton.style.display = "block";
+    mapInstance.on("moveend", () => {
+      const center = mapInstance.getCenter();
+
+      if (
+        roundCoordinate(center.lat) !== roundCoordinate(latitude) ||
+        roundCoordinate(center.lng) !== roundCoordinate(longitude)
+      ) {
+        resetMapButton.style.display = "block";
+      }
     });
 
     resetMapButton.addEventListener("click", () => {
@@ -196,8 +205,7 @@ const PlaceMap = ({ latitude, longitude }: PlaceMapProps) => {
         id={mapContainerId}
         className={"mb-4 rounded-md"}
         style={{
-          height:
-            "calc( 100dvh - 2*4*4px - 70px - 48px - (( min((100dvw - 2*4*4px), (600px - 2*4*4px)) - 3*4*4px ) / 4 * 2 + 4*4px ) )",
+          height: `calc( 100dvh - 16px - ${headerHeight}px - 16px - (( min((100dvw - 2*16px), (600px - 2*16px)) - 3*16px ) / 4 * 2 + 16px ) - 32px - 16px)`,
           maxHeight: 600 - 2 * 4 * 4,
           opacity: loading ? 0 : 100,
         }}

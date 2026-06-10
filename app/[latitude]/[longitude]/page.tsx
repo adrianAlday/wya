@@ -1,15 +1,14 @@
 import FooterLink from "@/app/_components/FooterLink";
-import PlaceMap from "@/app/_components/PlaceMap";
 import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
-import PlaceHeader from "@/app/_components/PlaceHeader";
 import { headers } from "next/headers";
 import SquircleLink from "@/app/_components/SquircleLink";
 import ShareButtons from "@/app/_components/ShareButtons";
 import { placePageMaxWidthStyle } from "@/app/_utils/styling";
 import { isDev } from "@/app/_utils/isDev";
+import PlaceTopSection from "@/app/_components/PlaceTopSection";
 
-const getTitle = (decodedParams: Params) => {
+const getInitialTitle = (decodedParams: Params) => {
   return (decodedParams.t ||
     `${decodedParams.latitude}, ${decodedParams.longitude}`) as string;
 };
@@ -23,7 +22,7 @@ export const generateMetadata = async ({
 }: PlacePageProps) => {
   const resolvedParams = { ...(await params), ...(await searchParams) };
   const decodedParams = decodeParams(resolvedParams);
-  const title = getTitle(decodedParams);
+  const title = getInitialTitle(decodedParams);
 
   return {
     title,
@@ -40,7 +39,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const decodedParams = decodeParams(resolvedParams);
   const { latitude, longitude } = decodedParams;
 
-  const title = getTitle(decodedParams);
+  const initialTitle = getInitialTitle(decodedParams);
   const subtitle = getSubtitle(decodedParams);
 
   const resolvedHeaders = await headers();
@@ -48,9 +47,9 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
   return (
     <div className={"w-dvw p-4 relative"} style={{ ...placePageMaxWidthStyle }}>
-      <PlaceHeader title={title} subtitle={subtitle} />
-
-      <PlaceMap
+      <PlaceTopSection
+        initialTitle={initialTitle}
+        subtitle={subtitle}
         latitude={latitude as unknown as number}
         longitude={longitude as unknown as number}
       />

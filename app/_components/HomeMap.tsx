@@ -17,6 +17,7 @@ import {
   getById,
   setupMap,
   generateMarkerElementOption,
+  roundCoordinate,
 } from "../_utils/map";
 import { isStandalone } from "../_utils/isStandalone";
 import { isDev } from "../_utils/isDev";
@@ -139,11 +140,9 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
       nextDelay = 2,
     ) => {
       const nextCoordinates = coordinates
-        ? (coordinates.map((coordinate) => {
-            const places = 5;
-
-            return Math.round((coordinate || 0) * 10 ** places) / 10 ** places;
-          }) as [number, number])
+        ? (coordinates.map((coordinate) =>
+            roundCoordinate(coordinate || 0),
+          ) as [number, number])
         : coordinates;
 
       setMarkerCoordinates(nextCoordinates);

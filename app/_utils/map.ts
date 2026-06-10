@@ -48,3 +48,6 @@ export const generateMarkerElementOption = () => {
   element.style.marginTop = `-${markerSize / 2}px`;
   return { element };
 };
+
+export const roundCoordinate = (coordinate: number, places = 5) =>
+  Math.round((coordinate || 0) * 10 ** places) / 10 ** places;
