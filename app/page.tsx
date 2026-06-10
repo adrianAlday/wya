@@ -63,5 +63,4 @@ export default HomePage;
 // show return key on keyboard?
 // make append return key button
 // make text color red when editing and over x characters
-// allow adding strava_route
 // allow adding garmin_route
