@@ -64,3 +64,4 @@ export default HomePage;
 // make append return key button
 // make text color red when editing and over x characters
 // allow adding garmin_route
+// get strava acivity via gpx?

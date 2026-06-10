@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useRef,
 } from "react";
-import { encodeParam } from "../_utils/url";
+import { encodeParam, generateQueryString, replaceUrl } from "../_utils/url";
 import { usePathname, useSearchParams } from "next/navigation";
 import { paramForNewPlace } from "./HomeMap";
 import { useToast } from "./ToastContext";
@@ -44,20 +44,24 @@ const PlaceHeader = ({
     }
   }, []);
 
-  const setUrl = (titleValue: string) => {
-    const newUrl = `${pathname}?t=${encodeParam(titleValue)}`;
+  const changeParams = (newParams: { [key: string]: string }) => {
+    const originalParams = [
+      { key: "t", value: "" },
+      ...["strava_activity", "strava_route"]
+        .filter((key) => searchParams.get(key))
+        .map((presentKey) => ({
+          key: presentKey,
+          value: searchParams.get(presentKey) as string,
+        })),
+    ];
 
-    window.history.replaceState(
-      { ...window.history.state, as: newUrl, url: newUrl },
-      "",
-      newUrl,
-    );
+    replaceUrl(`${pathname}?${generateQueryString(originalParams, newParams)}`);
   };
 
   const setTitleStateAndUrl = (value: string) => {
     setTitle(value);
 
-    setUrl(value);
+    changeParams({ t: value });
 
     document.title = value || subtitle;
   };
@@ -94,7 +98,7 @@ const PlaceHeader = ({
   const { addToast } = useToast();
 
   const handleDoneWithInput = () => {
-    setUrl(title);
+    changeParams({ t: title });
 
     addToast({ title: "Title saved", subtitle: title });
   };
