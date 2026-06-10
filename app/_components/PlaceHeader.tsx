@@ -138,11 +138,11 @@ const PlaceHeader = ({
           ref={textAreaRef}
           rows={1}
           enterKeyHint="done"
-          placeholder={"Pin title?"}
+          placeholder={"Title?"}
           value={title}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          className={`${borderClasses} border-2 border-[rgb(22,27,34)] focus:border-2 focus:border-[rgb(54,113,227)] -m-px rounded-md w-full py-1 resize-none ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
+          className={`${borderClasses} border-2 border-[rgb(22,27,34)] focus:border-2 focus:border-[rgb(54,113,227)] rounded-md w-full py-1 resize-none ${showClearButton ? "pl-3 pr-9" : "px-3"} text-base`}
         />
 
         <button
@@ -163,7 +163,7 @@ const PlaceHeader = ({
       </div>
 
       <button
-        className="py-2 px-3 text-sm text-[rgb(145,152,161)] hover:text-[rgb(240,246,252)] active:text-[rgb(171,125,248)] cursor-pointer"
+        className="pt-1 pb-2 px-3 text-sm text-[rgb(145,152,161)] hover:text-[rgb(240,246,252)] active:text-[rgb(171,125,248)] cursor-pointer"
         onClick={handleSubtitleClick}
       >
         {subtitle}
