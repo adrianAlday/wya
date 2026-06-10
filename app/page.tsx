@@ -66,3 +66,4 @@ export default HomePage;
 // allow adding garmin_route
 // get strava acivity via gpx?
 // animate line once
+// is logging in on garmin every call too much? is this cached?

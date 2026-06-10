@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@flow-js/garmin-connect": "^1.6.16",
     "@maplibre/maplibre-gl-geocoder": "^1.9.4",
     "@vercel/analytics": "^2.0.1",
     "@vercel/functions": "^3.6.0",

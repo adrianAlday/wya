@@ -1,3 +1,4 @@
+import { GarminConnect } from "@flow-js/garmin-connect";
 import { XMLParser } from "fast-xml-parser";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -19,17 +20,12 @@ export const POST = async (request: NextRequest) => {
     const { source, value } = await request.json();
 
     if (source === "garmin_course") {
-      const gpx = await fetch(
-        `https://connect.garmin.com/gc-api/course-service/course/gpx/${value}`,
-        {
-          method: "GET",
-          headers: {
-            Cookie: process.env.GARMIN_COOKIE as string,
-            "connect-csrf-token": process.env.GARMIN_TOKEN as string,
-            "sec-fetch-site": "same-origin",
-          },
-        },
-      ).then(async (response) => await response.text());
+      const garminClient = await new GarminConnect({
+        username: process.env.GARMIN_USERNAME as string,
+        password: process.env.GARMIN_PASSWORD as string,
+      }).login();
+
+      const gpx = await garminClient.exportCourseAsGpx(value);
 
       const lngLats = parseGpx(gpx);
 
