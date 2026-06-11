@@ -169,11 +169,17 @@ const PlaceMap = ({
       });
 
       if (geoJson) {
+        const cleanGeoJson = turf.cleanCoords(turf.lineString(geoJson)).geometry
+          .coordinates;
+
         const fitGeoJson = () => {
           mapInstance.fitBounds(
-            geoJson.reduce(
-              (bounds, coord) => {
-                return bounds.extend(coord);
+            cleanGeoJson.reduce(
+              (
+                bounds: maplibreGl.LngLatBounds,
+                coordinates: [number, number],
+              ) => {
+                return bounds.extend(coordinates);
               },
               new maplibreGl.LngLatBounds(
                 initialCoordinates,
@@ -207,7 +213,7 @@ const PlaceMap = ({
           startElement.style.borderRadius = "50%";
           startElement.style.border = "2px solid white";
           new maplibreGl.Marker({ element: startElement })
-            .setLngLat(geoJson[counter])
+            .setLngLat(cleanGeoJson[counter])
             .addTo(mapInstance);
 
           const routeElement = document.createElement("div");
@@ -222,7 +228,7 @@ const PlaceMap = ({
             routeElement.style.border = "2px solid white";
           }
           const routeMarker = new maplibreGl.Marker({ element: routeElement });
-          routeMarker.setLngLat(geoJson[counter]).addTo(mapInstance);
+          routeMarker.setLngLat(cleanGeoJson[counter]).addTo(mapInstance);
 
           const routeSourceName = "route";
           const generateRouteData = (count: number) =>
@@ -230,7 +236,7 @@ const PlaceMap = ({
               type: "Feature",
               geometry: {
                 type: "LineString",
-                coordinates: geoJson.slice(0, count + 1),
+                coordinates: cleanGeoJson.slice(0, count + 1),
               },
               properties: {},
             }) as GeoJSON.Feature;
@@ -254,22 +260,22 @@ const PlaceMap = ({
 
           const refreshRate = 120;
 
-          const miles = turf.length(turf.lineString(geoJson), {
+          const miles = turf.length(turf.lineString(cleanGeoJson), {
             units: "miles",
           });
 
           const milesPerSecond = 3;
 
           const animateMarker = async () => {
-            const processedCounter = Math.min(counter, geoJson.length - 1);
+            const processedCounter = Math.min(counter, cleanGeoJson.length - 1);
 
-            routeMarker.setLngLat(geoJson[processedCounter]);
+            routeMarker.setLngLat(cleanGeoJson[processedCounter]);
 
             (
               mapInstance.getSource(routeSourceName) as maplibreGl.GeoJSONSource
             ).setData(generateRouteData(processedCounter));
 
-            if (counter < geoJson.length - 1) {
+            if (counter < cleanGeoJson.length - 1) {
               await new Promise((resolve) =>
                 setTimeout(resolve, 1000 / refreshRate),
               );
@@ -284,14 +290,14 @@ const PlaceMap = ({
               finishElement.style.marginTop = `-${markerSize / 2}px`;
               finishElement.style.paddingLeft = `${markerSize}px`;
               new maplibreGl.Marker({ element: finishElement })
-                .setLngLat(geoJson.at(-1) as [number, number])
+                .setLngLat(cleanGeoJson.at(-1) as [number, number])
                 .addTo(mapInstance);
             }
 
             counter =
               counter +
               Math.ceil(
-                geoJson.length / ((refreshRate * miles) / milesPerSecond),
+                cleanGeoJson.length / ((refreshRate * miles) / milesPerSecond),
               );
           };
 
