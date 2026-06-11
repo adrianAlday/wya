@@ -77,6 +77,18 @@ const PlaceMap = ({
 
     mapInstance.addControl(geolocateControl, "top-right");
 
+    mapInstance.addControl(
+      new maplibreGl.NavigationControl({
+        visualizePitch: false,
+        visualizeRoll: false,
+        showZoom: true,
+        showCompass: false,
+      }),
+      "top-right",
+    );
+
+    const resetMapButton = getById(resetMapButtonId);
+
     mapInstance.on("load", () => {
       mapInstance.setProjection({
         type: "globe",
