@@ -91,13 +91,13 @@ const PlaceMap = ({
             new maplibreGl.LngLatBounds(initialCenter, initialCenter),
           ),
           {
-            padding: 16 + 32 + 16,
+            padding: { top: 16, bottom: 16, left: 16, right: 16 + 32 + 16 },
             maxZoom,
           },
         );
 
         mapInstance.once("moveend", async () => {
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          await new Promise((resolve) => setTimeout(resolve, 1000));
 
           let counter = 0;
 
