@@ -74,9 +74,6 @@ export default HomePage;
 // use strava api?
 // color route line by gradient
 // allow adding another arbitrary marker
-// on iphone route not drawing until user touch
 // get activity from intervals.icu?
 // strava or garmin button to open the route
-// install turf, increase animation time with actual distance
-// move to flexible-xml-parser
 // strava route get from page instead of gpx?
