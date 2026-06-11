@@ -175,18 +175,16 @@ const PlaceMap = ({
 
               requestAnimationFrame(animateMarker);
             } else {
-              if (!routeMarkerText) {
-                routeMarker.remove();
-                const finishElement = document.createElement("div");
-                finishElement.textContent = "🏁";
-                finishElement.style.fontSize = `${markerSize}px`;
-                finishElement.style.marginTop = `-${markerSize / 2}px`;
-                finishElement.style.paddingLeft = `${markerSize}px`;
+              routeMarker.remove();
 
-                new maplibreGl.Marker({ element: finishElement })
-                  .setLngLat(geoJson.at(-1) as [number, number])
-                  .addTo(mapInstance);
-              }
+              const finishElement = document.createElement("div");
+              finishElement.textContent = "🏁";
+              finishElement.style.fontSize = `${markerSize}px`;
+              finishElement.style.marginTop = `-${markerSize / 2}px`;
+              finishElement.style.paddingLeft = `${markerSize}px`;
+              new maplibreGl.Marker({ element: finishElement })
+                .setLngLat(geoJson.at(-1) as [number, number])
+                .addTo(mapInstance);
             }
 
             counter =
