@@ -72,3 +72,4 @@ export default HomePage;
 //   removeConsole: process.env.NODE_ENV === "production",
 // },
 // use strava api?
+// color route line by gradient
