@@ -15,6 +15,20 @@ const parseGpx = (gpx: string) => {
   ]);
 };
 
+const parsePage = (page: string) => {
+  const parser = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: "",
+  });
+  const json = parser.parse(page);
+
+  return JSON.parse(
+    json.html.body.script["#text"],
+  ).props.pageProps.streams.location.map((latlng: number[]) =>
+    latlng.reverse(),
+  );
+};
+
 export const POST = async (request: NextRequest) => {
   try {
     const { source, value } = await request.json();
@@ -32,7 +46,9 @@ export const POST = async (request: NextRequest) => {
       return NextResponse.json(lngLats);
     }
 
-    if (["strava_activity", "strava_route"].includes(source)) {
+    if (
+      ["strava_activity", "strava_route", "strava_segment"].includes(source)
+    ) {
       const stravaRequestOptions = {
         method: "GET",
         headers: {
@@ -64,6 +80,17 @@ export const POST = async (request: NextRequest) => {
         ).then(async (response) => await response.text());
 
         const lngLats = parseGpx(gpx);
+
+        return NextResponse.json(lngLats);
+      }
+
+      if (source === "strava_segment") {
+        const page = await fetch(
+          `https://www.strava.com/segments/40751819`,
+          stravaRequestOptions,
+        ).then(async (response) => await response.text());
+
+        const lngLats = parsePage(page);
 
         return NextResponse.json(lngLats);
       }
