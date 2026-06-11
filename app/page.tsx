@@ -78,4 +78,3 @@ export default HomePage;
 // get activity from intervals.icu?
 // strava or garmin button to open the route
 // install turf, increase animation time with actual distance
-// add zoom controls to place map
