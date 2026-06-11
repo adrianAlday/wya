@@ -1,4 +1,4 @@
-import { Map } from "maplibre-gl";
+import { Map, SourceSpecification } from "maplibre-gl";
 
 export const speed = 0.6;
 
@@ -14,24 +14,37 @@ export const getById = (id: string) =>
   document.getElementById(id) as HTMLElement;
 
 export const setupMap = (mapInstance: Map) => {
-  mapInstance.setStyle(
-    "https://tiles.openfreemap.org/styles/bright",
-    // fallback
-    // {
-    //   transformStyle: (_previousStyle, nextStyle) => {
-    //     nextStyle.sources.openmaptiles = {
-    //       type: "vector",
-    //       tiles: [
-    //         "https://tiles.openfreemap.org/planet/20260513_001001_pt/{z}/{x}/{y}.pbf",
-    //       ],
-    //       minzoom: 0,
-    //       maxzoom: 14,
-    //     };
-    //     return nextStyle;
-    //   },
-    // }
-    // recent issue: https://github.com/hyperknot/openfreemap/issues/112
-  );
+  mapInstance.setStyle("https://tiles.openfreemap.org/styles/bright", {
+    transformStyle: (_previousStyle, nextStyle) => {
+      const mapterhornSource = {
+        type: "raster-dem",
+        url: "https://tiles.mapterhorn.com/tilejson.json",
+      } as SourceSpecification;
+
+      nextStyle.sources.hillshadeSource = mapterhornSource;
+      nextStyle.layers.push({
+        id: "hills",
+        type: "hillshade",
+        source: "hillshadeSource",
+        layout: { visibility: "visible" },
+        paint: { "hillshade-shadow-color": "rgb(71,59,36)" },
+      });
+
+      // fallback
+      // recent issue: https://github.com/hyperknot/openfreemap/issues/112
+
+      // nextStyle.sources.openmaptiles = {
+      //   type: "vector",
+      //   tiles: [
+      //     "https://tiles.openfreemap.org/planet/20260513_001001_pt/{z}/{x}/{y}.pbf",
+      //   ],
+      //   minzoom: 0,
+      //   maxzoom: 14,
+      // };
+
+      return nextStyle;
+    },
+  });
   mapInstance.dragRotate.disable();
   mapInstance.touchZoomRotate.disableRotation();
   mapInstance.keyboard.disable();
