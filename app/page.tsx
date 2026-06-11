@@ -75,3 +75,5 @@ export default HomePage;
 // color route line by gradient
 // allow adding another arbitrary marker
 // on iphone route not drawing until user touch
+// get activity from intervals.icu?
+// strava or garmin button to open the route

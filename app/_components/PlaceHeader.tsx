@@ -47,7 +47,7 @@ const PlaceHeader = ({
   const changeParams = (newParams: { [key: string]: string }) => {
     const originalParams = [
       { key: "t", value: "" },
-      ...["garmin_course", "strava_activity", "strava_route"]
+      ...["garmin_course", "strava_activity", "strava_route", "m"]
         .filter((key) => searchParams.get(key))
         .map((presentKey) => ({
           key: presentKey,
