@@ -28,6 +28,7 @@ type PlaceMapProps = {
   longitude: number;
   headerHeight: number;
   geoJson: null | [number, number][];
+  routeMarkerText: null | string;
 };
 
 const PlaceMap = ({
@@ -35,6 +36,7 @@ const PlaceMap = ({
   longitude,
   headerHeight,
   geoJson,
+  routeMarkerText,
 }: PlaceMapProps) => {
   const [loading, setLoading] = useState(true);
 
@@ -75,50 +77,115 @@ const PlaceMap = ({
 
     mapInstance.addControl(geolocateControl, "top-right");
 
-    const geoJsonBounds = (geoJson || []).reduce(
-      (bounds, coord) => {
-        return bounds.extend(coord);
-      },
-      new maplibreGl.LngLatBounds(initialCenter, initialCenter),
-    );
-    const fitBoundsOptions = {
-      padding: 16 + 32 + 16,
-      maxZoom,
-    };
-
     mapInstance.on("load", () => {
       mapInstance.setProjection({
         type: "globe",
       });
 
       if (geoJson) {
-        mapInstance.addSource("route", {
-          type: "geojson",
-          data: {
-            type: "Feature",
-            geometry: {
-              type: "LineString",
-              coordinates: geoJson,
+        mapInstance.fitBounds(
+          geoJson.reduce(
+            (bounds, coord) => {
+              return bounds.extend(coord);
             },
-            properties: {},
+            new maplibreGl.LngLatBounds(initialCenter, initialCenter),
+          ),
+          {
+            padding: 16 + 32 + 16,
+            maxZoom,
           },
-        });
+        );
 
-        mapInstance.addLayer({
-          source: "route",
-          id: "route",
-          type: "line",
-          layout: {
-            "line-join": "round",
-            "line-cap": "round",
-          },
-          paint: {
-            "line-width": 2,
-            "line-color": "rgb(252,82,0)",
-          },
-        });
+        mapInstance.once("moveend", async () => {
+          await new Promise((resolve) => setTimeout(resolve, 100));
 
-        mapInstance.fitBounds(geoJsonBounds, fitBoundsOptions);
+          let counter = 0;
+
+          const orange = "rgb(252,82,0)";
+
+          const markerSize = 16;
+          const routeElement = document.createElement("div");
+          if (routeMarkerText) {
+            routeElement.textContent = routeMarkerText;
+            routeElement.style.fontSize = `${markerSize}px`;
+          } else {
+            routeElement.style.width = `${markerSize}px`;
+            routeElement.style.height = `${markerSize}px`;
+            routeElement.style.backgroundColor = orange;
+            routeElement.style.borderRadius = "50%";
+            routeElement.style.border = "2px solid white";
+          }
+          const routeMarker = new maplibreGl.Marker({ element: routeElement });
+          routeMarker.setLngLat(geoJson[counter]).addTo(mapInstance);
+
+          const routeSourceName = "route";
+          const generateRouteData = (count: number) =>
+            ({
+              type: "Feature",
+              geometry: {
+                type: "LineString",
+                coordinates: geoJson.slice(0, count + 1),
+              },
+              properties: {},
+            }) as GeoJSON.Feature;
+          mapInstance.addSource(routeSourceName, {
+            type: "geojson",
+            data: generateRouteData(counter),
+          });
+          mapInstance.addLayer({
+            source: routeSourceName,
+            id: routeSourceName,
+            type: "line",
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-width": 2,
+              "line-color": orange,
+            },
+          });
+
+          const maxRefreshRate = 120;
+
+          const animateMarker = async () => {
+            const processedCounter = Math.min(counter, geoJson.length - 1);
+
+            routeMarker.setLngLat(geoJson[processedCounter]);
+
+            (
+              mapInstance.getSource(routeSourceName) as maplibreGl.GeoJSONSource
+            ).setData(generateRouteData(processedCounter));
+
+            if (counter < geoJson.length - 1) {
+              await new Promise((resolve) =>
+                setTimeout(resolve, 1000 / maxRefreshRate),
+              );
+
+              requestAnimationFrame(animateMarker);
+            } else {
+              if (!routeMarkerText) {
+                routeMarker.remove();
+                const finishElement = document.createElement("div");
+                finishElement.textContent = "🏁";
+                finishElement.style.fontSize = `${markerSize}px`;
+                finishElement.style.marginTop = `-${markerSize / 2}px`;
+                finishElement.style.paddingLeft = `${markerSize}px`;
+
+                new maplibreGl.Marker({ element: finishElement })
+                  .setLngLat(geoJson.at(-1) as [number, number])
+                  .addTo(mapInstance);
+              }
+            }
+
+            counter =
+              counter + Math.ceil(geoJson.length / (maxRefreshRate * 2));
+          };
+
+          await new Promise((resolve) => setTimeout(resolve, 100));
+
+          animateMarker();
+        });
       }
 
       setLoading(false);

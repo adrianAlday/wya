@@ -9,8 +9,7 @@ import { isDev } from "@/app/_utils/isDev";
 import PlaceTopSection from "@/app/_components/PlaceTopSection";
 
 const getInitialTitle = (decodedParams: Params) => {
-  return (decodedParams.t ||
-    `${decodedParams.latitude}, ${decodedParams.longitude}`) as string;
+  return (decodedParams.t || getSubtitle(decodedParams)) as string;
 };
 const getSubtitle = (decodedParams: Params) => {
   return `${decodedParams.latitude}, ${decodedParams.longitude}` as string;
@@ -69,7 +68,7 @@ type PlacePageProps = {
 const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const resolvedParams = { ...(await params), ...(await searchParams) };
   const decodedParams = decodeParams(resolvedParams);
-  const { latitude, longitude } = decodedParams;
+  const { latitude, longitude, m } = decodedParams;
 
   const initialTitle = getInitialTitle(decodedParams);
   const subtitle = getSubtitle(decodedParams);
@@ -87,6 +86,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         latitude={latitude as unknown as number}
         longitude={longitude as unknown as number}
         geoJson={geoJson}
+        routeMarkerText={m}
       />
 
       <div className="grid grid-cols-4 gap-4">
