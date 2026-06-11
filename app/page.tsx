@@ -78,3 +78,5 @@ export default HomePage;
 // get activity from intervals.icu?
 // strava or garmin button to open the route
 // install turf, increase animation time with actual distance
+// move to flexible-xml-parser
+// strava route get from page instead of gpx?

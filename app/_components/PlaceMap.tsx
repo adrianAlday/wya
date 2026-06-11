@@ -22,6 +22,7 @@ import {
   squircleButtonBackgroundClass,
 } from "../_utils/styling";
 import { useToast } from "./ToastContext";
+import * as turf from "@turf/turf";
 
 type PlaceMapProps = {
   latitude: number;
@@ -251,7 +252,13 @@ const PlaceMap = ({
             },
           });
 
-          const maxRefreshRate = 120;
+          const refreshRate = 120;
+
+          const miles = turf.length(turf.lineString(geoJson), {
+            units: "miles",
+          });
+
+          const milesPerSecond = 3;
 
           const animateMarker = async () => {
             const processedCounter = Math.min(counter, geoJson.length - 1);
@@ -264,7 +271,7 @@ const PlaceMap = ({
 
             if (counter < geoJson.length - 1) {
               await new Promise((resolve) =>
-                setTimeout(resolve, 1000 / maxRefreshRate),
+                setTimeout(resolve, 1000 / refreshRate),
               );
 
               requestAnimationFrame(animateMarker);
@@ -282,7 +289,10 @@ const PlaceMap = ({
             }
 
             counter =
-              counter + Math.ceil(geoJson.length / (maxRefreshRate * 2));
+              counter +
+              Math.ceil(
+                geoJson.length / ((refreshRate * miles) / milesPerSecond),
+              );
           };
 
           await new Promise((resolve) => setTimeout(resolve, 100));
