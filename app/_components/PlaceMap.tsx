@@ -91,7 +91,7 @@ const PlaceMap = ({
             new maplibreGl.LngLatBounds(initialCenter, initialCenter),
           ),
           {
-            padding: { top: 16, bottom: 16, left: 16, right: 16 + 32 + 16 },
+            padding: { top: 36, bottom: 16, left: 16, right: 16 + 32 + 16 },
             maxZoom,
           },
         );
