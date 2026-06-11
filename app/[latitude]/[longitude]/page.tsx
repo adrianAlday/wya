@@ -137,10 +137,17 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       </div>
 
       <div className="flex justify-between">
-        <FooterLink
-          text={"Vector tiles from OpenFreeMap"}
-          url={"https://openfreemap.org/quick_start"}
-        />
+        <div className="flex gap-x-4">
+          <FooterLink
+            text={"OpenFreeMap"}
+            url={"https://openfreemap.org/quick_start"}
+          />
+
+          <FooterLink
+            text={"Mapterhorn"}
+            url={"https://mapterhorn.com/data-access/"}
+          />
+        </div>
 
         <FooterLink
           text={"Made with love by Adrian"}

@@ -20,6 +20,8 @@ const AboutPage = () => {
 
       <div>OpenFreeMap vector tiles</div>
 
+      <div>Mapterhorn terrain tiles</div>
+
       <Link target="_blank" href={"https://github.com/adrianAlday/wya"}>
         <div className="underline">Repo</div>
       </Link>
