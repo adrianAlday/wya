@@ -77,3 +77,5 @@ export default HomePage;
 // on iphone route not drawing until user touch
 // get activity from intervals.icu?
 // strava or garmin button to open the route
+// install turf, increase animation time with actual distance
+// add zoom controls to place map
