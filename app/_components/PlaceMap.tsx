@@ -96,7 +96,7 @@ const PlaceMap = ({
           },
         );
 
-        mapInstance.once("moveend", async () => {
+        mapInstance.once("idle", async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000));
 
           let counter = 0;
@@ -104,6 +104,17 @@ const PlaceMap = ({
           const orange = "rgb(252,82,0)";
 
           const markerSize = 16;
+
+          const startElement = document.createElement("div");
+          startElement.style.width = `${markerSize}px`;
+          startElement.style.height = `${markerSize}px`;
+          startElement.style.backgroundColor = "rgb(136,203,72)";
+          startElement.style.borderRadius = "50%";
+          startElement.style.border = "2px solid white";
+          new maplibreGl.Marker({ element: startElement })
+            .setLngLat(geoJson[counter])
+            .addTo(mapInstance);
+
           const routeElement = document.createElement("div");
           if (routeMarkerText) {
             routeElement.textContent = routeMarkerText;

@@ -73,3 +73,5 @@ export default HomePage;
 // },
 // use strava api?
 // color route line by gradient
+// allow adding another arbitrary marker
+// on iphone route not drawing until user touch
