@@ -196,9 +196,23 @@ const PlaceMap = ({
         fitGeoJson();
 
         mapInstance.once("idle", async () => {
-          await new Promise((resolve) => setTimeout(resolve, 1000));
+          await new Promise((resolve) => setTimeout(resolve, 1000 * 1));
 
           const fittedCenter = mapInstance.getCenter();
+
+          mapInstance.on("moveend", () => {
+            if (compareCenters(mapInstance.getCenter(), fittedCenter)) {
+              resetMapButton.style.display = "block";
+            }
+
+            resetMapButton.addEventListener("click", () => {
+              fitGeoJson();
+
+              mapInstance.once("move", () => {
+                resetMapButton.style.display = "none";
+              });
+            });
+          });
 
           let counter = 0;
 
@@ -212,6 +226,7 @@ const PlaceMap = ({
           startElement.style.backgroundColor = "rgb(136,203,72)";
           startElement.style.borderRadius = "50%";
           startElement.style.border = "2px solid white";
+
           new maplibreGl.Marker({ element: startElement })
             .setLngLat(cleanGeoJson[counter])
             .addTo(mapInstance);
@@ -227,8 +242,15 @@ const PlaceMap = ({
             routeElement.style.borderRadius = "50%";
             routeElement.style.border = "2px solid white";
           }
+
           const routeMarker = new maplibreGl.Marker({ element: routeElement });
           routeMarker.setLngLat(cleanGeoJson[counter]).addTo(mapInstance);
+
+          const finishElement = document.createElement("div");
+          finishElement.textContent = "🏁";
+          finishElement.style.fontSize = `${markerSize}px`;
+          finishElement.style.marginTop = `-${markerSize / 2}px`;
+          finishElement.style.paddingLeft = `${markerSize}px`;
 
           const routeSourceName = "route";
           const generateRouteData = (count: number) =>
@@ -243,6 +265,7 @@ const PlaceMap = ({
           mapInstance.addSource(routeSourceName, {
             type: "geojson",
             data: generateRouteData(counter),
+            lineMetrics: true,
           });
           mapInstance.addLayer({
             source: routeSourceName,
@@ -263,7 +286,6 @@ const PlaceMap = ({
           const miles = turf.length(turf.lineString(cleanGeoJson), {
             units: "miles",
           });
-
           const milesPerSecond = 3;
 
           const animateMarker = async () => {
@@ -277,47 +299,63 @@ const PlaceMap = ({
 
             if (counter < cleanGeoJson.length - 1) {
               await new Promise((resolve) =>
-                setTimeout(resolve, 1000 / refreshRate),
+                setTimeout(resolve, (1000 * 1) / refreshRate),
               );
 
               requestAnimationFrame(animateMarker);
+
+              counter =
+                counter +
+                Math.ceil(
+                  cleanGeoJson.length /
+                    ((refreshRate * miles) / milesPerSecond),
+                );
             } else {
               routeMarker.remove();
 
-              const finishElement = document.createElement("div");
-              finishElement.textContent = "🏁";
-              finishElement.style.fontSize = `${markerSize}px`;
-              finishElement.style.marginTop = `-${markerSize / 2}px`;
-              finishElement.style.paddingLeft = `${markerSize}px`;
               new maplibreGl.Marker({ element: finishElement })
                 .setLngLat(cleanGeoJson.at(-1) as [number, number])
                 .addTo(mapInstance);
-            }
 
-            counter =
-              counter +
-              Math.ceil(
-                cleanGeoJson.length / ((refreshRate * miles) / milesPerSecond),
-              );
+              await new Promise((resolve) => setTimeout(resolve, 1000 * 0.1));
+              animateRoutePaint();
+            }
           };
 
-          await new Promise((resolve) => setTimeout(resolve, 100));
+          let routePaintCounter = 0;
 
-          animateMarker();
+          const paintOffset = 0.01;
 
-          mapInstance.on("moveend", () => {
-            if (compareCenters(mapInstance.getCenter(), fittedCenter)) {
-              resetMapButton.style.display = "block";
+          const animateRoutePaint = async () => {
+            const processedCounter =
+              (routePaintCounter % (refreshRate + 3)) / refreshRate;
+
+            if (processedCounter === 0) {
+              await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
             }
 
-            resetMapButton.addEventListener("click", () => {
-              fitGeoJson();
+            mapInstance.setPaintProperty(routeSourceName, "line-gradient", [
+              "interpolate",
+              ["linear"],
+              ["line-progress"],
+              ...[-1, orange],
+              ...[processedCounter - 2 * paintOffset, orange],
+              ...[processedCounter - 1 * paintOffset, "white"],
+              ...[processedCounter - 0 * paintOffset, orange],
+              ...[2, orange],
+            ]);
 
-              mapInstance.once("move", () => {
-                resetMapButton.style.display = "none";
-              });
-            });
-          });
+            await new Promise((resolve) =>
+              setTimeout(resolve, (1000 * 1) / refreshRate),
+            );
+
+            requestAnimationFrame(animateRoutePaint);
+
+            routePaintCounter = routePaintCounter + 1;
+          };
+
+          await new Promise((resolve) => setTimeout(resolve, 1000 * 0.1));
+          animateMarker();
         });
       } else {
         mapInstance.on("moveend", () => {
