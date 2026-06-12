@@ -214,8 +214,6 @@ const PlaceMap = ({
             });
           });
 
-          let counter = 0;
-
           const orange = "rgb(252,82,0)";
 
           const markerSize = 16;
@@ -228,7 +226,7 @@ const PlaceMap = ({
           startElement.style.border = "2px solid white";
 
           new maplibreGl.Marker({ element: startElement })
-            .setLngLat(cleanGeoJson[counter])
+            .setLngLat(cleanGeoJson.at(0))
             .addTo(mapInstance);
 
           const routeElement = document.createElement("div");
@@ -244,7 +242,7 @@ const PlaceMap = ({
           }
 
           const routeMarker = new maplibreGl.Marker({ element: routeElement });
-          routeMarker.setLngLat(cleanGeoJson[counter]).addTo(mapInstance);
+          routeMarker.setLngLat(cleanGeoJson.at(0)).addTo(mapInstance);
 
           const finishElement = document.createElement("div");
           finishElement.textContent = "🏁";
@@ -253,18 +251,16 @@ const PlaceMap = ({
           finishElement.style.paddingLeft = `${markerSize}px`;
 
           const routeSourceName = "route";
-          const generateRouteData = (count: number) =>
-            ({
+          mapInstance.addSource(routeSourceName, {
+            type: "geojson",
+            data: {
               type: "Feature",
               geometry: {
                 type: "LineString",
-                coordinates: cleanGeoJson.slice(0, count + 1),
+                coordinates: cleanGeoJson,
               },
               properties: {},
-            }) as GeoJSON.Feature;
-          mapInstance.addSource(routeSourceName, {
-            type: "geojson",
-            data: generateRouteData(counter),
+            },
             lineMetrics: true,
           });
           mapInstance.addLayer({
@@ -277,39 +273,53 @@ const PlaceMap = ({
             },
             paint: {
               "line-width": 2,
-              "line-color": orange,
+              "line-color": "transparent",
             },
           });
 
           const refreshRate = 120;
 
-          const miles = turf.length(turf.lineString(cleanGeoJson), {
-            units: "miles",
-          });
+          const line = turf.lineString(cleanGeoJson);
+          const unitsOptions = {
+            units: "miles" as turf.Units,
+          };
+          const miles = turf.length(line, unitsOptions);
           const milesPerSecond = 3;
+          const totalFrames = Math.ceil((miles / milesPerSecond) * refreshRate);
+          const markerPoints = await (async () =>
+            [...Array(totalFrames + 1)].map(
+              (_frame, index) =>
+                turf.along(line, (miles / totalFrames) * index, unitsOptions)
+                  .geometry.coordinates as [number, number],
+            ))();
 
-          const animateMarker = async () => {
-            const processedCounter = Math.min(counter, cleanGeoJson.length - 1);
+          let routeMarkerCounter = 0;
 
-            routeMarker.setLngLat(cleanGeoJson[processedCounter]);
+          const processCounter = (value: number) => value / totalFrames;
 
-            (
-              mapInstance.getSource(routeSourceName) as maplibreGl.GeoJSONSource
-            ).setData(generateRouteData(processedCounter));
+          const animateRouteMarker = async () => {
+            const processedCounter = processCounter(routeMarkerCounter);
 
-            if (counter < cleanGeoJson.length - 1) {
+            routeMarker.setLngLat(markerPoints[routeMarkerCounter]);
+
+            mapInstance.setPaintProperty(routeSourceName, "line-gradient", [
+              "interpolate",
+              ["linear"],
+              ["line-progress"],
+              ...[-1, orange],
+              ...[processedCounter, orange],
+              ...[processCounter(routeMarkerCounter + 1), "transparent"],
+              ...[2, "transparent"],
+            ]);
+
+            if (processedCounter < 1) {
               await new Promise((resolve) =>
                 setTimeout(resolve, (1000 * 1) / refreshRate),
               );
 
-              requestAnimationFrame(animateMarker);
+              requestAnimationFrame(animateRouteMarker);
 
-              counter =
-                counter +
-                Math.ceil(
-                  cleanGeoJson.length /
-                    ((refreshRate * miles) / milesPerSecond),
-                );
+              routeMarkerCounter = routeMarkerCounter + 1;
             } else {
               routeMarker.remove();
 
@@ -324,7 +334,7 @@ const PlaceMap = ({
 
           let routePaintCounter = 0;
 
-          const paintOffset = 0.01;
+          const paintOffset = 1 / refreshRate;
 
           const animateRoutePaint = async () => {
             const processedCounter =
@@ -355,7 +365,7 @@ const PlaceMap = ({
           };
 
           await new Promise((resolve) => setTimeout(resolve, 1000 * 0.1));
-          animateMarker();
+          animateRouteMarker();
         });
       } else {
         mapInstance.on("moveend", () => {
