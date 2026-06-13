@@ -30,6 +30,11 @@ export const setupMap = (mapInstance: Map) => {
         paint: { "hillshade-shadow-color": "rgb(71,59,36)" },
       });
 
+      nextStyle.sources.terrainSource = mapterhornSource;
+      nextStyle.terrain = {
+        source: "terrainSource",
+      };
+
       // fallback
       // recent issue: https://github.com/hyperknot/openfreemap/issues/112
 

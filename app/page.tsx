@@ -77,3 +77,9 @@ export default HomePage;
 // get activity from intervals.icu?
 // strava or garmin button to open the route
 // strava route get from page instead of gpx?
+// show hide bottom buttons
+// less bold line around input?
+// contour lines https://mapterhorn.com/examples/contour/
+// bigger mile marker shadow?
+// allow subset of strava data?
+// another line layer as route shadow?

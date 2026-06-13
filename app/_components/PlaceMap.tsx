@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import maplibreGl from "maplibre-gl";
+import maplibreGl, { GeoJSONSource } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   speed,
@@ -23,6 +23,7 @@ import {
 } from "../_utils/styling";
 import { useToast } from "./ToastContext";
 import * as turf from "@turf/turf";
+import { FeatureCollection, LineString } from "geojson";
 
 type PlaceMapProps = {
   latitude: number;
@@ -178,9 +179,7 @@ const PlaceMap = ({
               (
                 bounds: maplibreGl.LngLatBounds,
                 coordinates: [number, number],
-              ) => {
-                return bounds.extend(coordinates);
-              },
+              ) => bounds.extend(coordinates),
               new maplibreGl.LngLatBounds(
                 initialCoordinates,
                 initialCoordinates,
@@ -194,6 +193,76 @@ const PlaceMap = ({
         };
 
         fitGeoJson();
+
+        const lineString = turf.lineString(cleanGeoJson);
+
+        const meterUnitsOptions = {
+          units: "meters" as turf.helpers.Units,
+        };
+
+        const totalMeters = turf.length(lineString, meterUnitsOptions);
+
+        let currentDistance = 0;
+
+        const segments = [];
+
+        const terrainResolutionMeters = 10;
+
+        const segmentMeters = terrainResolutionMeters * 5;
+
+        while (currentDistance < totalMeters) {
+          let nextDistance = currentDistance + segmentMeters;
+
+          if (nextDistance > totalMeters) {
+            nextDistance = totalMeters;
+          }
+
+          const segment = turf.lineSliceAlong(
+            lineString,
+            currentDistance,
+            nextDistance,
+            meterUnitsOptions,
+          );
+
+          segment.properties = {
+            distanceMeters: nextDistance - currentDistance,
+            startDistance: currentDistance,
+            endDistance: nextDistance,
+          };
+
+          segments.push(segment);
+
+          currentDistance = nextDistance;
+        }
+
+        const featureCollection = turf.featureCollection(segments);
+
+        featureCollection.features.forEach((feature) => {
+          const coordinates = feature.geometry.coordinates;
+
+          const startCoordinates = coordinates[0] as [number, number];
+          const endCoordinates = coordinates[coordinates.length - 1] as [
+            number,
+            number,
+          ];
+
+          const startElevation =
+            mapInstance.queryTerrainElevation(startCoordinates) || 0;
+          const endElevation =
+            mapInstance.queryTerrainElevation(endCoordinates) || 0;
+
+          if (!feature.properties) {
+            feature.properties = {};
+          }
+
+          const rise = endElevation - startElevation;
+          const run = feature.properties.distanceMeters;
+          const slopePercent = run > 0 ? (rise / run) * 100 : 0;
+
+          feature.properties.slope = slopePercent;
+          feature.properties.startElevation = startElevation;
+          feature.properties.endElevation = endElevation;
+        });
 
         mapInstance.once("idle", async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000 * 1));
@@ -214,55 +283,24 @@ const PlaceMap = ({
             });
           });
 
-          const orange = "rgb(252,82,0)";
-
-          const markerSize = 16;
-
-          const startElement = document.createElement("div");
-          startElement.style.width = `${markerSize}px`;
-          startElement.style.height = `${markerSize}px`;
-          startElement.style.backgroundColor = "rgb(136,203,72)";
-          startElement.style.borderRadius = "50%";
-          startElement.style.border = "2px solid white";
-
-          new maplibreGl.Marker({ element: startElement })
-            .setLngLat(cleanGeoJson.at(0))
-            .addTo(mapInstance);
-
-          const routeElement = document.createElement("div");
-          if (routeMarkerText) {
-            routeElement.textContent = routeMarkerText;
-            routeElement.style.fontSize = `${markerSize}px`;
-          } else {
-            routeElement.style.width = `${markerSize}px`;
-            routeElement.style.height = `${markerSize}px`;
-            routeElement.style.backgroundColor = orange;
-            routeElement.style.borderRadius = "50%";
-            routeElement.style.border = "2px solid white";
-          }
-
-          const routeMarker = new maplibreGl.Marker({ element: routeElement });
-          routeMarker.setLngLat(cleanGeoJson.at(0)).addTo(mapInstance);
-
-          const finishElement = document.createElement("div");
-          finishElement.textContent = "🏁";
-          finishElement.style.fontSize = `${markerSize}px`;
-          finishElement.style.marginTop = `-${markerSize / 2}px`;
-          finishElement.style.paddingLeft = `${markerSize}px`;
-
           const routeSourceName = "route";
+
+          const shownFeatureCollecion = {
+            type: "FeatureCollection",
+            features: [],
+          } as FeatureCollection<LineString>;
+
           mapInstance.addSource(routeSourceName, {
             type: "geojson",
-            data: {
-              type: "Feature",
-              geometry: {
-                type: "LineString",
-                coordinates: cleanGeoJson,
-              },
-              properties: {},
-            },
-            lineMetrics: true,
+            data: shownFeatureCollecion,
           });
+
+          const routeSource = mapInstance.getSource(
+            routeSourceName,
+          ) as GeoJSONSource;
+
+          const slopePercentForColor = 2;
+
           mapInstance.addLayer({
             source: routeSourceName,
             id: routeSourceName,
@@ -273,99 +311,138 @@ const PlaceMap = ({
             },
             paint: {
               "line-width": 2,
-              "line-color": "transparent",
+              "line-color": [
+                "step",
+                ["get", "slope"],
+                "rgba(48,108,188,1.0)",
+                ...[
+                  -1 * slopePercentForColor,
+                  "rgba(139,81,119,0.5)",
+                  slopePercentForColor,
+                ],
+                "rgba(230,54,49,1.0)",
+              ],
             },
           });
 
+          let animateCounter = 0;
+
           const refreshRate = 120;
 
-          const line = turf.lineString(cleanGeoJson);
-          const unitsOptions = {
-            units: "miles" as turf.Units,
+          const chunkSize = Math.floor(
+            featureCollection.features.length / refreshRate,
+          );
+
+          const markerSize = 16;
+
+          const routeElement = document.createElement("div");
+          if (routeMarkerText) {
+            routeElement.textContent = routeMarkerText;
+            routeElement.style.fontSize = `${markerSize}px`;
+          } else {
+            routeElement.style.width = `${(markerSize * 2) / 3}px`;
+            routeElement.style.height = `${(markerSize * 2) / 3}px`;
+            routeElement.style.backgroundColor = "rgb(255,255,255)";
+            routeElement.style.borderRadius = "50%";
+            routeElement.style.border = "2px solid rgba(0,0,0,0.5)";
+          }
+
+          const startCoordinates = featureCollection.features[0].geometry
+            .coordinates[0] as [number, number];
+
+          const routeMarker = new maplibreGl.Marker({
+            element: routeElement,
+          })
+            .setLngLat(startCoordinates)
+            .addTo(mapInstance);
+
+          const miles = Array.from(
+            {
+              length: Math.floor(
+                turf.convertLength(totalMeters, "meters", "miles"),
+              ),
+            },
+            (_, index) => index + 1,
+          ).map((mile) => ({
+            mile,
+            meters: turf.convertLength(mile, "miles", "meters"),
+            coordinates: turf.along(lineString, mile, {
+              units: "miles",
+            }).geometry.coordinates,
+          }));
+
+          const generateMileMarker = (mile: number) => {
+            const mileMarkerElement = document.createElement("div");
+            mileMarkerElement.textContent = `${mile}`;
+            mileMarkerElement.style.fontSize = `${markerSize}px`;
+            mileMarkerElement.style.color = "rgb(38,41,46)";
+            mileMarkerElement.style.textShadow = "1px 1px 2px rgb(247,248,250)";
+
+            return mileMarkerElement;
           };
-          const miles = turf.length(line, unitsOptions);
-          const milesPerSecond = 3;
-          const totalFrames = Math.ceil((miles / milesPerSecond) * refreshRate);
-          const markerPoints = await (async () =>
-            [...Array(totalFrames + 1)].map(
-              (_frame, index) =>
-                turf.along(line, (miles / totalFrames) * index, unitsOptions)
-                  .geometry.coordinates as [number, number],
-            ))();
 
-          let routeMarkerCounter = 0;
+          const animateRoute = async () => {
+            // set max index?
+            // is route trailing a little behind marker?
 
-          const processCounter = (value: number) => value / totalFrames;
+            const isFirstLoop =
+              animateCounter * chunkSize < featureCollection.features.length;
 
-          const animateRouteMarker = async () => {
-            const processedCounter = processCounter(routeMarkerCounter);
-
-            routeMarker.setLngLat(markerPoints[routeMarkerCounter]);
-
-            mapInstance.setPaintProperty(routeSourceName, "line-gradient", [
-              "interpolate",
-              ["linear"],
-              ["line-progress"],
-              ...[-1, orange],
-              ...[processedCounter, orange],
-              ...[processCounter(routeMarkerCounter + 1), "transparent"],
-              ...[2, "transparent"],
-            ]);
-
-            if (processedCounter < 1) {
-              await new Promise((resolve) =>
-                setTimeout(resolve, (1000 * 1) / refreshRate),
-              );
-
-              requestAnimationFrame(animateRouteMarker);
-
-              routeMarkerCounter = routeMarkerCounter + 1;
-            } else {
+            if (
+              !isFirstLoop &&
+              (animateCounter * chunkSize) % featureCollection.features.length <
+                ((animateCounter - 1) * chunkSize) %
+                  featureCollection.features.length
+            ) {
               routeMarker.remove();
 
-              new maplibreGl.Marker({ element: finishElement })
-                .setLngLat(cleanGeoJson.at(-1) as [number, number])
-                .addTo(mapInstance);
-
-              await new Promise((resolve) => setTimeout(resolve, 1000 * 0.1));
-              animateRoutePaint();
-            }
-          };
-
-          let routePaintCounter = 0;
-
-          const paintOffset = 1 / refreshRate;
-
-          const animateRoutePaint = async () => {
-            const processedCounter =
-              (routePaintCounter % (refreshRate + 3)) / refreshRate;
-
-            if (processedCounter === 0) {
               await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
+
+              routeMarker.setLngLat(startCoordinates).addTo(mapInstance);
             }
 
-            mapInstance.setPaintProperty(routeSourceName, "line-gradient", [
-              "interpolate",
-              ["linear"],
-              ["line-progress"],
-              ...[-1, orange],
-              ...[processedCounter - 2 * paintOffset, orange],
-              ...[processedCounter - 1 * paintOffset, "white"],
-              ...[processedCounter - 0 * paintOffset, orange],
-              ...[2, orange],
-            ]);
+            if (isFirstLoop) {
+              const featuresToAdd = featureCollection.features.slice(
+                animateCounter * chunkSize,
+                animateCounter * chunkSize + chunkSize,
+              );
+
+              shownFeatureCollecion.features.push(...featuresToAdd);
+              await routeSource.setData(shownFeatureCollecion);
+
+              miles
+                .filter(
+                  (mile) =>
+                    mile.meters > featuresToAdd[0].properties?.startDistance &&
+                    mile.meters <=
+                      featuresToAdd.reverse()[0].properties?.endDistance,
+                )
+                .forEach((mile) => {
+                  new maplibreGl.Marker({
+                    element: generateMileMarker(mile.mile),
+                  })
+                    .setLngLat(mile.coordinates as [number, number])
+                    .addTo(mapInstance);
+                });
+            }
+
+            routeMarker.setLngLat(
+              featureCollection.features[
+                (animateCounter * chunkSize) % featureCollection.features.length
+              ].geometry.coordinates.at(-1) as [number, number],
+            );
 
             await new Promise((resolve) =>
               setTimeout(resolve, (1000 * 1) / refreshRate),
             );
 
-            requestAnimationFrame(animateRoutePaint);
+            requestAnimationFrame(animateRoute);
 
-            routePaintCounter = routePaintCounter + 1;
+            animateCounter = animateCounter + 1;
           };
 
           await new Promise((resolve) => setTimeout(resolve, 1000 * 0.1));
-          animateRouteMarker();
+          animateRoute();
         });
       } else {
         mapInstance.on("moveend", () => {
