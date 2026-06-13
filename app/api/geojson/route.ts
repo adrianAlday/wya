@@ -31,7 +31,7 @@ const parsePage = (page: string) => {
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { source, value } = await request.json();
+    const { source, value, start, end } = await request.json();
 
     if (source === "garmin_course") {
       const garminClient = await new GarminConnect({
@@ -69,8 +69,12 @@ export const POST = async (request: NextRequest) => {
         const lngLats = streams?.latlng.map((latlng: number[]) =>
           latlng.reverse(),
         );
+        const selectedLngLats = lngLats.slice(
+          start || 0,
+          end || lngLats.length,
+        );
 
-        return NextResponse.json(lngLats);
+        return NextResponse.json(selectedLngLats);
       }
 
       if (source === "strava_route") {

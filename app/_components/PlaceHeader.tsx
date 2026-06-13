@@ -53,6 +53,8 @@ const PlaceHeader = ({
         "strava_route",
         "strava_segment",
         "m",
+        "start",
+        "end",
       ]
         .filter((key) => searchParams.get(key))
         .map((presentKey) => ({

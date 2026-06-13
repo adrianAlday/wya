@@ -81,5 +81,7 @@ export default HomePage;
 // less bold line around input?
 // contour lines https://mapterhorn.com/examples/contour/
 // bigger mile marker shadow?
-// allow subset of strava data?
 // another line layer as route shadow?
+// allow subset of strava data? for all data types
+// why start end need to be cast?
+// one line selectedlnglats?

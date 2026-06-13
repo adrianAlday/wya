@@ -16,8 +16,14 @@ const getSubtitle = (decodedParams: Params) => {
 };
 
 const getGeoJson = async (decodedParams: Params, host: string) => {
-  const { garmin_course, strava_activity, strava_route, strava_segment } =
-    decodedParams;
+  const {
+    garmin_course,
+    strava_activity,
+    strava_route,
+    strava_segment,
+    start,
+    end,
+  } = decodedParams;
 
   const body: { [key: string]: string | string[] } = {};
 
@@ -29,6 +35,8 @@ const getGeoJson = async (decodedParams: Params, host: string) => {
   if (strava_activity) {
     body.source = "strava_activity";
     body.value = strava_activity;
+    body.start = start as string;
+    body.end = end as string;
   }
 
   if (strava_route) {
