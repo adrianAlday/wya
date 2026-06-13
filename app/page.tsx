@@ -82,6 +82,7 @@ export default HomePage;
 // contour lines https://mapterhorn.com/examples/contour/
 // bigger mile marker shadow?
 // another line layer as route shadow?
+// elevation color not working on mobile safari
 // allow subset of strava data? for all data types
 // why start end need to be cast?
 // one line selectedlnglats?
