@@ -62,17 +62,13 @@ export default HomePage;
 // make search marker draggable?
 // show return key on keyboard?
 // make append return key button
-// make text color red when editing and over x characters
-// allow adding garmin_route
 // get strava acivity via gpx?
-// animate line once
 // is logging in on garmin every call too much? is this cached?
 // disable console in prod?
 // compiler: {
 //   removeConsole: process.env.NODE_ENV === "production",
 // },
 // use strava api?
-// color route line by gradient
 // allow adding another arbitrary marker
 // get activity from intervals.icu?
 // strava or garmin button to open the route
@@ -82,6 +78,6 @@ export default HomePage;
 // contour lines https://mapterhorn.com/examples/contour/
 // bigger mile marker shadow?
 // another line layer as route shadow?
-// allow subset of strava data? for all data types
+// allow subset of route data for all data types
 // why start end need to be cast?
 // one line selectedlnglats?
