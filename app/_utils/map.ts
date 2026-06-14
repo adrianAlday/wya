@@ -1,4 +1,4 @@
-import { Map, SourceSpecification } from "maplibre-gl";
+import { Map, RasterDEMSourceSpecification } from "maplibre-gl";
 
 export const speed = 0.6;
 
@@ -19,7 +19,8 @@ export const setupMap = (mapInstance: Map) => {
       const mapterhornSource = {
         type: "raster-dem",
         url: "https://tiles.mapterhorn.com/tilejson.json",
-      } as SourceSpecification;
+        tileSize: 512,
+      } as RasterDEMSourceSpecification;
 
       nextStyle.sources.hillshadeSource = mapterhornSource;
       nextStyle.layers.push({

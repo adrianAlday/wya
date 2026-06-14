@@ -85,3 +85,4 @@ export default HomePage;
 // allow subset of strava data? for all data types
 // why start end need to be cast?
 // one line selectedlnglats?
+// slow load?
