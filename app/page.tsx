@@ -81,3 +81,4 @@ export default HomePage;
 // allow subset of route data for all data types
 // why start end need to be cast?
 // one line selectedlnglats?
+// initial zoom with route not correct?

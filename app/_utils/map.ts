@@ -1,4 +1,5 @@
-import { Map, SourceSpecification } from "maplibre-gl";
+import maplibreGl, { Map, SourceSpecification } from "maplibre-gl";
+import maplibreContour from "maplibre-contour";
 
 export const speed = 0.6;
 
@@ -34,6 +35,60 @@ export const setupMap = (mapInstance: Map) => {
       nextStyle.terrain = {
         source: "terrainSource",
       };
+
+      const demSource = new maplibreContour.DemSource({
+        url: "https://tiles.mapterhorn.com/{z}/{x}/{y}.webp",
+        maxzoom: 13,
+        worker: true,
+        cacheSize: 100,
+        timeoutMs: 10_000,
+      });
+      demSource.setupMaplibre(maplibreGl);
+
+      nextStyle.sources.contourSource = {
+        type: "vector",
+        tiles: [
+          demSource.contourProtocolUrl({
+            multiplier: 3.28084,
+            thresholds: {
+              1: [10, 100],
+            },
+            contourLayer: "contours",
+            elevationKey: "ele",
+            levelKey: "level",
+            extent: 4096,
+            buffer: 1,
+          }),
+        ],
+        maxzoom: 15,
+      };
+      nextStyle.layers.push({
+        id: "contourLines",
+        type: "line",
+        source: "contourSource",
+        "source-layer": "contours",
+        paint: {
+          "line-color": "rgba(0,0,0,0.33)",
+          "line-width": ["match", ["get", "level"], 1, 1, 0.5],
+        },
+      });
+      nextStyle.layers.push({
+        id: "contourLabels",
+        type: "symbol",
+        source: "contourSource",
+        "source-layer": "contours",
+        filter: [">", ["get", "level"], 0],
+        layout: {
+          "symbol-placement": "line",
+          "text-size": 10,
+          "text-field": ["concat", ["number-format", ["get", "ele"], {}], "'"],
+        },
+        paint: {
+          "text-color": "rgb(22,27,34)",
+          "text-halo-color": "rgb(247,248,250)",
+          "text-halo-width": 1,
+        },
+      });
 
       // fallback
       // recent issue: https://github.com/hyperknot/openfreemap/issues/112
