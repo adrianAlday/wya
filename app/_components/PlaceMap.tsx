@@ -373,7 +373,9 @@ const PlaceMap = ({
             mileMarkerElement.textContent = `${mile}`;
             mileMarkerElement.style.fontSize = `${markerSize}px`;
             mileMarkerElement.style.color = "rgb(38,41,46)";
-            mileMarkerElement.style.textShadow = "1px 1px 2px rgb(247,248,250)";
+            mileMarkerElement.style.fontWeight = "500";
+            mileMarkerElement.style.textShadow =
+              "-1px -1px 0 rgb(247,248,250), 1px -1px 0 rgb(247,248,250), -1px  1px 0 rgb(247,248,250), 1px  1px 0 rgb(247,248,250)";
 
             return mileMarkerElement;
           };

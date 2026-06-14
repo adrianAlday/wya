@@ -79,6 +79,5 @@ export default HomePage;
 // bigger mile marker shadow?
 // another line layer as route shadow?
 // allow subset of route data for all data types
-// why start end need to be cast?
 // one line selectedlnglats?
 // initial zoom with route not correct?
