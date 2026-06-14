@@ -237,33 +237,6 @@ const PlaceMap = ({
 
         const featureCollection = turf.featureCollection(segments);
 
-        featureCollection.features.forEach((feature) => {
-          const coordinates = feature.geometry.coordinates;
-
-          const startCoordinates = coordinates[0] as [number, number];
-          const endCoordinates = coordinates[coordinates.length - 1] as [
-            number,
-            number,
-          ];
-
-          const startElevation =
-            mapInstance.queryTerrainElevation(startCoordinates) || 0;
-          const endElevation =
-            mapInstance.queryTerrainElevation(endCoordinates) || 0;
-
-          if (!feature.properties) {
-            feature.properties = {};
-          }
-
-          const rise = endElevation - startElevation;
-          const run = feature.properties.distanceMeters;
-          const slopePercent = run > 0 ? (rise / run) * 100 : 0;
-
-          feature.properties.slope = slopePercent;
-          feature.properties.startElevation = startElevation;
-          feature.properties.endElevation = endElevation;
-        });
-
         mapInstance.once("idle", async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000 * 1));
 
@@ -283,6 +256,32 @@ const PlaceMap = ({
             });
           });
 
+          featureCollection.features.forEach((feature) => {
+            const coordinates = feature.geometry.coordinates;
+
+            const startCoordinates = coordinates[0] as [number, number];
+            const endCoordinates = coordinates[coordinates.length - 1] as [
+              number,
+              number,
+            ];
+
+            const startElevation =
+              mapInstance.queryTerrainElevation(startCoordinates) || 0;
+            const endElevation =
+              mapInstance.queryTerrainElevation(endCoordinates) || 0;
+
+            if (!feature.properties) {
+              feature.properties = {};
+            }
+
+            const rise = endElevation - startElevation;
+            const run = feature.properties.distanceMeters;
+            const slopePercent = run > 0 ? (rise / run) * 100 : 0;
+
+            feature.properties.slope = slopePercent;
+            feature.properties.startElevation = startElevation;
+            feature.properties.endElevation = endElevation;
+          });
           const routeSourceName = "route";
 
           const shownFeatureCollecion = {
