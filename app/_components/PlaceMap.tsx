@@ -339,9 +339,9 @@ const PlaceMap = ({
           } else {
             routeElement.style.width = `${markerSize / 2}px`;
             routeElement.style.height = `${markerSize / 2}px`;
-            routeElement.style.backgroundColor = "rgb(247,248,250)";
+            routeElement.style.backgroundColor = "rgba(247,248,250,0.66)";
             routeElement.style.borderRadius = "50%";
-            routeElement.style.border = "1.5px solid rgb(38,41,46)";
+            routeElement.style.border = "1.5px solid rgba(38,41,46,0.66)";
           }
 
           const startCoordinates = featureCollection.features[0].geometry
@@ -372,10 +372,10 @@ const PlaceMap = ({
             const mileMarkerElement = document.createElement("div");
             mileMarkerElement.textContent = `${mile}`;
             mileMarkerElement.style.fontSize = `${markerSize}px`;
-            mileMarkerElement.style.color = "rgb(38,41,46)";
+            mileMarkerElement.style.color = "rgba(38,41,46,0.66)";
             mileMarkerElement.style.fontWeight = "500";
             mileMarkerElement.style.textShadow =
-              "-1px -1px 0 rgb(247,248,250), 1px -1px 0 rgb(247,248,250), -1px  1px 0 rgb(247,248,250), 1px  1px 0 rgb(247,248,250)";
+              "-1.5px -1.5px 1.5px rgba(247,248,250,0.66), 1.5px -1.5px 1.5px rgba(247,248,250,0.66), -1.5px  1.5px 1.5px rgba(247,248,250,0.66), 1.5px  1.5px 1.5px rgba(247,248,250,0.66)";
 
             return mileMarkerElement;
           };
