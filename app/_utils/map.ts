@@ -68,7 +68,7 @@ export const setupMap = (mapInstance: Map) => {
         source: "contourSource",
         "source-layer": "contours",
         paint: {
-          "line-color": "rgba(0,0,0,0.33)",
+          "line-color": "rgba(71,59,36,0.33)",
           "line-width": ["match", ["get", "level"], 1, 1, 0.5],
         },
       });
@@ -80,13 +80,14 @@ export const setupMap = (mapInstance: Map) => {
         filter: [">", ["get", "level"], 0],
         layout: {
           "symbol-placement": "line",
-          "text-size": 10,
+          "text-size": 12,
           "text-field": ["concat", ["number-format", ["get", "ele"], {}], "'"],
         },
         paint: {
-          "text-color": "rgb(22,27,34)",
-          "text-halo-color": "rgb(247,248,250)",
-          "text-halo-width": 1,
+          "text-color": "rgba(71,59,36,0.66)",
+          "text-halo-color": "rgba(247,248,250,0.66)",
+          "text-halo-width": 0.66,
+          // "text-halo-blur": 1,
         },
       });
 
