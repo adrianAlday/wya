@@ -82,12 +82,12 @@ export const setupMap = (mapInstance: Map) => {
           "symbol-placement": "line",
           "text-size": 12,
           "text-field": ["concat", ["number-format", ["get", "ele"], {}], "'"],
+          "text-font": ["-apple-system", "BlinkMacSystemFont", "sans-serif"],
         },
         paint: {
           "text-color": "rgba(71,59,36,0.66)",
           "text-halo-color": "rgba(247,248,250,0.66)",
           "text-halo-width": 0.66,
-          // "text-halo-blur": 1,
         },
       });
 

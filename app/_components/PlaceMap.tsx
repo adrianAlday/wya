@@ -372,6 +372,8 @@ const PlaceMap = ({
             const mileMarkerElement = document.createElement("div");
             mileMarkerElement.textContent = `${mile}`;
             mileMarkerElement.style.fontSize = `${markerSize}px`;
+            mileMarkerElement.style.fontFamily =
+              "-apple-system, BlinkMacSystemFont, sans-serif";
             mileMarkerElement.style.color = "rgba(38,41,46,0.66)";
             mileMarkerElement.style.fontWeight = "500";
             mileMarkerElement.style.textShadow =
