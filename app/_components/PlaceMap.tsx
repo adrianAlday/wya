@@ -326,9 +326,9 @@ const PlaceMap = ({
 
           const refreshRate = 120;
 
-          const chunkSize = Math.floor(
-            featureCollection.features.length / refreshRate,
-          );
+          const chunkSize =
+            Math.floor(featureCollection.features.length / (refreshRate * 2)) ||
+            1;
 
           const markerSize = 16;
 
@@ -337,8 +337,8 @@ const PlaceMap = ({
             routeElement.textContent = routeMarkerText;
             routeElement.style.fontSize = `${markerSize}px`;
           } else {
-            routeElement.style.width = `${markerSize / 2}px`;
-            routeElement.style.height = `${markerSize / 2}px`;
+            routeElement.style.width = `${(markerSize * 2) / 3}px`;
+            routeElement.style.height = `${(markerSize * 2) / 3}px`;
             routeElement.style.backgroundColor = "rgba(247,248,250,0.66)";
             routeElement.style.borderRadius = "50%";
             routeElement.style.border = "1.5px solid rgba(38,41,46,0.66)";
