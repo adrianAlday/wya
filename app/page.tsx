@@ -81,3 +81,4 @@ export default HomePage;
 // allow subset of route data for all data types
 // one line selectedlnglats?
 // initial zoom with route not correct?
+// color of place map zoom and geolocaet controls

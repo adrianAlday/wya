@@ -337,11 +337,11 @@ const PlaceMap = ({
             routeElement.textContent = routeMarkerText;
             routeElement.style.fontSize = `${markerSize}px`;
           } else {
-            routeElement.style.width = `${(markerSize * 2) / 3}px`;
-            routeElement.style.height = `${(markerSize * 2) / 3}px`;
-            routeElement.style.backgroundColor = "rgb(255,255,255)";
+            routeElement.style.width = `${markerSize / 2}px`;
+            routeElement.style.height = `${markerSize / 2}px`;
+            routeElement.style.backgroundColor = "rgb(247,248,250)";
             routeElement.style.borderRadius = "50%";
-            routeElement.style.border = "2px solid rgba(0,0,0,0.5)";
+            routeElement.style.border = "1.5px solid rgb(38,41,46)";
           }
 
           const startCoordinates = featureCollection.features[0].geometry
