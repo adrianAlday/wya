@@ -202,7 +202,7 @@ const PlaceMap = ({
 
         const totalMeters = turf.length(lineString, meterUnitsOptions);
 
-        let currentDistance = 0;
+        let startDistance = 0;
 
         const segments = [];
 
@@ -210,29 +210,31 @@ const PlaceMap = ({
 
         const segmentMeters = terrainResolutionMeters * 5;
 
-        while (currentDistance < totalMeters) {
-          let nextDistance = currentDistance + segmentMeters;
+        while (startDistance < totalMeters) {
+          let endDistance = startDistance + segmentMeters;
 
-          if (nextDistance > totalMeters) {
-            nextDistance = totalMeters;
+          if (endDistance > totalMeters) {
+            endDistance = totalMeters;
           }
 
           const segment = turf.lineSliceAlong(
             lineString,
-            currentDistance,
-            nextDistance,
+            startDistance,
+            endDistance,
             meterUnitsOptions,
           );
 
           segment.properties = {
-            distanceMeters: nextDistance - currentDistance,
-            startDistance: currentDistance,
-            endDistance: nextDistance,
+            distanceMeters: endDistance - startDistance,
+            startDistance,
+            endDistance,
           };
+
+          segment.id = endDistance;
 
           segments.push(segment);
 
-          currentDistance = nextDistance;
+          startDistance = endDistance;
         }
 
         const featureCollection = turf.featureCollection(segments);
@@ -282,27 +284,19 @@ const PlaceMap = ({
             feature.properties.startElevation = startElevation;
             feature.properties.endElevation = endElevation;
           });
-          const routeSourceName = "route";
 
-          const shownFeatureCollecion = {
-            type: "FeatureCollection",
-            features: [],
-          } as FeatureCollection<LineString>;
+          const routeSourceName = "routeSource";
 
           mapInstance.addSource(routeSourceName, {
             type: "geojson",
-            data: shownFeatureCollecion,
+            data: featureCollection,
           });
-
-          const routeSource = mapInstance.getSource(
-            routeSourceName,
-          ) as GeoJSONSource;
 
           const slopePercentForColor = 2;
 
           mapInstance.addLayer({
             source: routeSourceName,
-            id: routeSourceName,
+            id: "routeLayer",
             type: "line",
             layout: {
               "line-join": "round",
@@ -311,13 +305,18 @@ const PlaceMap = ({
             paint: {
               "line-width": 2,
               "line-color": [
-                "step",
-                ["get", "slope"],
-                "rgba(48,108,188,1.0)",
-                -1 * slopePercentForColor,
-                "rgba(139,81,119,0.5)",
-                slopePercentForColor,
-                "rgba(230,54,49,1.0)",
+                "case",
+                ["boolean", ["feature-state", "drawn"], false],
+                [
+                  "step",
+                  ["get", "slope"],
+                  "rgba(48,108,188,1.0)",
+                  -1 * slopePercentForColor,
+                  "rgba(139,81,119,0.5)",
+                  slopePercentForColor,
+                  "rgba(230,54,49,1.0)",
+                ],
+                "transparent",
               ],
             },
           });
@@ -326,9 +325,12 @@ const PlaceMap = ({
 
           const refreshRate = 120;
 
+          const targetSeconds = 2;
+
           const chunkSize =
-            Math.floor(featureCollection.features.length / (refreshRate * 2)) ||
-            1;
+            Math.floor(
+              featureCollection.features.length / (refreshRate * targetSeconds),
+            ) || 1;
 
           const markerSize = 16;
 
@@ -408,8 +410,15 @@ const PlaceMap = ({
                 animateCounter * chunkSize + chunkSize,
               );
 
-              shownFeatureCollecion.features.push(...featuresToAdd);
-              await routeSource.setData(shownFeatureCollecion);
+              featuresToAdd.forEach((feature) => {
+                mapInstance.setFeatureState(
+                  {
+                    source: routeSourceName,
+                    id: feature.id,
+                  },
+                  { drawn: true },
+                );
+              });
 
               miles
                 .filter(
