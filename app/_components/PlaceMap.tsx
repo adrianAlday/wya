@@ -354,10 +354,10 @@ const PlaceMap = ({
 
           const targetSeconds = 1;
 
-          const chunkSize =
-            Math.floor(
-              featureCollection.features.length / (refreshRate * targetSeconds),
-            ) || 1;
+          const theoreticalChunkSize =
+            featureCollection.features.length / (refreshRate * targetSeconds);
+
+          const chunkSize = Math.floor(theoreticalChunkSize) || 1;
 
           const getChunkFeaturesStartIndex = (counterValue: number) =>
             (counterValue * chunkSize) % featureCollection.features.length;
@@ -459,7 +459,10 @@ const PlaceMap = ({
             }
 
             await new Promise((resolve) =>
-              setTimeout(resolve, (1000 * 1) / refreshRate),
+              setTimeout(
+                resolve,
+                ((1000 * 1) / refreshRate) * (chunkSize / theoreticalChunkSize),
+              ),
             );
 
             requestAnimationFrame(animateRoute);
