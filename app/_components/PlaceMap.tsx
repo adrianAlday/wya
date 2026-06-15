@@ -430,31 +430,31 @@ const PlaceMap = ({
                     .setLngLat(mile.coordinates as [number, number])
                     .addTo(mapInstance);
                 });
-            } else {
-              lastChunkFeatures.forEach((feature) => {
-                mapInstance.setFeatureState(
-                  {
-                    source: routeTraceSourceName,
-                    id: feature.id,
-                  },
-                  { drawn: false },
-                );
-              });
-
-              if (startIndex < lastChunkStartIndex) {
-                await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
-              }
-
-              chunkFeatures.forEach((feature) => {
-                mapInstance.setFeatureState(
-                  {
-                    source: routeTraceSourceName,
-                    id: feature.id,
-                  },
-                  { drawn: true },
-                );
-              });
             }
+
+            lastChunkFeatures.forEach((feature) => {
+              mapInstance.setFeatureState(
+                {
+                  source: routeTraceSourceName,
+                  id: feature.id,
+                },
+                { drawn: false },
+              );
+            });
+
+            if (startIndex < lastChunkStartIndex) {
+              await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
+            }
+
+            chunkFeatures.forEach((feature) => {
+              mapInstance.setFeatureState(
+                {
+                  source: routeTraceSourceName,
+                  id: feature.id,
+                },
+                { drawn: true },
+              );
+            });
 
             await new Promise((resolve) =>
               setTimeout(
