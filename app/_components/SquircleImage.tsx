@@ -5,6 +5,7 @@ type SquircleImageProps = {
   imageClasses?: string;
   imagePath: string;
   imageAltText: string;
+  sizes?: string;
 };
 
 const SquircleImage = ({
@@ -12,6 +13,7 @@ const SquircleImage = ({
   imageClasses,
   imagePath,
   imageAltText,
+  sizes = "150px",
 }: SquircleImageProps) => (
   <div className={`rounded-[22.5%] aspect-square relative ${wrapperClasses}`}>
     <Image
@@ -21,6 +23,7 @@ const SquircleImage = ({
       fill
       style={{ objectFit: "contain" }}
       unoptimized={imagePath.endsWith(".svg")}
+      sizes={sizes}
     />
   </div>
 );
