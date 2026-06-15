@@ -238,6 +238,8 @@ const PlaceMap = ({
 
         const featureCollection = turf.featureCollection(segments);
 
+        const traceFeatureCollection = featureCollection;
+
         mapInstance.once("idle", async () => {
           await new Promise((resolve) => setTimeout(resolve, 1000 * 1));
 
@@ -305,7 +307,7 @@ const PlaceMap = ({
               "line-width": 2,
               "line-color": [
                 "case",
-                ["boolean", ["feature-state", "drawn"], false],
+                ["to-boolean", ["feature-state", "drawn"]],
                 [
                   "step",
                   ["get", "slope"],
@@ -320,42 +322,51 @@ const PlaceMap = ({
             },
           });
 
+          const routeTraceSourceName = "routeTraceSource";
+
+          mapInstance.addSource(routeTraceSourceName, {
+            type: "geojson",
+            data: traceFeatureCollection,
+          });
+
+          mapInstance.addLayer({
+            source: routeTraceSourceName,
+            id: "routeTraceLayer",
+            type: "line",
+            layout: {
+              "line-join": "round",
+              "line-cap": "round",
+            },
+            paint: {
+              "line-width": 2,
+              "line-color": [
+                "case",
+                ["to-boolean", ["feature-state", "drawn"]],
+                "rgb(240,246,252)",
+                "transparent",
+              ],
+            },
+          });
+
           let animateCounter = 0;
 
           const refreshRate = 120;
 
-          const targetSeconds = 2;
+          const targetSeconds = 1;
 
           const chunkSize =
             Math.floor(
               featureCollection.features.length / (refreshRate * targetSeconds),
             ) || 1;
 
-          const getChunkStartIndex = (counterValue: number) =>
+          const getChunkFeaturesStartIndex = (counterValue: number) =>
             (counterValue * chunkSize) % featureCollection.features.length;
 
-          const markerSize = 16;
-
-          const routeElement = document.createElement("div");
-          if (routeMarkerText) {
-            routeElement.textContent = routeMarkerText;
-            routeElement.style.fontSize = `${markerSize}px`;
-          } else {
-            routeElement.style.width = `${(markerSize * 2) / 3}px`;
-            routeElement.style.height = `${(markerSize * 2) / 3}px`;
-            routeElement.style.backgroundColor = "rgba(247,248,250,0.66)";
-            routeElement.style.borderRadius = "50%";
-            routeElement.style.border = "1.5px solid rgba(38,41,46,0.66)";
-          }
-
-          const startCoordinates = featureCollection.features[0].geometry
-            .coordinates[0] as [number, number];
-
-          const routeMarker = new maplibreGl.Marker({
-            element: routeElement,
-          })
-            .setLngLat(startCoordinates)
-            .addTo(mapInstance);
+          const getChunkFeatures = (startIndex: number) =>
+            featureCollection.features.slice(
+              startIndex,
+              startIndex + chunkSize,
+            );
 
           const miles = Array.from(
             {
@@ -372,44 +383,22 @@ const PlaceMap = ({
             }).geometry.coordinates,
           }));
 
-          const generateMileMarker = (mile: number) => {
-            const mileMarkerElement = document.createElement("div");
-            mileMarkerElement.textContent = `${mile}`;
-            mileMarkerElement.style.fontSize = `${markerSize}px`;
-            mileMarkerElement.style.fontFamily =
-              "-apple-system, BlinkMacSystemFont, sans-serif";
-            mileMarkerElement.style.color = "rgba(38,41,46,0.66)";
-            mileMarkerElement.style.fontWeight = "500";
-            mileMarkerElement.style.textShadow =
-              "-1.5px -1.5px 1.5px rgba(247,248,250,0.66), 1.5px -1.5px 1.5px rgba(247,248,250,0.66), -1.5px  1.5px 1.5px rgba(247,248,250,0.66), 1.5px  1.5px 1.5px rgba(247,248,250,0.66)";
-
-            return mileMarkerElement;
-          };
-
           const animateRoute = async () => {
             const isFirstLoop =
               animateCounter * chunkSize < featureCollection.features.length;
 
-            const startIndex = getChunkStartIndex(animateCounter);
+            const startIndex = getChunkFeaturesStartIndex(animateCounter);
 
-            if (
-              !isFirstLoop &&
-              startIndex < getChunkStartIndex(animateCounter - 1)
-            ) {
-              routeMarker.remove();
+            const chunkFeatures = getChunkFeatures(startIndex);
 
-              await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
+            const lastChunkStartIndex = getChunkFeaturesStartIndex(
+              animateCounter - 1,
+            );
 
-              routeMarker.setLngLat(startCoordinates).addTo(mapInstance);
-            }
+            const lastChunkFeatures = getChunkFeatures(lastChunkStartIndex);
 
             if (isFirstLoop) {
-              const featuresToAdd = featureCollection.features.slice(
-                animateCounter * chunkSize,
-                animateCounter * chunkSize + chunkSize,
-              );
-
-              featuresToAdd.forEach((feature) => {
+              chunkFeatures.forEach((feature) => {
                 mapInstance.setFeatureState(
                   {
                     source: routeSourceName,
@@ -422,25 +411,57 @@ const PlaceMap = ({
               miles
                 .filter(
                   (mile) =>
-                    mile.meters > featuresToAdd[0].properties?.startDistance &&
+                    mile.meters > chunkFeatures[0].properties?.startDistance &&
                     mile.meters <=
-                      featuresToAdd.reverse()[0].properties?.endDistance,
+                      chunkFeatures.reverse()[0].properties?.endDistance,
                 )
                 .forEach((mile) => {
+                  const mileMarkerElement = document.createElement("div");
+                  mileMarkerElement.textContent = `${mile.mile}`;
+                  mileMarkerElement.style.fontSize = "16px";
+                  mileMarkerElement.style.fontFamily =
+                    "-apple-system, BlinkMacSystemFont, sans-serif";
+                  mileMarkerElement.style.color = "rgba(38,41,46,0.66)";
+                  mileMarkerElement.style.fontWeight = "500";
+                  mileMarkerElement.style.textShadow =
+                    "-1.5px -1.5px 1.5px rgba(247,248,250,0.66), 1.5px -1.5px 1.5px rgba(247,248,250,0.66), -1.5px  1.5px 1.5px rgba(247,248,250,0.66), 1.5px  1.5px 1.5px rgba(247,248,250,0.66)";
+
                   new maplibreGl.Marker({
-                    element: generateMileMarker(mile.mile),
+                    element: mileMarkerElement,
                   })
                     .setLngLat(mile.coordinates as [number, number])
                     .addTo(mapInstance);
                 });
-            }
+            } else {
+              for (let index = 0; index < chunkSize; index++) {
+                if (lastChunkFeatures[index]) {
+                  mapInstance.setFeatureState(
+                    {
+                      source: routeTraceSourceName,
+                      id: lastChunkFeatures[index].id,
+                    },
+                    { drawn: false },
+                  );
+                }
 
-            // doesnt make it quite to end
-            routeMarker.setLngLat(
-              featureCollection.features[startIndex].geometry.coordinates.at(
-                -1,
-              ) as [number, number],
-            );
+                if (
+                  index === chunkSize - 1 &&
+                  startIndex < lastChunkStartIndex
+                ) {
+                  await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
+                }
+
+                if (chunkFeatures[index]) {
+                  mapInstance.setFeatureState(
+                    {
+                      source: routeTraceSourceName,
+                      id: chunkFeatures[index].id,
+                    },
+                    { drawn: true },
+                  );
+                }
+              }
+            }
 
             await new Promise((resolve) =>
               setTimeout(resolve, (1000 * 1) / refreshRate),
