@@ -29,7 +29,6 @@ type PlaceMapProps = {
   longitude: number;
   headerHeight: number;
   geoJson: null | [number, number][];
-  routeMarkerText: null | string;
 };
 
 const PlaceMap = ({
@@ -37,7 +36,6 @@ const PlaceMap = ({
   longitude,
   headerHeight,
   geoJson,
-  routeMarkerText,
 }: PlaceMapProps) => {
   const [loading, setLoading] = useState(true);
 

@@ -52,7 +52,6 @@ const PlaceHeader = ({
         "strava_activity",
         "strava_route",
         "strava_segment",
-        "m",
         "start",
         "end",
       ]

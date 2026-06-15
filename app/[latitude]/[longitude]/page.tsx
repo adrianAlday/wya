@@ -100,7 +100,6 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         latitude={latitude as unknown as number}
         longitude={longitude as unknown as number}
         geoJson={geoJson}
-        routeMarkerText={m}
       />
 
       <div className="grid grid-cols-4 gap-4">
