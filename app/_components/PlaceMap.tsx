@@ -346,25 +346,22 @@ const PlaceMap = ({
             },
           });
 
-          let animateCounter = 0;
+          let startDrawTime: null | number = null;
 
-          const refreshRate = 120;
+          let drawnFeatures = 0;
 
-          const targetSeconds = 1;
+          const kilometersPerSecond = 1.6;
 
-          const theoreticalChunkSize =
-            featureCollection.features.length / (refreshRate * targetSeconds);
+          const targetDuration = totalMeters / kilometersPerSecond;
 
-          const chunkSize = Math.floor(theoreticalChunkSize) || 1;
+          let startTraceTime: null | number = null;
 
-          const getChunkFeaturesStartIndex = (counterValue: number) =>
-            (counterValue * chunkSize) % featureCollection.features.length;
+          let lastTracedIndex = 0;
 
-          const getChunkFeatures = (startIndex: number) =>
-            featureCollection.features.slice(
-              startIndex,
-              startIndex + chunkSize,
-            );
+          const delayDuration = 2000;
+
+          const totalTraceDuration = delayDuration + targetDuration;
+          console.log("totalTraceDuration", totalTraceDuration);
 
           const miles = Array.from(
             {
@@ -381,95 +378,109 @@ const PlaceMap = ({
             }).geometry.coordinates,
           }));
 
-          const animateRoute = async () => {
-            const isFirstLoop =
-              animateCounter * chunkSize < featureCollection.features.length;
+          const animateRoute = async (timestamp: number) => {
+            if (drawnFeatures < featureCollection.features.length) {
+              if (!startDrawTime) {
+                startDrawTime = timestamp;
+              }
 
-            const startIndex = getChunkFeaturesStartIndex(animateCounter);
+              const elapsed = timestamp - startDrawTime;
 
-            const chunkFeatures = getChunkFeatures(startIndex);
-
-            const lastChunkStartIndex = getChunkFeaturesStartIndex(
-              animateCounter - 1,
-            );
-
-            const lastChunkFeatures = getChunkFeatures(lastChunkStartIndex);
-
-            if (isFirstLoop) {
-              chunkFeatures.forEach((feature) => {
-                mapInstance.setFeatureState(
-                  {
-                    source: routeSourceName,
-                    id: feature.id,
-                  },
-                  { drawn: true },
-                );
-              });
-
-              miles
-                .filter(
-                  (mile) =>
-                    mile.meters > chunkFeatures[0].properties?.startDistance &&
-                    mile.meters <=
-                      chunkFeatures.reverse()[0].properties?.endDistance,
+              featureCollection.features
+                .slice(
+                  drawnFeatures,
+                  Math.floor(
+                    (elapsed < targetDuration
+                      ? (elapsed % targetDuration) / targetDuration
+                      : 1) * featureCollection.features.length,
+                  ),
                 )
-                .forEach((mile) => {
-                  const mileMarkerElement = document.createElement("div");
-                  mileMarkerElement.textContent = `${mile.mile}`;
-                  mileMarkerElement.style.fontSize = "16px";
-                  mileMarkerElement.style.fontFamily =
-                    "-apple-system, BlinkMacSystemFont, sans-serif";
-                  mileMarkerElement.style.color = "rgba(38,41,46,0.66)";
-                  mileMarkerElement.style.fontWeight = "500";
-                  mileMarkerElement.style.textShadow =
-                    "-1.5px -1.5px 1.5px rgba(247,248,250,0.66), 1.5px -1.5px 1.5px rgba(247,248,250,0.66), -1.5px  1.5px 1.5px rgba(247,248,250,0.66), 1.5px  1.5px 1.5px rgba(247,248,250,0.66)";
+                .forEach((feature) => {
+                  mapInstance.setFeatureState(
+                    {
+                      source: routeSourceName,
+                      id: feature.id,
+                    },
+                    { drawn: true },
+                  );
 
-                  new maplibreGl.Marker({
-                    element: mileMarkerElement,
-                  })
-                    .setLngLat(mile.coordinates as [number, number])
-                    .addTo(mapInstance);
+                  miles
+                    .filter(
+                      (mile) =>
+                        mile.meters >
+                          featureCollection.features[drawnFeatures].properties
+                            ?.startDistance &&
+                        mile.meters <=
+                          featureCollection.features[drawnFeatures + 1]
+                            .properties?.endDistance,
+                    )
+                    .forEach((mile) => {
+                      const mileMarkerElement = document.createElement("div");
+                      mileMarkerElement.textContent = `${mile.mile}`;
+                      mileMarkerElement.style.fontSize = "16px";
+                      mileMarkerElement.style.fontFamily =
+                        "-apple-system, BlinkMacSystemFont, sans-serif";
+                      mileMarkerElement.style.color = "rgba(38,41,46,0.66)";
+                      mileMarkerElement.style.fontWeight = "500";
+                      mileMarkerElement.style.textShadow =
+                        "-1.5px -1.5px 1.5px rgba(247,248,250,0.66), 1.5px -1.5px 1.5px rgba(247,248,250,0.66), -1.5px  1.5px 1.5px rgba(247,248,250,0.66), 1.5px  1.5px 1.5px rgba(247,248,250,0.66)";
+
+                      new maplibreGl.Marker({
+                        element: mileMarkerElement,
+                      })
+                        .setLngLat(mile.coordinates as [number, number])
+                        .addTo(mapInstance);
+                    });
+
+                  drawnFeatures = drawnFeatures + 1;
                 });
             } else {
-              lastChunkFeatures.forEach((feature) => {
+              if (!startTraceTime) {
+                startTraceTime = timestamp;
+              }
+
+              const elapsed = timestamp - startTraceTime;
+
+              const phaseElapsed = elapsed % totalTraceDuration;
+
+              const traceElapsed = phaseElapsed - delayDuration;
+
+              const traceIndex =
+                traceElapsed < 0
+                  ? null
+                  : Math.floor(
+                      (traceElapsed / targetDuration) *
+                        featureCollection.features.length,
+                    );
+
+              if (lastTracedIndex !== null) {
                 mapInstance.setFeatureState(
                   {
                     source: routeTraceSourceName,
-                    id: feature.id,
+                    id: featureCollection.features[lastTracedIndex].id,
                   },
                   { drawn: false },
                 );
-              });
-
-              if (startIndex < lastChunkStartIndex) {
-                await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
               }
 
-              chunkFeatures.forEach((feature) => {
+              if (traceIndex !== null) {
                 mapInstance.setFeatureState(
                   {
                     source: routeTraceSourceName,
-                    id: feature.id,
+                    id: featureCollection.features[traceIndex].id,
                   },
                   { drawn: true },
                 );
-              });
+
+                lastTracedIndex = traceIndex;
+              }
             }
 
-            await new Promise((resolve) =>
-              setTimeout(
-                resolve,
-                ((1000 * 1) / refreshRate) * (chunkSize / theoreticalChunkSize),
-              ),
-            );
-
             requestAnimationFrame(animateRoute);
-
-            animateCounter = animateCounter + 1;
           };
 
           await new Promise((resolve) => setTimeout(resolve, 1000 * 0.1));
-          animateRoute();
+          requestAnimationFrame(animateRoute);
         });
       } else {
         mapInstance.on("moveend", () => {
