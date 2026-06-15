@@ -61,7 +61,8 @@ const PlaceMap = ({
       ...initialPosition,
       minZoom,
       attributionControl: false,
-      ...(isDev ? {} : {}),
+      localIdeographFontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+      ...(isDev ? { hash: true } : {}),
     });
 
     setupMap(mapInstance);
