@@ -86,3 +86,5 @@ export default HomePage;
 // light trace with transparent background on top of elevation line?
 // marker logic correct? kinda clocks a little every loop
 // marker show hide with feature state?
+// place spinner is high?
+// font fetch failing? GET https://tiles.openfreemap.org/fonts/-apple-system,BlinkMacSystemFont,sans-serif/0-255.pbf 404 (Not Found)
