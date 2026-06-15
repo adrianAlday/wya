@@ -82,3 +82,7 @@ export default HomePage;
 // one line selectedlnglats?
 // initial zoom with route not correct?
 // color of place map zoom and geolocaet controls
+// map fullscreen button
+// light trace with transparent background on top of elevation line?
+// marker logic correct? kinda clocks a little every loop
+// marker show hide with feature state?

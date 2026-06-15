@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import maplibreGl, { GeoJSONSource } from "maplibre-gl";
+import maplibreGl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import {
   speed,
@@ -23,7 +23,6 @@ import {
 } from "../_utils/styling";
 import { useToast } from "./ToastContext";
 import * as turf from "@turf/turf";
-import { FeatureCollection, LineString } from "geojson";
 
 type PlaceMapProps = {
   latitude: number;
@@ -332,6 +331,9 @@ const PlaceMap = ({
               featureCollection.features.length / (refreshRate * targetSeconds),
             ) || 1;
 
+          const getChunkStartIndex = (counterValue: number) =>
+            (counterValue * chunkSize) % featureCollection.features.length;
+
           const markerSize = 16;
 
           const routeElement = document.createElement("div");
@@ -385,17 +387,14 @@ const PlaceMap = ({
           };
 
           const animateRoute = async () => {
-            // set max index?
-            // is route trailing a little behind marker?
-
             const isFirstLoop =
               animateCounter * chunkSize < featureCollection.features.length;
 
+            const startIndex = getChunkStartIndex(animateCounter);
+
             if (
               !isFirstLoop &&
-              (animateCounter * chunkSize) % featureCollection.features.length <
-                ((animateCounter - 1) * chunkSize) %
-                  featureCollection.features.length
+              startIndex < getChunkStartIndex(animateCounter - 1)
             ) {
               routeMarker.remove();
 
@@ -436,10 +435,11 @@ const PlaceMap = ({
                 });
             }
 
+            // doesnt make it quite to end
             routeMarker.setLngLat(
-              featureCollection.features[
-                (animateCounter * chunkSize) % featureCollection.features.length
-              ].geometry.coordinates.at(-1) as [number, number],
+              featureCollection.features[startIndex].geometry.coordinates.at(
+                -1,
+              ) as [number, number],
             );
 
             await new Promise((resolve) =>
