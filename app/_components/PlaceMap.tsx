@@ -433,34 +433,29 @@ const PlaceMap = ({
                     .addTo(mapInstance);
                 });
             } else {
-              for (let index = 0; index < chunkSize; index++) {
-                if (lastChunkFeatures[index]) {
-                  mapInstance.setFeatureState(
-                    {
-                      source: routeTraceSourceName,
-                      id: lastChunkFeatures[index].id,
-                    },
-                    { drawn: false },
-                  );
-                }
+              lastChunkFeatures.forEach((feature) => {
+                mapInstance.setFeatureState(
+                  {
+                    source: routeTraceSourceName,
+                    id: feature.id,
+                  },
+                  { drawn: false },
+                );
+              });
 
-                if (
-                  index === chunkSize - 1 &&
-                  startIndex < lastChunkStartIndex
-                ) {
-                  await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
-                }
-
-                if (chunkFeatures[index]) {
-                  mapInstance.setFeatureState(
-                    {
-                      source: routeTraceSourceName,
-                      id: chunkFeatures[index].id,
-                    },
-                    { drawn: true },
-                  );
-                }
+              if (startIndex < lastChunkStartIndex) {
+                await new Promise((resolve) => setTimeout(resolve, 1000 * 2));
               }
+
+              chunkFeatures.forEach((feature) => {
+                mapInstance.setFeatureState(
+                  {
+                    source: routeTraceSourceName,
+                    id: feature.id,
+                  },
+                  { drawn: true },
+                );
+              });
             }
 
             await new Promise((resolve) =>
