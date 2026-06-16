@@ -23,6 +23,7 @@ const getGeoJson = async (decodedParams: Params, host: string) => {
     strava_segment,
     start,
     end,
+    no_source,
   } = decodedParams;
 
   const body: { [key: string]: string | string[] } = {};
@@ -55,23 +56,29 @@ const getGeoJson = async (decodedParams: Params, host: string) => {
       body: JSON.stringify(body),
     }).then(async (response) => await response.json());
 
+    const hideSource = no_source === "";
+
     if (geoJson) {
       return {
         geoJson,
-        geoJsonAltText: garmin_course
-          ? "Garmin"
-          : strava_activity || strava_route || strava_segment
-            ? "Strava"
-            : null,
-        geoJsonUrl: garmin_course
-          ? `https://connect.garmin.com/app/course/${garmin_course}`
-          : strava_activity
-            ? `https://www.strava.com/activities/${strava_activity}`
-            : strava_route
-              ? `https://www.strava.com/routes/${strava_route}`
-              : strava_segment
-                ? `https://www.strava.com/segments/${strava_segment}`
-                : null,
+        geoJsonAltText: hideSource
+          ? null
+          : garmin_course
+            ? "Garmin"
+            : strava_activity || strava_route || strava_segment
+              ? "Strava"
+              : null,
+        geoJsonUrl: hideSource
+          ? null
+          : garmin_course
+            ? `https://connect.garmin.com/app/course/${garmin_course}`
+            : strava_activity
+              ? `https://www.strava.com/activities/${strava_activity}`
+              : strava_route
+                ? `https://www.strava.com/routes/${strava_route}`
+                : strava_segment
+                  ? `https://www.strava.com/segments/${strava_segment}`
+                  : null,
       };
     }
   }
