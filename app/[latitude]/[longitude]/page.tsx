@@ -123,7 +123,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   );
 
   const squircleRows = 2;
-  const squircleColumns = 5;
+  const squircleColumns = 6;
 
   const generateGridTemplateStyleValue = (repeats: number) =>
     `repeat(${repeats}, minmax(0, 1fr))`;
@@ -141,7 +141,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       />
 
       <div
-        className={"grid gap-4"}
+        className={"grid gap-3"}
         style={{
           gridTemplateRows: generateGridTemplateStyleValue(squircleRows),
           gridTemplateColumns: generateGridTemplateStyleValue(squircleColumns),
@@ -171,8 +171,18 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
               ? `uber://riderequest?dropoff[latitude]=${latitude}&dropoff[longitude]=${longitude}`
               : `https://uber.com/go?drop[0]={"latitude":${latitude},"longitude":${longitude}}`
           }
-          imagePath={"/uber.jpg"}
+          imagePath={"/uber.png"}
           imageAltText={"Uber"}
+        />
+
+        <SquircleLink
+          url={
+            isMobile
+              ? `lyft://ridetype?destination[latitude]=${latitude}&destination[longitude]=${longitude}`
+              : `https://ride.lyft.com`
+          }
+          imagePath={"/lyft.png"}
+          imageAltText={"Lyft"}
         />
 
         {geoJson && geoJsonUrl && geoJsonAltText && (
