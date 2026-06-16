@@ -185,16 +185,16 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         <ShareButtons host={host} />
 
         <SquircleLink
+          url={`sms:${process.env.NEXT_PUBLIC_COMMENT_BOX}&body=${"wya maps, i have thoughts: ".replaceAll(" ", "%20")}`}
+          imagePath={"/messages.png"}
+          imageAltText={"Messages"}
+        />
+
+        <SquircleLink
           url={`http${isDev ? "" : "s"}://${host}`}
           imagePath={"/plus.svg"}
           imageAltText={"New"}
           imageClasses={"p-4"}
-        />
-
-        <SquircleLink
-          url={`sms:${process.env.NEXT_PUBLIC_COMMENT_BOX}&body=${"wya maps, i have thoughts: ".replaceAll(" ", "%20")}`}
-          imagePath={"/messages.png"}
-          imageAltText={"Messages"}
         />
       </div>
 
