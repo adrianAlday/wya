@@ -15,7 +15,10 @@ export const decodeParams = (resolvedParams: Params) =>
   );
 
 export const encodeParam = (value: string) =>
-  encodeURIComponent(value).replace(/%20/g, "+").replace(/%2C/g, ",");
+  encodeURIComponent(value)
+    .replace(/%20/g, "+")
+    .replace(/%2C/g, ",")
+    .replace(/%3A/g, ":");
 
 export const generateQueryString = (
   originalParams: { key: string; value: string }[],
