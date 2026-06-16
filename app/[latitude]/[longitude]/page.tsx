@@ -4,7 +4,11 @@ import { decodeParams } from "@/app/_utils/url";
 import { headers } from "next/headers";
 import SquircleLink from "@/app/_components/SquircleLink";
 import ShareButtons from "@/app/_components/ShareButtons";
-import { placePageMaxWidthStyle } from "@/app/_utils/styling";
+import {
+  placePageMaxWidthStyle,
+  squircleButtonColumns,
+  squircleButtonRows,
+} from "@/app/_utils/styling";
 import { isDev } from "@/app/_utils/isDev";
 import PlaceTopSection from "@/app/_components/PlaceTopSection";
 
@@ -107,7 +111,7 @@ type PlacePageProps = {
 const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const resolvedParams = { ...(await params), ...(await searchParams) };
   const decodedParams = decodeParams(resolvedParams);
-  const { latitude, longitude, m } = decodedParams;
+  const { latitude, longitude } = decodedParams;
 
   const initialTitle = getInitialTitle(decodedParams);
   const subtitle = getSubtitle(decodedParams);
@@ -122,9 +126,6 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
     host,
   );
 
-  const squircleRows = 2;
-  const squircleColumns = 6;
-
   const generateGridTemplateStyleValue = (repeats: number) =>
     `repeat(${repeats}, minmax(0, 1fr))`;
 
@@ -136,15 +137,15 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         latitude={latitude as unknown as number}
         longitude={longitude as unknown as number}
         geoJson={geoJson}
-        squircleRows={squircleRows}
-        squircleColumns={squircleColumns}
       />
 
       <div
         className={"grid gap-3"}
         style={{
-          gridTemplateRows: generateGridTemplateStyleValue(squircleRows),
-          gridTemplateColumns: generateGridTemplateStyleValue(squircleColumns),
+          gridTemplateRows: generateGridTemplateStyleValue(squircleButtonRows),
+          gridTemplateColumns: generateGridTemplateStyleValue(
+            squircleButtonColumns,
+          ),
         }}
       >
         <SquircleLink

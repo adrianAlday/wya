@@ -20,6 +20,8 @@ import {
   mapButtonShadowStyle,
   buttonStateTransitionClasses,
   squircleButtonBackgroundClass,
+  squircleButtonColumns,
+  squircleButtonRows,
 } from "../_utils/styling";
 import { useToast } from "./ToastContext";
 import * as turf from "@turf/turf";
@@ -29,8 +31,6 @@ type PlaceMapProps = {
   longitude: number;
   geoJson: null | [number, number][];
   headerHeight: number;
-  squircleRows: number;
-  squircleColumns: number;
 };
 
 const PlaceMap = ({
@@ -38,8 +38,6 @@ const PlaceMap = ({
   longitude,
   geoJson,
   headerHeight,
-  squircleRows,
-  squircleColumns,
 }: PlaceMapProps) => {
   const [loading, setLoading] = useState(true);
 
@@ -543,7 +541,7 @@ const PlaceMap = ({
         id={mapContainerId}
         className={"mb-4 rounded-md"}
         style={{
-          height: `calc( 100dvh - 16px - ${headerHeight}px - 16px - (( min((100dvw - 2*16px), (600px - 2*16px)) - ${squircleColumns - 1}*12px ) / ${squircleColumns} * ${squircleRows} + 16px ) - 32px - 16px)`,
+          height: `calc( 100dvh - 16px - ${headerHeight}px - 16px - (( min((100dvw - 2*16px), (600px - 2*16px)) - ${squircleButtonColumns - 1}*12px ) / ${squircleButtonColumns} * ${squircleButtonRows} + ${squircleButtonRows - 1}*12px ) - 32px - 16px)`,
           maxHeight: 600 - 2 * 4 * 4,
           opacity: loading ? 0 : 100,
         }}

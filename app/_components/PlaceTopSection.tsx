@@ -10,8 +10,6 @@ type PlaceTopSection = {
   latitude: number;
   longitude: number;
   geoJson: null | [number, number][];
-  squircleRows: number;
-  squircleColumns: number;
 };
 
 const PlaceTopSection = ({
@@ -20,8 +18,6 @@ const PlaceTopSection = ({
   latitude,
   longitude,
   geoJson,
-  squircleRows,
-  squircleColumns,
 }: PlaceTopSection) => {
   const [title, setTitle] = useState(initialTitle);
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -50,8 +46,6 @@ const PlaceTopSection = ({
         longitude={longitude}
         geoJson={geoJson}
         headerHeight={headerHeight}
-        squircleRows={squircleRows}
-        squircleColumns={squircleColumns}
       />
     </div>
   );

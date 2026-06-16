@@ -90,5 +90,4 @@ export default HomePage;
 // font fetch failing? GET https://tiles.openfreemap.org/fonts/-apple-system,BlinkMacSystemFont,sans-serif/0-255.pbf 404 (Not Found)
 // uber affiliate link?
 // if is dev, click logs latlong
-// lyft button
 // just pass button height?

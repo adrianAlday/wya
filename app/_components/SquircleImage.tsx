@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { squircleButtonColumns } from "../_utils/styling";
 
 type SquircleImageProps = {
   wrapperClasses?: string;
@@ -13,7 +14,7 @@ const SquircleImage = ({
   imageClasses,
   imagePath,
   imageAltText,
-  sizes = "150px",
+  sizes = `${600 / squircleButtonColumns}px`,
 }: SquircleImageProps) => (
   <div className={`rounded-[22.5%] aspect-square relative ${wrapperClasses}`}>
     <Image
