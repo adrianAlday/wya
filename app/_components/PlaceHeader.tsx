@@ -153,7 +153,7 @@ const PlaceHeader = ({
           value={title}
           onChange={handleInputChange}
           onKeyDown={handleInputKeyDown}
-          className={`${borderClasses} border-1 border-[rgb(22,27,34)] focus:border-2 focus:border-[rgb(54,113,227)] rounded-md w-full py-[4px] focus:py-[3px] resize-none ${showClearButton ? "pl-[12px] pr-[36px] focus:pl-11px focus:pr-[35px]" : "px-[12px] focus:px-[11px]"} text-base`}
+          className={`${borderClasses} border-[0.5px] border-[rgb(22,27,34)] focus:border-2 focus:border-[rgb(54,113,227)] rounded-md w-full py-[4px] focus:py-[2.5px] resize-none ${showClearButton ? "pl-[12px] pr-[36px] focus:pl-[10.5px] focus:pr-[34.5px]" : "px-[12px] focus:px-[10.5px]"} text-base`}
         />
 
         <button
