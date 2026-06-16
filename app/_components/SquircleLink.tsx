@@ -1,6 +1,9 @@
 import Link from "next/link";
 import SquircleImage from "./SquircleImage";
-import { squircleButtonBackgroundClass } from "../_utils/styling";
+import {
+  borderClasses,
+  squircleButtonBackgroundClass,
+} from "../_utils/styling";
 
 type SquircleLinkProps = {
   url: string | object;
@@ -17,7 +20,7 @@ const SquircleLink = ({
 }: SquircleLinkProps) => (
   <Link target="_blank" href={url}>
     <SquircleImage
-      wrapperClasses={squircleButtonBackgroundClass}
+      wrapperClasses={`border-[0.5px] border-[rgba(61,68,77,0.1)] ${squircleButtonBackgroundClass}`}
       imageClasses={imageClasses}
       imagePath={imagePath}
       imageAltText={imageAltText}

@@ -27,15 +27,19 @@ import * as turf from "@turf/turf";
 type PlaceMapProps = {
   latitude: number;
   longitude: number;
-  headerHeight: number;
   geoJson: null | [number, number][];
+  headerHeight: number;
+  squircleRows: number;
+  squircleColumns: number;
 };
 
 const PlaceMap = ({
   latitude,
   longitude,
-  headerHeight,
   geoJson,
+  headerHeight,
+  squircleRows,
+  squircleColumns,
 }: PlaceMapProps) => {
   const [loading, setLoading] = useState(true);
 
@@ -199,6 +203,11 @@ const PlaceMap = ({
         };
 
         const totalMeters = turf.length(lineString, meterUnitsOptions);
+
+        if (isDev) {
+          console.log("start", lineString.geometry.coordinates[0].reverse());
+          console.log("meters", totalMeters);
+        }
 
         let startDistance = 0;
 
@@ -534,7 +543,7 @@ const PlaceMap = ({
         id={mapContainerId}
         className={"mb-4 rounded-md"}
         style={{
-          height: `calc( 100dvh - 16px - ${headerHeight}px - 16px - (( min((100dvw - 2*16px), (600px - 2*16px)) - 3*16px ) / 4 * 2 + 16px ) - 32px - 16px)`,
+          height: `calc( 100dvh - 16px - ${headerHeight}px - 16px - (( min((100dvw - 2*16px), (600px - 2*16px)) - ${squircleColumns - 1}*16px ) / ${squircleColumns} * ${squircleRows} + 16px ) - 32px - 16px)`,
           maxHeight: 600 - 2 * 4 * 4,
           opacity: loading ? 0 : 100,
         }}

@@ -92,6 +92,12 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
   const geoJson = await getGeoJson(decodedParams, host);
 
+  const squircleRows = 2;
+  const squircleColumns = 5;
+
+  const generateGridTemplateStyleValue = (repeats: number) =>
+    `repeat(${repeats}, minmax(0, 1fr))`;
+
   return (
     <div className={"w-dvw p-4 relative"} style={{ ...placePageMaxWidthStyle }}>
       <PlaceTopSection
@@ -100,9 +106,17 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         latitude={latitude as unknown as number}
         longitude={longitude as unknown as number}
         geoJson={geoJson}
+        squircleRows={squircleRows}
+        squircleColumns={squircleColumns}
       />
 
-      <div className="grid grid-cols-4 gap-4">
+      <div
+        className={"grid gap-4"}
+        style={{
+          gridTemplateRows: generateGridTemplateStyleValue(squircleRows),
+          gridTemplateColumns: generateGridTemplateStyleValue(squircleColumns),
+        }}
+      >
         <SquircleLink
           url={`https://maps.apple.com/place?coordinate=${latitude},${longitude}`}
           imagePath={"/apple.png"}
@@ -122,7 +136,13 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         />
 
         <SquircleLink
-          url={`https://www.windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
+          url={`https://uber.com/go?drop[0]={"latitude":${latitude},"longitude":${longitude}}`}
+          imagePath={"/uber.jpg"}
+          imageAltText={"Uber"}
+        />
+
+        <SquircleLink
+          url={`https://windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
           imagePath={"/windy.png"}
           imageAltText={"Windy"}
         />
