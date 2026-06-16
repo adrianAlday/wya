@@ -90,7 +90,7 @@ export const POST = async (request: NextRequest) => {
 
       if (source === "strava_segment") {
         const page = await fetch(
-          `https://www.strava.com/segments/40751819`,
+          `https://www.strava.com/segments/${value}`,
           stravaRequestOptions,
         ).then(async (response) => await response.text());
 
