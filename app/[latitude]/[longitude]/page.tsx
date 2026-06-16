@@ -88,7 +88,9 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const subtitle = getSubtitle(decodedParams);
 
   const resolvedHeaders = await headers();
-  const host = resolvedHeaders.get("host") as string;
+  const host = resolvedHeaders.get("host") || "";
+  const userAgent = resolvedHeaders.get("user-agent") || "";
+  const isMobile = /mobile/i.test(userAgent);
 
   const geoJson = await getGeoJson(decodedParams, host);
 
@@ -136,7 +138,11 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         />
 
         <SquircleLink
-          url={`https://uber.com/go?drop[0]={"latitude":${latitude},"longitude":${longitude}}`}
+          url={
+            isMobile
+              ? `uber://riderequest?dropoff[latitude]=${latitude}&dropoff[longitude]=${longitude}`
+              : `https://uber.com/go?drop[0]={"latitude":${latitude},"longitude":${longitude}}`
+          }
           imagePath={"/uber.jpg"}
           imageAltText={"Uber"}
         />
