@@ -93,3 +93,4 @@ export default HomePage;
 // just pass button height?
 // go back down to 5 columns if no strava? prop drill again
 // shorten strava param name?
+// svg sizing a little weird again
