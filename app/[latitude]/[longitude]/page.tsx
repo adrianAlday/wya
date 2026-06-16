@@ -55,10 +55,28 @@ const getGeoJson = async (decodedParams: Params, host: string) => {
       body: JSON.stringify(body),
     }).then(async (response) => await response.json());
 
-    return geoJson;
+    if (geoJson) {
+      return {
+        geoJson,
+        geoJsonAltText: garmin_course
+          ? "Garmin"
+          : strava_activity || strava_route || strava_segment
+            ? "Strava"
+            : null,
+        geoJsonUrl: garmin_course
+          ? `https://connect.garmin.com/app/course/${garmin_course}`
+          : strava_activity
+            ? `https://www.strava.com/activities/${strava_activity}`
+            : strava_route
+              ? `https://www.strava.com/routes/${strava_route}`
+              : strava_segment
+                ? `https://www.strava.com/segments/${strava_segment}`
+                : null,
+      };
+    }
   }
 
-  return null;
+  return {};
 };
 
 export const generateMetadata = async ({
@@ -92,7 +110,10 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
   const userAgent = resolvedHeaders.get("user-agent") || "";
   const isMobile = /mobile/i.test(userAgent);
 
-  const geoJson = await getGeoJson(decodedParams, host);
+  const { geoJson, geoJsonAltText, geoJsonUrl } = await getGeoJson(
+    decodedParams,
+    host,
+  );
 
   const squircleRows = 2;
   const squircleColumns = 5;
@@ -146,6 +167,14 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
           imagePath={"/uber.jpg"}
           imageAltText={"Uber"}
         />
+
+        {geoJson && geoJsonUrl && geoJsonAltText && (
+          <SquircleLink
+            url={geoJsonUrl}
+            imagePath={`/${geoJsonAltText.toLowerCase()}.png`}
+            imageAltText={geoJsonAltText}
+          />
+        )}
 
         <SquircleLink
           url={`https://windy.com/multimodel/${latitude}/${longitude}?${latitude},${longitude},16`}
