@@ -177,14 +177,6 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
           imageAltText={"Transit"}
         />
 
-        {decodedParams.test && (
-          <SquircleLink
-            url={`https://transitapp.com/en/trip?destination=${latitude},${longitude}`}
-            imagePath={"/transit.png"}
-            imageAltText={"Transit"}
-          />
-        )}
-
         <SquircleLink
           url={`https://ul.waze.com/ul?ll=${latitude},${longitude}`}
           imagePath={"/waze.png"}
