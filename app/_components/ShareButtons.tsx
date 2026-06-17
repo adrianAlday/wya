@@ -7,7 +7,7 @@ import { squircleButtonBackgroundClass } from "../_utils/styling";
 
 const ShareButtons = () => {
   const url = window.location.href;
-  const title = new URL(url)?.searchParams.get("t");
+  const title = new URL(url)?.searchParams.get("t") || "";
   const date = new URL(url)?.searchParams.get("d");
 
   const { addToast } = useToast();
