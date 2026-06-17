@@ -212,7 +212,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
           url={`http${isDev ? "" : "s"}://${host}`}
           imagePath={"/plus.svg"}
           imageAltText={"New"}
-          imageClasses={"p-4"}
+          imageClasses={"p-2"}
         />
       </div>
 
