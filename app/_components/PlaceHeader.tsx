@@ -55,7 +55,6 @@ const PlaceHeader = ({
         "start",
         "end",
         "d",
-        "r",
       ]
         .filter((key) => searchParams.get(key))
         .map((presentKey) => ({
