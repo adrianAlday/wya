@@ -49,7 +49,7 @@ const ShareButtons = () => {
       >
         <SquircleImage
           wrapperClasses={squircleButtonBackgroundClass}
-          imageClasses={"p-1"}
+          imageClasses={"p-[15%]"}
           imagePath={"/share.svg"}
           imageAltText={"Share"}
         />
@@ -65,7 +65,7 @@ const ShareButtons = () => {
       >
         <SquircleImage
           wrapperClasses={squircleButtonBackgroundClass}
-          imageClasses={"p-2"}
+          imageClasses={"p-[15%]"}
           imagePath={"/copy.svg"}
           imageAltText="Copy"
         />
