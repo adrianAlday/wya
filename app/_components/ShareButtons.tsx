@@ -7,8 +7,10 @@ import { squircleButtonBackgroundClass } from "../_utils/styling";
 
 const ShareButtons = () => {
   const url = window.location.href;
-  const title = new URL(url)?.searchParams.get("t") || "";
-  const date = new URL(url)?.searchParams.get("d");
+  const searchParams = new URL(url)?.searchParams;
+  const title = searchParams.get("t") || "";
+  const date = searchParams.get("d");
+  const weekly = searchParams.get("r") === "w";
 
   const { addToast } = useToast();
 
@@ -20,7 +22,7 @@ const ShareButtons = () => {
         <button
           onClick={async () => {
             window.open(
-              `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${date}&details=${encodeURIComponent(url)}`,
+              `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${date}&details=${encodeURIComponent(`${title}\n\n${url}`)}${weekly ? "&recur=RRULE:FREQ=WEEKLY;INTERVAL=1" : ""}`,
               "_blank",
               "noopener,noreferrer",
             );
