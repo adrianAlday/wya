@@ -15,13 +15,33 @@ const ShareButtons = ({ host }: ShareButtonsProps) => {
 
   const buttonClasses = "cursor-pointer w-full";
 
+  const url = getUrl();
+  const title = new URL(url)?.searchParams.get("t") || url;
+  const date = new URL(url)?.searchParams.get("d") || url;
+
   return (
     <Fragment>
+      {date && (
+        <button
+          onClick={async () => {
+            window.open(
+              `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${date}&details=${encodeURIComponent(url)}`,
+              "_blank",
+              "noopener,noreferrer",
+            );
+          }}
+          className={buttonClasses}
+        >
+          <SquircleImage
+            wrapperClasses={squircleButtonBackgroundClass}
+            imagePath={"/google-calendar.png"}
+            imageAltText={"Calendar"}
+          />
+        </button>
+      )}
+
       <button
         onClick={async () => {
-          const url = getUrl();
-          const title = new URL(url)?.searchParams.get("t") || url;
-
           try {
             await navigator.share({ url, title });
           } catch (error: unknown) {
@@ -40,8 +60,6 @@ const ShareButtons = ({ host }: ShareButtonsProps) => {
 
       <button
         onClick={async () => {
-          const url = getUrl();
-
           navigator.clipboard.writeText(url);
 
           addToast({ title: "Link copied", subtitle: url });

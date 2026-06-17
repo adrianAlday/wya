@@ -156,8 +156,8 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
 
         <SquircleLink
           url={`https://maps.google.com?q=${latitude},${longitude}`}
-          imagePath={"/google.png"}
-          imageAltText={"Google"}
+          imagePath={"/google-maps.png"}
+          imageAltText={"Google Maps"}
         />
 
         <SquircleLink
