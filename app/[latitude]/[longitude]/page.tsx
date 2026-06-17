@@ -6,6 +6,7 @@ import SquircleLink from "@/app/_components/SquircleLink";
 import {
   placePageMaxWidthStyle,
   squircleButtonColumns,
+  squircleButtonGap,
   squircleButtonRows,
 } from "@/app/_utils/styling";
 import { isDev } from "@/app/_utils/isDev";
@@ -145,12 +146,13 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
       />
 
       <div
-        className={"grid gap-3"}
+        className={"grid"}
         style={{
           gridTemplateRows: generateGridTemplateStyleValue(squircleButtonRows),
           gridTemplateColumns: generateGridTemplateStyleValue(
             squircleButtonColumns,
           ),
+          gap: squircleButtonGap,
         }}
       >
         <SquircleLink
@@ -163,6 +165,16 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
           url={`https://maps.google.com?q=${latitude},${longitude}`}
           imagePath={"/google-maps.png"}
           imageAltText={"Google Maps"}
+        />
+
+        <SquircleLink
+          url={
+            isMobile
+              ? `transit://directions?to=${latitude},${longitude}`
+              : `https://transitapp.com/en/trip?destination=${latitude},${longitude}`
+          }
+          imagePath={"/transit.png"}
+          imageAltText={"Transit"}
         />
 
         <SquircleLink

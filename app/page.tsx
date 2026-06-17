@@ -95,3 +95,4 @@ export default HomePage;
 // shorten strava param name?
 // track tap popsup says distance and elevation
 // home map slow load
+// use transit app search?

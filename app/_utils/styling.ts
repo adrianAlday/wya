@@ -16,6 +16,7 @@ export const buttonStateTransitionClasses =
   "transition-all duration-80 transition-discrete";
 
 export const squircleButtonRows = 2;
-export const squircleButtonColumns = 6;
+export const squircleButtonColumns = 7;
+export const squircleButtonGap = 8;
 
 export const squircleButtonBackgroundClass = "bg-[rgb(74,74,74)]";

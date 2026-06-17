@@ -22,6 +22,7 @@ import {
   squircleButtonBackgroundClass,
   squircleButtonColumns,
   squircleButtonRows,
+  squircleButtonGap,
 } from "../_utils/styling";
 import { useToast } from "./ToastContext";
 import * as turf from "@turf/turf";
@@ -541,7 +542,7 @@ const PlaceMap = ({
         id={mapContainerId}
         className={"mb-4 rounded-md"}
         style={{
-          height: `calc( 100dvh - 16px - ${headerHeight}px - 16px - (( min((100dvw - 2*16px), (600px - 2*16px)) - ${squircleButtonColumns - 1}*12px ) / ${squircleButtonColumns} * ${squircleButtonRows} + ${squircleButtonRows - 1}*12px ) - 32px - 16px)`,
+          height: `calc( 100dvh - 16px - ${headerHeight}px - 16px - (( min((100dvw - 2*16px), (600px - 2*16px)) - ${squircleButtonColumns - 1}*${squircleButtonGap}px ) / ${squircleButtonColumns} * ${squircleButtonRows} + ${squircleButtonRows - 1}*${squircleButtonGap}px ) - 32px - 16px)`,
           maxHeight: 600 - 2 * 4 * 4,
           opacity: loading ? 0 : 100,
         }}
