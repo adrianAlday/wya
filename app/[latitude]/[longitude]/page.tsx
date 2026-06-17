@@ -230,7 +230,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
         </div>
 
         <FooterLink
-          text={"Made with love by Adrian"}
+          text={"Made in Baltimore"}
           url={"https://github.com/adrianAlday/wya"}
         />
       </div>
