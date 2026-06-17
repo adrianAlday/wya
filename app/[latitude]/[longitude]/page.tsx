@@ -3,7 +3,6 @@ import { Params } from "@/app/_utils/types";
 import { decodeParams } from "@/app/_utils/url";
 import { headers } from "next/headers";
 import SquircleLink from "@/app/_components/SquircleLink";
-import ShareButtons from "@/app/_components/ShareButtons";
 import {
   placePageMaxWidthStyle,
   squircleButtonColumns,
@@ -11,6 +10,7 @@ import {
 } from "@/app/_utils/styling";
 import { isDev } from "@/app/_utils/isDev";
 import PlaceTopSection from "@/app/_components/PlaceTopSection";
+import DynamicShareButtons from "@/app/_components/DynamicShareButtons";
 
 const getInitialTitle = (decodedParams: Params) => {
   return (decodedParams.t || getSubtitle(decodedParams)) as string;
@@ -200,7 +200,7 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
           imageAltText={"Windy"}
         />
 
-        <ShareButtons host={host} />
+        <DynamicShareButtons />
 
         <SquircleLink
           url={`sms:${process.env.NEXT_PUBLIC_COMMENT_BOX}&body=${"wya maps, i have thoughts: ".replaceAll(" ", "%20")}`}

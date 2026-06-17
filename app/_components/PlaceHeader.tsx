@@ -54,6 +54,7 @@ const PlaceHeader = ({
         "strava_segment",
         "start",
         "end",
+        "d",
       ]
         .filter((key) => searchParams.get(key))
         .map((presentKey) => ({

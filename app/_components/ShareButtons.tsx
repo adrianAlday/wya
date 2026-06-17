@@ -5,19 +5,14 @@ import SquircleImage from "./SquircleImage";
 import { useToast } from "./ToastContext";
 import { squircleButtonBackgroundClass } from "../_utils/styling";
 
-type ShareButtonsProps = { host: string };
-
-const ShareButtons = ({ host }: ShareButtonsProps) => {
-  const getUrl = () =>
-    typeof window === "undefined" ? host : window.location.href;
+const ShareButtons = () => {
+  const url = window.location.href;
+  const title = new URL(url)?.searchParams.get("t");
+  const date = new URL(url)?.searchParams.get("d");
 
   const { addToast } = useToast();
 
   const buttonClasses = "cursor-pointer w-full";
-
-  const url = getUrl();
-  const title = new URL(url)?.searchParams.get("t") || url;
-  const date = new URL(url)?.searchParams.get("d") || url;
 
   return (
     <Fragment>
