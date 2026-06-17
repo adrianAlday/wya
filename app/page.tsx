@@ -96,3 +96,4 @@ export default HomePage;
 // track tap popsup says distance and elevation
 // home map slow load
 // use transit app search? https://transitapp.com/en/trip
+// fallback for dynamically loaded buttons
