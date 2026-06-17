@@ -94,3 +94,4 @@ export default HomePage;
 // go back down to 5 columns if no strava? prop drill again
 // shorten strava param name?
 // track tap popsup says distance and elevation
+// home map slow load

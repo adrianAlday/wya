@@ -34,7 +34,7 @@ type HomeMapProps = {
   longitude: number;
 };
 
-export const paramForNewPlace = "n";
+export const paramForNewPlace = "new";
 
 const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
   const [loading, setLoading] = useState(true);
@@ -64,7 +64,7 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
       minZoom,
       maxZoom,
       attributionControl: false,
-      ...(isDev ? { hash: true } : {}),
+      // ...(isDev ? { hash: true } : {}),
     });
 
     setupMap(mapInstance);
