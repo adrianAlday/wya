@@ -2,6 +2,13 @@ import { GarminConnect } from "@flow-js/garmin-connect";
 import { XMLParser } from "fast-xml-parser";
 import { NextRequest, NextResponse } from "next/server";
 
+export enum RouteType {
+  GarminCourse = "garminCourse",
+  StravaActivity = "stravaActivity",
+  StravaRoute = "stravaRoute",
+  StravaSegment = "stravaSegment",
+}
+
 const parseGpx = (gpx: string) => {
   const parser = new XMLParser({
     ignoreAttributes: false,
@@ -31,15 +38,15 @@ const parsePage = (page: string) => {
 
 export const POST = async (request: NextRequest) => {
   try {
-    const { source, value, start, end } = await request.json();
+    const { type, id, start, end } = await request.json();
 
-    if (source === "garmin_course") {
+    if (type === RouteType.GarminCourse) {
       const garminClient = await new GarminConnect({
         username: process.env.GARMIN_USERNAME as string,
         password: process.env.GARMIN_PASSWORD as string,
       }).login();
 
-      const gpx = await garminClient.exportCourseAsGpx(value);
+      const gpx = await garminClient.exportCourseAsGpx(id);
 
       const lngLats = parseGpx(gpx);
 
@@ -47,7 +54,11 @@ export const POST = async (request: NextRequest) => {
     }
 
     if (
-      ["strava_activity", "strava_route", "strava_segment"].includes(source)
+      [
+        RouteType.StravaActivity,
+        RouteType.StravaRoute,
+        RouteType.StravaSegment,
+      ].includes(type)
     ) {
       const stravaRequestOptions = {
         method: "GET",
@@ -60,9 +71,9 @@ export const POST = async (request: NextRequest) => {
         },
       };
 
-      if (source === "strava_activity") {
+      if (type === RouteType.StravaActivity) {
         const streams = await fetch(
-          `https://www.strava.com/activities/${value}/streams?stream_types[]=latlng`,
+          `https://www.strava.com/activities/${id}/streams?stream_types[]=latlng`,
           stravaRequestOptions,
         ).then(async (response) => await response.json());
 
@@ -70,16 +81,16 @@ export const POST = async (request: NextRequest) => {
           latlng.reverse(),
         );
         const selectedLngLats = lngLats.slice(
-          start || 0,
-          end || lngLats.length,
+          !start || start === "inf" ? 0 : start,
+          !end || end === "inf" ? lngLats.length : end,
         );
 
         return NextResponse.json(selectedLngLats);
       }
 
-      if (source === "strava_route") {
+      if (type === RouteType.StravaRoute) {
         const gpx = await fetch(
-          `https://www.strava.com/routes/${value}/export_gpx`,
+          `https://www.strava.com/routes/${id}/export_gpx`,
           stravaRequestOptions,
         ).then(async (response) => await response.text());
 
@@ -88,9 +99,9 @@ export const POST = async (request: NextRequest) => {
         return NextResponse.json(lngLats);
       }
 
-      if (source === "strava_segment") {
+      if (type === RouteType.StravaSegment) {
         const page = await fetch(
-          `https://www.strava.com/segments/${value}`,
+          `https://www.strava.com/segments/${id}`,
           stravaRequestOptions,
         ).then(async (response) => await response.text());
 

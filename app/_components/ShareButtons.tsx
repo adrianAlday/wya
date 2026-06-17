@@ -21,7 +21,7 @@ const ShareButtons = () => {
         <button
           onClick={async () => {
             window.open(
-              `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dateData[0]}&details=${encodeURIComponent(`${title}\n\n${url}`)}${dateData[1] === "w" ? "&recur=RRULE:FREQ=WEEKLY;INTERVAL=1" : ""}`,
+              `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${dateData[0]}00&details=${encodeURIComponent(`${title}\n\n${url}`)}${dateData[1] === "w" ? "&recur=RRULE:FREQ=WEEKLY;INTERVAL=1" : ""}`,
               "_blank",
               "noopener,noreferrer",
             );

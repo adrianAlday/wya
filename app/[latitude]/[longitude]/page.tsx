@@ -11,6 +11,7 @@ import {
 import { isDev } from "@/app/_utils/isDev";
 import PlaceTopSection from "@/app/_components/PlaceTopSection";
 import DynamicShareButtons from "@/app/_components/DynamicShareButtons";
+import { RouteType } from "@/app/api/geojson/route";
 
 const getInitialTitle = (decodedParams: Params) => {
   return (decodedParams.t || getSubtitle(decodedParams)) as string;
@@ -20,70 +21,74 @@ const getSubtitle = (decodedParams: Params) => {
 };
 
 const getGeoJson = async (decodedParams: Params, host: string) => {
-  const {
-    garmin_course,
-    strava_activity,
-    strava_route,
-    strava_segment,
-    start,
-    end,
-    no_source,
-  } = decodedParams;
+  const { r } = decodedParams;
 
-  const body: { [key: string]: string | string[] } = {};
+  if (r) {
+    const [showPart, sourcePart, typePart, idPart, startPart, endPart] = (
+      r as string
+    ).split("-");
 
-  if (garmin_course) {
-    body.source = "garmin_course";
-    body.value = garmin_course;
-  }
+    enum RouteSource {
+      Garmin = "garmin",
+      Strava = "strava",
+    }
 
-  if (strava_activity) {
-    body.source = "strava_activity";
-    body.value = strava_activity;
-    body.start = start as string;
-    body.end = end as string;
-  }
+    const RouteSourceMap = {
+      ga: RouteSource.Garmin,
+      st: RouteSource.Strava,
+    } as { [key: string]: RouteSource };
 
-  if (strava_route) {
-    body.source = "strava_route";
-    body.value = strava_route;
-  }
+    const source = RouteSourceMap[sourcePart];
 
-  if (strava_segment) {
-    body.source = "strava_segment";
-    body.value = strava_segment;
-  }
-
-  if (garmin_course || strava_activity || strava_route || strava_segment) {
-    const geoJson = await fetch(`http://${host}/api/geojson`, {
-      method: "POST",
-      body: JSON.stringify(body),
-    }).then(async (response) => await response.json());
-
-    const hideSource = no_source === "";
-
-    if (geoJson) {
-      return {
-        geoJson,
-        geoJsonAltText: hideSource
-          ? null
-          : garmin_course
-            ? "Garmin"
-            : strava_activity || strava_route || strava_segment
-              ? "Strava"
-              : null,
-        geoJsonUrl: hideSource
-          ? null
-          : garmin_course
-            ? `https://connect.garmin.com/app/course/${garmin_course}`
-            : strava_activity
-              ? `https://www.strava.com/activities/${strava_activity}`
-              : strava_route
-                ? `https://www.strava.com/routes/${strava_route}`
-                : strava_segment
-                  ? `https://www.strava.com/segments/${strava_segment}`
-                  : null,
+    if (source) {
+      const RouteTypeMap = {
+        [RouteSource.Garmin]: {
+          co: RouteType.GarminCourse,
+        },
+        [RouteSource.Strava]: {
+          ac: RouteType.StravaActivity,
+          ro: RouteType.StravaRoute,
+          se: RouteType.StravaSegment,
+        },
+      } as {
+        [key: string]: {
+          [key: string]: RouteType;
+        };
       };
+
+      const type = RouteTypeMap[source]?.[typePart];
+
+      if (type) {
+        const body: { [key: string]: string | string[] } = {};
+
+        body.type = type;
+        body.id = idPart;
+        body.start = startPart;
+        body.end = endPart;
+
+        const geoJson = await fetch(`http://${host}/api/geojson`, {
+          method: "POST",
+          body: JSON.stringify(body),
+        }).then(async (response) => await response.json());
+
+        if (geoJson) {
+          const showSource = showPart === "1";
+
+          return {
+            geoJson,
+            geoJsonAltText: !showSource ? null : source,
+            geoJsonUrl: !showSource
+              ? null
+              : source === RouteSource.Garmin && type
+                ? type === RouteType.GarminCourse
+                  ? `https://connect.garmin.com/app/course/${idPart}`
+                  : null
+                : source == RouteSource.Strava && type
+                  ? `https://www.strava.com/${type === RouteType.StravaActivity ? "activities" : type === RouteType.StravaRoute ? "routes" : type === RouteType.StravaSegment ? "segments" : null}/${idPart}`
+                  : null,
+          };
+        }
+      }
     }
   }
 
