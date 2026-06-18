@@ -97,3 +97,4 @@ export default HomePage;
 // home map slow load
 // use transit app search? https://transitapp.com/en/trip
 // fallback for dynamically loaded buttons
+// windy and google calendar links open a blank tab
