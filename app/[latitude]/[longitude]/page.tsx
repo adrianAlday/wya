@@ -216,6 +216,11 @@ const PlacePage = async ({ params, searchParams }: PlacePageProps) => {
           imagePath={"/windy.png"}
           imageAltText={"Windy"}
         />
+        <SquircleLink
+          url={`https://waqi.info/#/c/${latitude}/${longitude}/10z`}
+          imagePath={"/waqi.png"}
+          imageAltText={"Waqi"}
+        />
 
         <DynamicShareButtons />
 
