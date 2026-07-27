@@ -67,6 +67,8 @@ const Image = async ({ params, searchParams }: ImageProps) => {
       ? [y - 1, y, (yRemainder + 0.5) * imageSize]
       : [y, y + 1, (yRemainder - 0.5) * imageSize];
 
+  const tileEndpoint = `http://${host}/api/tile`;
+
   return new ImageResponse(
     <div
       style={{
@@ -82,7 +84,7 @@ const Image = async ({ params, searchParams }: ImageProps) => {
           left: 0 - xOffset,
           top: 0 - yOffset,
         }}
-        src={`http://tile.openstreetmap.org/${z}/${x1}/${y1}.png`}
+        src={`${tileEndpoint}?z=${z}&x=${x1}&y=${y1}`}
         alt="map"
       />
 
@@ -93,7 +95,7 @@ const Image = async ({ params, searchParams }: ImageProps) => {
           left: 0 - xOffset,
           top: imageSize - yOffset,
         }}
-        src={`http://tile.openstreetmap.org/${z}/${x1}/${y2}.png`}
+        src={`${tileEndpoint}?z=${z}&x=${x1}&y=${y2}`}
         alt="map"
       />
 
@@ -104,7 +106,7 @@ const Image = async ({ params, searchParams }: ImageProps) => {
           left: imageSize - xOffset,
           top: 0 - yOffset,
         }}
-        src={`http://tile.openstreetmap.org/${z}/${x2}/${y1}.png`}
+        src={`${tileEndpoint}?z=${z}&x=${x2}&y=${y1}`}
         alt="map"
       />
 
@@ -115,7 +117,7 @@ const Image = async ({ params, searchParams }: ImageProps) => {
           left: imageSize - xOffset,
           top: imageSize - yOffset,
         }}
-        src={`http://tile.openstreetmap.org/${z}/${x2}/${y2}.png`}
+        src={`${tileEndpoint}?z=${z}&x=${x2}&y=${y2}`}
         alt="map"
       />
 
