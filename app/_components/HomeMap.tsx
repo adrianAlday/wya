@@ -97,10 +97,16 @@ const HomeMap = ({ latitude, longitude }: HomeMapProps) => {
           }).then(async (response) => await response.json());
 
           for (const { place } of search.mapsResult) {
-            const idCenter = place.mapsId.shardedId.center;
+            const { component } = place;
+
+            const idCenter =
+              place.mapsId?.shardedId.center ||
+              component.find(
+                (component: { type: string }) =>
+                  component.type === "COMPONENT_TYPE_PLACE_INFO",
+              ).value?.[0].placeInfo.center;
             const center = [idCenter.lng, idCenter.lat];
 
-            const { component } = place;
             const name = component.find(
               (component: { type: string }) =>
                 component.type === "COMPONENT_TYPE_RESULT_SNIPPET",
