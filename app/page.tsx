@@ -98,3 +98,4 @@ export default HomePage;
 // use transit app search? https://transitapp.com/en/trip
 // fallback for dynamically loaded buttons
 // windy and google calendar links open a blank tab
+// automatically act like result is clicked when zooming to one result?
